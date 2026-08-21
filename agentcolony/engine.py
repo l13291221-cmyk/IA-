@@ -194,9 +194,11 @@ class Engine:
                 self.day_start_equity = equity
 
             if self.effective_mode == "live":
-                loss = self.swarm.start_capital - equity   # perdita rispetto al capitale iniziale
-                if loss >= float(self.cfg["stop_loss_eur"]) > 0:
-                    self._do_kill("stop-loss raggiunto (perdita €%.2f)" % loss)
+                # limite duro = il capitale: se i soldi si esauriscono, ferma tutto.
+                # (lo stop-loss tattico lo gestisce l'IA per ogni bot; questo è solo il fondo)
+                floor = max(float(self.cfg["min_order_eur"]), self.swarm.start_capital * 0.05)
+                if equity <= floor:
+                    self._do_kill("capitale esaurito (perdita entro il limite di €%.0f)" % self.swarm.start_capital)
                     return
 
             self.swarm.step()

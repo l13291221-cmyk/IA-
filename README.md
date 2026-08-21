@@ -93,10 +93,10 @@ python3 server.py
    nessuno può portarti via i fondi: si può solo comprare/vendere.
 2. Nel sito → **Impostazioni**: incolla le chiavi, spunta il consenso ai rischi,
    salva.
-3. → **Soldi veri**: nella tabella imposti solo **capitale iniziale** e **stop-loss**
-   (quanto sei disposto a perdere); il **resto lo decide l'IA** da sola. Puoi anche
-   alzare il numero massimo di bot (**fino a 1000**). Poi premi **SOLDI VERI** e i bot
-   operano in **autonomia**, senza chiederti il permesso a ogni operazione.
+3. → **Soldi veri**: nella tabella imposti **capitale iniziale**, **stop-loss** (quanto
+   sei disposto a perdere) e il **numero massimo di bot** (lo decidi tu); il **resto lo
+   decide l'IA** da sola. Poi premi **SOLDI VERI** e i bot operano in **autonomia**,
+   senza chiederti il permesso a ogni operazione.
 4. Inizia con **pochi euro** che puoi permetterti di perdere del tutto. Con poco
    capitale tieni **pochi bot** (es. 1–3): parte comunque da 1 Bot e si clona da solo
    crescendo. Ricorda la **fase di analisi**: per iniziare subito, premi "salta analisi".

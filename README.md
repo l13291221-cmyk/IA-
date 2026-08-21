@@ -123,6 +123,9 @@ python3 server.py
 
 ## Farlo girare 24/7
 
+📘 **Guida passo-passo completa: [`GUIDA-24-7.md`](GUIDA-24-7.md)** (VPS, systemd, Docker,
+accesso sicuro). Riassunto qui sotto.
+
 Il PC/server deve restare acceso. Lo stato è salvato su disco, quindi un riavvio
 riprende da dove era.
 

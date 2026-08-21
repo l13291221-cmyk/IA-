@@ -26,11 +26,10 @@ DEFAULTS: Dict[str, Any] = {
     "api_key": "",
     "api_secret": "",
     # limiti di rischio (soldi veri)
-    "live_capital_eur": 20.0,       # capitale massimo che il bot può impiegare
-    "per_order_eur": 10.0,          # importo massimo per singolo ordine
+    "live_capital_eur": 20.0,       # TETTO totale che lo sciame può impiegare (mai superato)
+    "swarm_agents": 8,              # numero massimo di agenti nello sciame operativo
+    "min_order_eur": 5.0,           # ordine reale minimo (Kraken rifiuta ordini troppo piccoli)
     "daily_loss_limit_eur": 5.0,    # se perde più di così in un giorno → STOP automatico
-    "take_profit": 0.06,            # obiettivo di uscita del campione (+6%)
-    "stop_loss": 0.04,              # stop di protezione (-4%)
     # palestra evolutiva (demo)
     "lab_population": 12,
     "lab_tps": 6.0,                 # velocità di evoluzione (tick/sec)

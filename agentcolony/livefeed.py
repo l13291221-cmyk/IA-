@@ -28,6 +28,7 @@ class LiveFeed:
         self._stop = False
         self._ex = None
         self._init_exchange()
+        self._prefetch_history()
         self._poll_once(initial=True)
 
     def _init_exchange(self) -> None:
@@ -38,6 +39,22 @@ class LiveFeed:
         except Exception as e:
             self._ex = None
             self.last_error = f"ccxt non disponibile: {e}"
+
+    def _prefetch_history(self) -> None:
+        """Riempi la serie con lo storico reale, così gli indicatori partono subito."""
+        if self._ex is None:
+            return
+        try:
+            ohlcv = self._ex.fetch_ohlcv(self.symbol, timeframe="1m", limit=self.prices.maxlen)
+            for c in ohlcv:
+                if c and c[4]:
+                    self.prices.append(round(float(c[4]), 2))
+                    self.times.append(c[0] / 1000.0)
+            if self.prices:
+                self._price = self.prices[-1]
+                self.is_real = True
+        except Exception:
+            pass
 
     def _poll_once(self, initial: bool = False) -> None:
         price = None

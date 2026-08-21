@@ -48,17 +48,20 @@ class PaperBroker:
         self.trade_log.append(rec)
         return {"ok": True, **rec}
 
-    def market_sell_all(self) -> Dict[str, Any]:
+    def market_sell(self, units: float) -> Dict[str, Any]:
         p = self.price()
-        if self.coin <= 0 or p <= 0:
+        units = min(units, self.coin)
+        if units <= 0 or p <= 0:
             return {"ok": False, "reason": "niente da vendere"}
-        eur = self.coin * p * (1 - FEE)
-        units = self.coin
+        eur = units * p * (1 - FEE)
+        self.coin -= units
         self.eur += eur
-        self.coin = 0.0
         rec = {"t": time.time(), "side": "SELL", "price": p, "eur": eur, "units": units}
         self.trade_log.append(rec)
         return {"ok": True, **rec}
+
+    def market_sell_all(self) -> Dict[str, Any]:
+        return self.market_sell(self.coin)
 
 
 class LiveBroker:
@@ -111,9 +114,9 @@ class LiveBroker:
         except Exception as e:
             return {"ok": False, "reason": str(e)[:200]}
 
-    def market_sell_all(self) -> Dict[str, Any]:
+    def market_sell(self, units: float) -> Dict[str, Any]:
         b = self.balances()
-        units = round(b["COIN"], 8)
+        units = round(min(units, b["COIN"]), 8)
         if units <= 0:
             return {"ok": False, "reason": "niente da vendere"}
         try:
@@ -125,3 +128,6 @@ class LiveBroker:
             return {"ok": True, **rec}
         except Exception as e:
             return {"ok": False, "reason": str(e)[:200]}
+
+    def market_sell_all(self) -> Dict[str, Any]:
+        return self.market_sell(self.balances()["COIN"])

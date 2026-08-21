@@ -12,7 +12,7 @@
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
   header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 18px;
     border-bottom:1px solid var(--line);background:var(--panel);position:sticky;top:0;z-index:5}
-  h1{font-size:16px;margin:0;font-weight:800;letter-spacing:.3px}
+  h1{font-size:16px;margin:0;font-weight:800}
   .mode{font-size:12px;font-weight:800;padding:4px 12px;border-radius:20px;border:1px solid}
   .mode.demo{color:#052e16;background:var(--green);border-color:var(--green)}
   .mode.live{color:#450a0a;background:var(--red);border-color:var(--red)}
@@ -33,26 +33,33 @@
   .stat{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px}
   .stat .k{font-size:11px;color:var(--muted)}.stat .v{font-size:22px;font-weight:800;margin-top:3px}
   .v.green{color:var(--green)}.v.blue{color:var(--blue)}.v.red{color:var(--red)}.v.amber{color:var(--amber)}
-  canvas{width:100%;height:150px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;display:block}
+  canvas{width:100%;height:140px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;display:block}
   table{width:100%;border-collapse:collapse;font-size:12px}
   th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:600}
-  .feed{max-height:220px;overflow:auto;font-size:12px}
+  .feed{max-height:200px;overflow:auto;font-size:12px}
   .feed div{padding:5px 0;border-bottom:1px solid var(--line);color:var(--muted)}.feed span{color:#5b6577;margin-right:6px}
-  .agents{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
-  .card{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:11px}
-  .card.top{border-color:#2c6e4b}
-  .card .row{display:flex;justify-content:space-between;align-items:baseline}
-  .card .id{font-weight:700}.card .gen{font-size:10px;color:var(--muted);border:1px solid var(--line);padding:1px 6px;border-radius:10px}
-  .eq{font-size:20px;font-weight:800;margin:6px 0 2px}
-  .bar{height:6px;background:#0e1420;border-radius:4px;overflow:hidden;margin:6px 0}
-  .bar>i{display:block;height:100%;background:linear-gradient(90deg,#f87171,#fbbf24,#4ade80)}
-  .meta{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:6px}
-  .tag{font-size:10px;padding:1px 6px;border-radius:5px;border:1px solid var(--line)}
+  .bots{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+  .botcard{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:12px}
+  .botcard.top{border-color:#2c6e4b}
+  .bothead{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .botname{font-weight:800;font-size:15px}
+  .badge{font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px}
+  .badge.vivo{background:#0e2a1a;color:var(--green);border:1px solid #245}
+  .badge.morto{background:#2a0e0e;color:var(--red);border:1px solid #522}
+  .pill{font-size:10px;padding:1px 7px;border:1px solid var(--line);border-radius:10px;color:var(--muted)}
   .tag.trend{color:var(--blue)}.tag.meanrev{color:var(--purple)}
-  .act{font-size:10px;font-weight:700}.act.COMPRA{color:var(--green)}.act.VENDI{color:var(--red)}.act.ATTENDI{color:var(--muted)}
+  .money{margin-left:auto;font-size:18px;font-weight:800;color:var(--green)}
+  .bar{height:5px;background:#0e1420;border-radius:4px;overflow:hidden;margin:6px 0}
+  .bar>i{display:block;height:100%;background:linear-gradient(90deg,#f87171,#fbbf24,#4ade80)}
+  .trwrap{max-height:150px;overflow:auto;margin-top:6px}
+  .res.vinto{color:var(--green);font-weight:700}.res.perso{color:var(--red);font-weight:700}.res.aperto{color:var(--muted)}
+  .analysis{background:#0c1a24;border:1px solid #16384a;border-radius:12px;padding:14px;margin-bottom:14px}
+  .analysis h3{margin:0 0 8px;font-size:14px;color:var(--blue)}
+  .pbar{height:12px;background:#0e1420;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+  .pbar>i{display:block;height:100%;background:linear-gradient(90deg,#38bdf8,#4ade80)}
   label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px}
   input,select{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--txt);padding:9px;border-radius:8px;font-size:14px}
-  .rowf{display:flex;gap:12px;flex-wrap:wrap}.rowf>div{flex:1;min-width:150px}
+  .rowf{display:flex;gap:12px;flex-wrap:wrap}.rowf>div{flex:1;min-width:140px}
   .save{background:var(--blue);color:#03202e;border:none;font-weight:700;margin-top:14px}
   .danger{background:var(--red);color:#450a0a;border:none;font-weight:800}
   .seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
@@ -60,7 +67,7 @@
   .seg button.on.demo{background:var(--green);color:#052e16}.seg button.on.live{background:var(--red);color:#450a0a}
   .warn{background:#221c0c;border:1px solid #4a3c15;color:var(--amber);padding:10px 12px;border-radius:8px;font-size:12px;margin-top:10px}
   .ok{color:var(--green)}.bad{color:var(--red)}
-  .pill{font-size:11px;padding:2px 8px;border:1px solid var(--line);border-radius:10px;color:var(--muted)}
+  .ptable td{padding:8px}.ptable td:first-child{color:var(--muted)}.ptable input{max-width:160px}
   .disclaimer{font-size:11px;color:var(--amber)}
 </style>
 </head>
@@ -80,41 +87,47 @@
 <main>
   <!-- ============ PANORAMICA ============ -->
   <section class="tab active" id="tab-over">
+    <div id="analysisBox"></div>
+
     <div class="grid g4">
       <div class="stat"><div class="k">Modalità</div><div class="v" id="oMode">–</div></div>
-      <div class="stat"><div class="k">Valore sciame</div><div class="v green" id="oEquity">–</div></div>
+      <div class="stat"><div class="k">Soldi totali</div><div class="v green" id="oEquity">–</div></div>
       <div class="stat"><div class="k">P&L oggi</div><div class="v" id="oPnl">–</div></div>
-      <div class="stat"><div class="k">Investito</div><div class="v blue" id="oInv">–</div></div>
+      <div class="stat"><div class="k">Bot vivi</div><div class="v blue" id="oBots">–</div></div>
     </div>
 
     <div class="grid g2" style="margin-top:14px">
       <div class="panel">
-        <h2>Andamento dello sciame</h2>
+        <h2>Andamento (tutti i bot)</h2>
         <canvas id="equityChart"></canvas>
         <div class="rowf" style="margin-top:10px">
-          <div class="stat"><div class="k">Agenti vivi</div><div class="v blue" id="oPop">–</div></div>
+          <div class="stat"><div class="k">Capitale iniziale</div><div class="v" id="oCap">–</div></div>
           <div class="stat"><div class="k">Nascite/Morti</div><div class="v" id="oBD">–</div></div>
-          <div class="stat"><div class="k">Tetto capitale</div><div class="v amber" id="oCap">–</div></div>
+          <div class="stat"><div class="k">Generazione</div><div class="v amber" id="oGen">–</div></div>
         </div>
       </div>
       <div class="panel">
-        <h2>Ordini reali (accorpati)</h2>
-        <table><thead><tr><th>lato</th><th>prezzo</th><th>importo</th></tr></thead><tbody id="orders"></tbody></table>
-        <h2 style="margin-top:16px">Palestra (cervello)</h2>
+        <h2>Palestra (cervello condiviso)</h2>
         <div class="rowf">
           <div class="stat"><div class="k">Popolazione</div><div class="v" id="labPop">–</div></div>
           <div class="stat"><div class="k">Generazione</div><div class="v amber" id="labGen">–</div></div>
-          <div class="stat"><div class="k">Nascite/Morti</div><div class="v" id="labBD">–</div></div>
+          <div class="stat"><div class="k">Strategia campione</div><div class="v blue" id="labCh" style="font-size:16px">–</div></div>
         </div>
+        <h2 style="margin-top:16px">Diario</h2>
+        <div class="feed" id="feed"></div>
       </div>
     </div>
 
     <div class="panel" style="margin-top:14px">
-      <h2>Lo sciame — agenti con soldi <span id="swMoney">finti</span> (<span id="swCount">0</span>)</h2>
-      <div class="agents" id="agents"></div>
+      <h2>I bot — ognuno pensa per sé, ma condividono ciò che imparano</h2>
+      <div class="bots" id="bots"></div>
     </div>
 
-    <div class="panel" style="margin-top:14px"><h2>Diario</h2><div class="feed" id="feed"></div></div>
+    <div class="panel" style="margin-top:14px" id="graveWrap">
+      <h2>⚰️ Cimitero (bot autoeliminati)</h2>
+      <table><thead><tr><th>Bot</th><th>gen</th><th>soldi finali</th><th>duplicaz.</th><th>operaz.</th><th>vittorie</th><th>morto il</th></tr></thead>
+      <tbody id="grave"></tbody></table>
+    </div>
   </section>
 
   <!-- ============ SOLDI VERI ============ -->
@@ -126,30 +139,28 @@
         <button id="segLive" class="live" onclick="setMode('live')">SOLDI VERI</button>
       </div>
       <div id="liveStatus" style="margin-top:12px"></div>
-      <div class="warn">In <b>SOLDI VERI</b> lo sciame opera con denaro reale su Kraken: gli agenti si clonano
-      quando raddoppiano e si autoeliminano quando perdono la loro quota. Il totale a rischio è limitato al
-      <b>tetto di capitale</b> qui sotto e non viene mai superato. Attivabile solo dopo aver inserito le chiavi
+      <div class="warn">In <b>SOLDI VERI</b> ogni bot piazza i propri ordini reali su Kraken. Il massimo che puoi
+      perdere è il <b>capitale iniziale</b> (spot, nessuna leva). Attivabile solo dopo aver inserito le chiavi
       e accettato i rischi nelle Impostazioni.</div>
     </div>
 
     <div class="panel" style="margin-top:14px">
-      <h2>Limiti di rischio (soldi veri)</h2>
-      <div class="rowf">
-        <div><label>Tetto capitale totale (EUR) — mai superato</label><input id="live_capital_eur" type="number" step="1"></div>
-        <div><label>Numero massimo di agenti nello sciame</label><input id="swarm_agents" type="number" step="1"></div>
-      </div>
-      <div class="rowf">
-        <div><label>Ordine minimo (EUR) — Kraken rifiuta ordini troppo piccoli</label><input id="min_order_eur" type="number" step="1"></div>
-        <div><label>Stop-perdita giornaliero (EUR) → ferma tutto</label><input id="daily_loss_limit_eur" type="number" step="1"></div>
-      </div>
-      <button class="btn save" onclick="saveRisk()">Salva limiti</button>
-      <div class="warn">💡 Con poco capitale e tanti agenti, la quota di ciascuno può finire sotto l'ordine minimo di
-      Kraken: gli ordini vengono comunque <b>accorpati</b>, ma tieni il numero di agenti basso se parti con pochi euro.</div>
+      <h2>Capitale e limiti</h2>
+      <table class="ptable">
+        <tr><td>💶 Capitale iniziale del Bot 1 (EUR)</td><td><input id="start_capital_eur" type="number" step="1"></td></tr>
+        <tr><td>Numero massimo di bot vivi</td><td><input id="max_bots" type="number" step="1"></td></tr>
+        <tr><td>Ordine minimo (EUR) — minimo di Kraken</td><td><input id="min_order_eur" type="number" step="1"></td></tr>
+        <tr><td>Stop-perdita giornaliero (EUR) → ferma tutto</td><td><input id="daily_loss_limit_eur" type="number" step="1"></td></tr>
+        <tr><td>Giorni di analisi prima di iniziare</td><td><input id="analysis_days" type="number" step="1"></td></tr>
+      </table>
+      <button class="btn save" onclick="saveParams()">Salva</button>
+      <div class="warn">💡 Ogni bot deve poter piazzare ordini ≥ minimo di Kraken: con poco capitale tieni
+      <b>pochi bot</b>. Lo sciame parte comunque da 1 e si clona crescendo.</div>
     </div>
 
     <div class="panel" style="margin-top:14px">
       <h2>Emergenza</h2>
-      <p style="color:var(--muted);font-size:13px">Chiude subito tutta la posizione dello sciame e ferma il trading reale.</p>
+      <p style="color:var(--muted);font-size:13px">Chiude subito tutte le posizioni dei bot e ferma il trading reale.</p>
       <button class="btn danger" onclick="killSwitch()">🛑 FERMA TUTTO E VENDI</button>
     </div>
   </section>
@@ -175,14 +186,13 @@
       <h2>Mercato</h2>
       <div class="rowf">
         <div><label>Coppia</label><select id="symbol"><option>BTC/EUR</option><option>ETH/EUR</option><option>SOL/EUR</option><option>BTC/USD</option></select></div>
-        <div><label>Exchange</label><input value="kraken" disabled></div>
         <div><label>Frequenza controllo prezzo (sec)</label><input id="live_poll_seconds" type="number" step="5"></div>
       </div>
       <button class="btn save" onclick="saveMarket()">Salva mercato</button>
     </div>
 
     <div class="panel" style="margin-top:14px">
-      <h2>Palestra evolutiva (demo, cervello)</h2>
+      <h2>Palestra evolutiva (cervello, demo)</h2>
       <div class="rowf">
         <div><label>Popolazione</label><input id="lab_population" type="number" step="1"></div>
         <div><label>Velocità (tick/sec)</label><input id="lab_tps" type="number" step="1"></div>
@@ -206,6 +216,7 @@ async function api(path,method="GET",body=null){
   return r.json();
 }
 function fmt(n){return "€"+Number(n||0).toLocaleString("it-IT",{minimumFractionDigits:2,maximumFractionDigits:2});}
+function hhmm(t){return new Date(t*1000).toLocaleTimeString("it-IT");}
 
 document.querySelectorAll("nav button[data-tab]").forEach(b=>b.onclick=()=>{
   document.querySelectorAll("nav button[data-tab]").forEach(x=>x.classList.remove("active"));
@@ -217,8 +228,8 @@ document.querySelectorAll("nav button[data-tab]").forEach(b=>b.onclick=()=>{
 let filled=false;
 function fillForms(c){
   if(filled)return;filled=true;
-  ["live_capital_eur","swarm_agents","min_order_eur","daily_loss_limit_eur","live_poll_seconds",
-   "lab_population","lab_tps","lab_vol"].forEach(k=>{if($(k))$(k).value=c[k];});
+  ["start_capital_eur","max_bots","min_order_eur","daily_loss_limit_eur","analysis_days",
+   "live_poll_seconds","lab_population","lab_tps","lab_vol"].forEach(k=>{if($(k))$(k).value=c[k];});
   $("symbol").value=c.symbol;$("lab_regime").value=c.lab_regime;$("acknowledged_risk").checked=!!c.acknowledged_risk;
 }
 function drawChart(cv,data,color){
@@ -227,44 +238,66 @@ function drawChart(cv,data,color){
   ctx.beginPath();data.forEach((v,i)=>{const x=pad+(W-2*pad)*i/(data.length-1),y=H-pad-(H-2*pad)*(v-mn)/sp;i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
   ctx.strokeStyle=color;ctx.lineWidth=2;ctx.stroke();ctx.lineTo(W-pad,H-pad);ctx.lineTo(pad,H-pad);ctx.closePath();ctx.fillStyle=color+"22";ctx.fill();
 }
-function card(a,i,repro){
-  const pct=Math.max(0,Math.min(100,(a.equity/repro)*100));
-  return `<div class="card${i===0?' top':''}">
-    <div class="row"><span class="id">#${a.id}</span><span class="gen">gen ${a.gen}</span></div>
-    <div class="eq">${fmt(a.equity)}</div><div class="bar"><i style="width:${pct}%"></i></div>
-    <div class="row"><span class="tag ${a.strategy}">${a.strategy}</span><span class="act ${a.last}">${a.last}</span></div>
-    <div class="meta"><span>trade ${a.trades}</span><span>win ${a.winrate}%</span><span>figli ${a.children}</span></div>
+function botCard(b,i,repro){
+  const pct=Math.max(0,Math.min(100,(b.equity/repro)*100));
+  const rows=(b.trades||[]).map(t=>`<tr><td>${hhmm(t.t)}</td><td>${t.side}</td><td>${fmt(t.price)}</td>
+    <td>${fmt(t.eur)}</td><td class="res ${t.result}">${t.result==='vinto'?'✅ vinto':t.result==='perso'?'❌ perso':'· aperto'}${t.pnl!==undefined?' ('+t.pnl+'%)':''}</td></tr>`).join("")
+    ||"<tr><td colspan=5 style='color:#5b6577'>nessuna operazione ancora</td></tr>";
+  return `<div class="botcard${i===0?' top':''}">
+    <div class="bothead">
+      <span class="botname">Bot #${b.id}</span>
+      <span class="badge vivo">VIVO</span>
+      <span class="pill">gen ${b.gen}</span>
+      <span class="pill tag ${b.strategy}">${b.strategy}</span>
+      <span class="money">${fmt(b.equity)}</span>
+    </div>
+    <div style="font-size:12px;color:var(--muted);display:flex;gap:14px">
+      <span>duplicazioni: <b style="color:var(--txt)">${b.children}</b></span>
+      <span>operazioni: <b style="color:var(--txt)">${b.n_trades}</b></span>
+      <span>vittorie: <b style="color:var(--txt)">${b.winrate}%</b></span>
+    </div>
+    <div class="bar"><i style="width:${pct}%"></i></div>
+    <div class="trwrap"><table><thead><tr><th>ora</th><th>op.</th><th>prezzo</th><th>importo</th><th>esito</th></tr></thead><tbody>${rows}</tbody></table></div>
   </div>`;
 }
 
 async function poll(){
   let s;try{s=await api("/api/state");}catch(e){return;}
   if(!s||!s.swarm)return;
-  const sw=s.swarm,c=s.config,lab=s.lab,live=s.effective_mode==="live";
+  const sw=s.swarm,c=s.config,lab=s.lab,live=s.effective_mode==="live",an=sw.analysis;
   $("modeBadge").textContent=live?"SOLDI VERI":"DEMO";$("modeBadge").className="mode "+(live?"live":"demo");
   $("price").textContent=fmt(s.price);$("sym").textContent=c.symbol;
   $("priceDot").className="dot "+(s.price_is_real?"real":"sim");$("priceReal").textContent=s.price_is_real?"reale":"simulato";
   $("pause").textContent=s.paused?"▶":"⏸";
+  // analisi
+  if(an&&an.active){
+    $("analysisBox").innerHTML=`<div class="analysis"><h3>🔎 Fase di analisi del mercato</h3>
+      <div class="pbar"><i style="width:${an.progress_pct}%"></i></div>
+      <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:13px">
+        <span>La IA sta studiando il mercato prima di iniziare a operare.</span>
+        <span>${an.progress_pct}% · restano ~${an.remaining_days} giorni</span></div>
+      <button class="btn" style="margin-top:10px" onclick="skipAnalysis()">⏩ Salta analisi e inizia subito</button></div>`;
+  } else $("analysisBox").innerHTML="";
   // panoramica
   $("oMode").textContent=live?"SOLDI VERI":"DEMO";$("oMode").className="v "+(live?"red":"green");
-  $("oEquity").textContent=fmt(sw.equity);
+  $("oEquity").textContent=fmt(sw.total_equity);
   $("oPnl").textContent=fmt(s.pnl_today);$("oPnl").className="v "+(s.pnl_today>=0?"green":"red");
-  $("oInv").textContent=sw.invested_pct+"%";
-  $("oPop").textContent=sw.population;$("oBD").textContent=sw.births+"/"+sw.deaths;$("oCap").textContent=fmt(sw.capital);
+  $("oBots").textContent=sw.bots_alive;
+  $("oCap").textContent=fmt(sw.start_capital);$("oBD").textContent=sw.births+"/"+sw.deaths;$("oGen").textContent=sw.best_generation;
   drawChart($("equityChart"),sw.equity_hist,"#4ade80");
-  $("orders").innerHTML=(sw.orders||[]).map(o=>`<tr><td class="${o.side==='BUY'?'ok':'bad'}">${o.side==='BUY'?'COMPRA':'VENDI'}</td><td>${fmt(o.price)}</td><td>${fmt(o.eur)}</td></tr>`).join("")||"<tr><td colspan=3 style='color:#5b6577'>nessun ordine ancora</td></tr>";
-  $("labPop").textContent=lab.population;$("labGen").textContent=lab.best_generation;$("labBD").textContent=lab.births+"/"+lab.deaths;
-  $("swMoney").textContent=live?"VERI":"finti";$("swCount").textContent=sw.population;
-  $("agents").innerHTML=(sw.agents||[]).map((a,i)=>card(a,i,sw.reproduce_threshold)).join("");
-  $("feed").innerHTML=(s.events||[]).map(e=>`<div><span>${e.t}</span>${e.msg}</div>`).join("");
+  $("labPop").textContent=lab.population;$("labGen").textContent=lab.best_generation;$("labCh").textContent=lab.champion.strategy;
+  $("feed").innerHTML=(sw.events||[]).map(e=>`<div>${e}</div>`).join("")+(s.events||[]).map(e=>`<div><span>${e.t}</span>${e.msg}</div>`).join("");
+  $("bots").innerHTML=(sw.bots||[]).map((b,i)=>botCard(b,i,sw.reproduce_threshold)).join("");
+  const gv=sw.graveyard||[];
+  $("graveWrap").style.display=gv.length?"block":"none";
+  $("grave").innerHTML=gv.map(g=>`<tr><td>#${g.id}</td><td>${g.gen}</td><td class="bad">${fmt(g.final)}</td><td>${g.children}</td><td>${g.n_trades}</td><td>${g.winrate}%</td><td>${g.died}</td></tr>`).join("");
   // soldi veri
   $("segDemo").classList.toggle("on",!live);$("segLive").classList.toggle("on",live);
   let st=`Modalità effettiva: <b class="${live?'bad':'ok'}">${live?'SOLDI VERI':'DEMO'}</b>. `;
   st+=c.has_keys?'<span class="ok">chiavi presenti</span>':'<span class="bad">nessuna chiave</span>';
   if(c.keys_from_env)st+=' <span class="pill">da variabili d\'ambiente</span>';
-  st+=` · sciame: raddoppio a ${fmt(sw.reproduce_threshold)}, rovina a ${fmt(sw.ruin_threshold)}`;
+  st+=` · raddoppio a ${fmt(sw.reproduce_threshold)}, morte sotto ${fmt(sw.ruin_threshold)}`;
   if(s.live_error)st+=`<div class="warn">${s.live_error}</div>`;
-  if(sw.last_error)st+=`<div class="warn">ordine: ${sw.last_error}</div>`;
   if(s.live_stopped_reason)st+=`<div class="warn">🛑 Trading reale fermato: ${s.live_stopped_reason}. Riattivalo qui dopo aver verificato.</div>`;
   if(s.feed_error&&!s.price_is_real)st+=`<div class="warn">Prezzo non reale: ${s.feed_error}</div>`;
   $("liveStatus").innerHTML=st;
@@ -277,16 +310,16 @@ async function setMode(m){
   if(m==="live"){
     if(!s.config.has_keys){alert("Prima inserisci le chiavi API nelle Impostazioni.");return;}
     if(!s.config.acknowledged_risk){alert("Prima accetta i rischi nelle Impostazioni.");return;}
-    if(!confirm("Attivare lo sciame con SOLDI VERI su Kraken?\nVerranno piazzati ordini reali entro il tetto di capitale.")) return;
+    if(!confirm("Attivare i bot con SOLDI VERI su Kraken?\nOgni bot piazzerà i propri ordini reali.")) return;
     await api("/api/settings","POST",{mode:"live",live_enabled:true});
   }else{await api("/api/settings","POST",{mode:"demo",live_enabled:false});}
   poll();
 }
 function num(id){return parseFloat($(id).value);}
-async function saveRisk(){
-  await api("/api/settings","POST",{live_capital_eur:num("live_capital_eur"),swarm_agents:parseInt($("swarm_agents").value),
-    min_order_eur:num("min_order_eur"),daily_loss_limit_eur:num("daily_loss_limit_eur")});
-  alert("Limiti salvati.");
+async function saveParams(){
+  await api("/api/settings","POST",{start_capital_eur:num("start_capital_eur"),max_bots:parseInt($("max_bots").value),
+    min_order_eur:num("min_order_eur"),daily_loss_limit_eur:num("daily_loss_limit_eur"),analysis_days:num("analysis_days")});
+  alert("Salvato. (Il capitale iniziale si applica ai nuovi bot / al riavvio dello sciame.)");
 }
 async function saveKeys(){
   const b={acknowledged_risk:$("acknowledged_risk").checked};
@@ -297,7 +330,8 @@ async function saveKeys(){
 async function saveMarket(){await api("/api/settings","POST",{symbol:$("symbol").value,live_poll_seconds:num("live_poll_seconds")});alert("Mercato salvato.");}
 async function saveLab(){await api("/api/settings","POST",{lab_population:parseInt($("lab_population").value),lab_tps:num("lab_tps"),lab_vol:num("lab_vol"),lab_regime:$("lab_regime").value});alert("Palestra salvata.");}
 async function resetLab(){if(confirm("Riavviare la palestra da zero?")){await api("/api/reset-lab","POST",{});}}
-async function killSwitch(){if(confirm("FERMARE tutto e vendere la posizione dello sciame?")){await api("/api/kill","POST",{});poll();}}
+async function skipAnalysis(){if(confirm("Saltare la fase di analisi e iniziare subito a operare?")){await api("/api/skip-analysis","POST",{});poll();}}
+async function killSwitch(){if(confirm("FERMARE tutto e vendere le posizioni?")){await api("/api/kill","POST",{});poll();}}
 $("pause").onclick=async()=>{await api("/api/pause","POST",{});poll();};
 
 poll();setInterval(poll,1500);

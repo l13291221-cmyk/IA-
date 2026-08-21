@@ -41,20 +41,32 @@ class LiveFeed:
             self.last_error = f"ccxt non disponibile: {e}"
 
     def _prefetch_history(self) -> None:
-        """Riempi la serie con lo storico reale, così gli indicatori partono subito."""
-        if self._ex is None:
-            return
-        try:
-            ohlcv = self._ex.fetch_ohlcv(self.symbol, timeframe="1m", limit=self.prices.maxlen)
-            for c in ohlcv:
-                if c and c[4]:
-                    self.prices.append(round(float(c[4]), 2))
-                    self.times.append(c[0] / 1000.0)
-            if self.prices:
-                self._price = self.prices[-1]
-                self.is_real = True
-        except Exception:
-            pass
+        """Riempi la serie con lo storico, così gli indicatori partono subito."""
+        if self._ex is not None:
+            try:
+                ohlcv = self._ex.fetch_ohlcv(self.symbol, timeframe="1m", limit=self.prices.maxlen)
+                for c in ohlcv:
+                    if c and c[4]:
+                        self.prices.append(round(float(c[4]), 2))
+                        self.times.append(c[0] / 1000.0)
+                if self.prices:
+                    self._price = self.prices[-1]
+                    self.is_real = True
+                    return
+            except Exception:
+                pass
+        # fallback: storia sintetica (solo DEMO / offline) così gli indicatori partono subito
+        base = 30000.0 if "BTC" in self.symbol.upper() else 100.0
+        p = base
+        anchor = base
+        now = time.time()
+        n = 150
+        for i in range(n):
+            anchor *= (1.0 + self._rng.gauss(0.0, 0.004))
+            p = max(0.01, p * (1.0 + 0.06 * (anchor - p) / p + self._rng.gauss(0.0, 0.015)))
+            self.prices.append(round(p, 2))
+            self.times.append(now - (n - i) * 60)
+        self._price = p
 
     def _poll_once(self, initial: bool = False) -> None:
         price = None

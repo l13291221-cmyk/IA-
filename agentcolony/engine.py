@@ -111,16 +111,20 @@ class Engine:
 
         self.swarm = TradingSwarm(
             price_fn=lambda: self.feed.price,
-            capital=float(self.cfg["live_capital_eur"]),
+            start_capital=float(self.cfg["start_capital_eur"]),
             lab=self.colony,
             broker=broker,
-            desired_seed=20.0,
-            max_agents=int(self.cfg["swarm_agents"]),
+            max_bots=int(self.cfg["max_bots"]),
             min_order_eur=float(self.cfg["min_order_eur"]),
+            analysis_days=float(self.cfg["analysis_days"]),
+            analysis_start=float(self.cfg.get("analysis_start", 0.0)),
         )
         if not self._restored and self._pending_state:
             self.swarm.load_state(self._pending_state)
             self._restored = True
+        # memorizza l'inizio dell'analisi così il conto alla rovescia sopravvive ai riavvii
+        if not self.cfg.get("analysis_start"):
+            self.cfg = cfgmod.save({"analysis_start": self.swarm.analysis_start})
 
     def _ensure_swarm(self) -> None:
         want_live = self._can_go_live() and not self.live_stopped_reason
@@ -182,7 +186,7 @@ class Engine:
             self._ensure_swarm()
             if self.swarm is None:
                 return
-            equity = self.swarm.equity()
+            equity = self.swarm.total_equity()
 
             today = _today()
             if today != self.day or self.day_start_equity <= 0:
@@ -232,6 +236,12 @@ class Engine:
         self.paused = value
         self._log("⏸️ In pausa" if value else "▶️ Ripreso")
 
+    def skip_analysis(self) -> None:
+        with self.lock:
+            if self.swarm:
+                self.swarm.skip_analysis()
+                self.cfg = cfgmod.save({"analysis_start": self.swarm.analysis_start})
+
     def reset_lab(self) -> None:
         with self.lock:
             self.colony = self._new_colony()
@@ -241,7 +251,7 @@ class Engine:
     def snapshot(self) -> Dict[str, Any]:
         with self.lock:
             sw = self.swarm.snapshot() if self.swarm else {}
-            equity = sw.get("equity", 0.0)
+            equity = sw.get("total_equity", 0.0)
             pnl = equity - self.day_start_equity if self.day_start_equity else 0.0
             lab = self.colony.snapshot()
             return {

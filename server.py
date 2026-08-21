@@ -97,6 +97,9 @@ def make_handler(engine: Engine):
             if path == "/api/reset-lab":
                 engine.reset_lab()
                 return self._json({"ok": True})
+            if path == "/api/skip-analysis":
+                engine.skip_analysis()
+                return self._json({"ok": True})
             return self._json({"error": "not found"}, 404)
 
     return Handler

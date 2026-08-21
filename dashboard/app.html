@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgentColony — gestione</title>
+<style>
+  :root{--bg:#0b0e14;--panel:#131823;--panel2:#1a2130;--line:#232c3d;--txt:#e6ebf5;
+    --muted:#8b97ad;--green:#4ade80;--blue:#38bdf8;--amber:#fbbf24;--red:#f87171;--purple:#c084fc}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);font-size:14px;line-height:1.45;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 18px;
+    border-bottom:1px solid var(--line);background:var(--panel);position:sticky;top:0;z-index:5}
+  h1{font-size:16px;margin:0;font-weight:800;letter-spacing:.3px}
+  .mode{font-size:12px;font-weight:800;padding:4px 12px;border-radius:20px;border:1px solid}
+  .mode.demo{color:#052e16;background:var(--green);border-color:var(--green)}
+  .mode.live{color:#450a0a;background:var(--red);border-color:var(--red)}
+  .price{font-size:13px;color:var(--muted)}
+  .price b{color:var(--txt)}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+  .dot.real{background:var(--green)} .dot.sim{background:var(--amber)}
+  nav{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+  nav button,.btn{background:var(--panel2);color:var(--txt);border:1px solid var(--line);
+    padding:7px 13px;border-radius:8px;cursor:pointer;font-size:13px}
+  nav button.active{border-color:var(--blue);color:#fff}
+  .btn:hover,nav button:hover{border-color:var(--blue)}
+  main{max-width:1180px;margin:0 auto;padding:18px}
+  .tab{display:none} .tab.active{display:block}
+  .grid{display:grid;gap:14px}
+  .g4{grid-template-columns:repeat(4,1fr)} .g3{grid-template-columns:repeat(3,1fr)}
+  .g2{grid-template-columns:1fr 1fr}
+  @media(max-width:820px){.g4,.g3,.g2{grid-template-columns:1fr 1fr}}
+  @media(max-width:520px){.g4,.g3,.g2{grid-template-columns:1fr}}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .panel h2{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:0 0 12px}
+  .stat{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px}
+  .stat .k{font-size:11px;color:var(--muted)} .stat .v{font-size:22px;font-weight:800;margin-top:3px}
+  .v.green{color:var(--green)} .v.blue{color:var(--blue)} .v.red{color:var(--red)} .v.amber{color:var(--amber)}
+  canvas{width:100%;height:150px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;display:block}
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:600}
+  .feed{max-height:240px;overflow:auto;font-size:12px}
+  .feed div{padding:5px 0;border-bottom:1px solid var(--line);color:var(--muted)}
+  .feed span{color:#5b6577;margin-right:6px}
+  label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px}
+  input,select{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--txt);
+    padding:9px;border-radius:8px;font-size:14px}
+  .row{display:flex;gap:12px;flex-wrap:wrap} .row>div{flex:1;min-width:150px}
+  .save{background:var(--blue);color:#03202e;border:none;font-weight:700;margin-top:14px}
+  .danger{background:var(--red);color:#450a0a;border:none;font-weight:800}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .seg button{background:var(--panel2);border:none;color:var(--muted);padding:10px 20px;cursor:pointer;font-weight:700}
+  .seg button.on.demo{background:var(--green);color:#052e16} .seg button.on.live{background:var(--red);color:#450a0a}
+  .warn{background:#221c0c;border:1px solid #4a3c15;color:var(--amber);padding:10px 12px;border-radius:8px;font-size:12px;margin-top:10px}
+  .ok{color:var(--green)} .bad{color:var(--red)}
+  .pill{font-size:11px;padding:2px 8px;border:1px solid var(--line);border-radius:10px;color:var(--muted)}
+  .disclaimer{font-size:11px;color:var(--amber)}
+  .big{font-size:15px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🧬 AgentColony</h1>
+  <span class="mode demo" id="modeBadge">DEMO</span>
+  <span class="price"><span class="dot sim" id="priceDot"></span><b id="price">–</b> <span id="sym">BTC/EUR</span> <span id="priceReal" class="pill">simulato</span></span>
+  <nav>
+    <button data-tab="over" class="active">Panoramica</button>
+    <button data-tab="live">Soldi veri</button>
+    <button data-tab="set">Impostazioni</button>
+    <button id="pause" class="btn">⏸</button>
+  </nav>
+</header>
+
+<main>
+  <!-- ============ PANORAMICA ============ -->
+  <section class="tab active" id="tab-over">
+    <div class="grid g4">
+      <div class="stat"><div class="k">Modalità attiva</div><div class="v" id="oMode">–</div></div>
+      <div class="stat"><div class="k">Valore conto</div><div class="v green" id="oEquity">–</div></div>
+      <div class="stat"><div class="k">Posizione</div><div class="v blue" id="oPos">–</div></div>
+      <div class="stat"><div class="k">P&L oggi</div><div class="v" id="oPnl">–</div></div>
+    </div>
+
+    <div class="grid g2" style="margin-top:14px">
+      <div class="panel">
+        <h2>Andamento del conto</h2>
+        <canvas id="equityChart"></canvas>
+        <div class="row" style="margin-top:10px">
+          <div class="stat"><div class="k">Liquidità (EUR)</div><div class="v" id="oEur">–</div></div>
+          <div class="stat"><div class="k">Cripto</div><div class="v" id="oCoin">–</div></div>
+          <div class="stat"><div class="k">Limite capitale</div><div class="v amber" id="oCap">–</div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Strategia campione (dalla palestra)</h2>
+        <div id="champ" class="big"></div>
+        <h2 style="margin-top:16px">Palestra evolutiva</h2>
+        <div class="row">
+          <div class="stat"><div class="k">Popolazione</div><div class="v blue" id="labPop">–</div></div>
+          <div class="stat"><div class="k">Generazione</div><div class="v amber" id="labGen">–</div></div>
+          <div class="stat"><div class="k">Nascite/Morti</div><div class="v" id="labBD">–</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid g2" style="margin-top:14px">
+      <div class="panel"><h2>Ultime operazioni</h2>
+        <table><thead><tr><th>ora</th><th>lato</th><th>prezzo</th><th>importo</th></tr></thead>
+        <tbody id="trades"></tbody></table>
+      </div>
+      <div class="panel"><h2>Diario</h2><div class="feed" id="feed"></div></div>
+    </div>
+  </section>
+
+  <!-- ============ SOLDI VERI ============ -->
+  <section class="tab" id="tab-live">
+    <div class="panel">
+      <h2>Interruttore modalità</h2>
+      <div class="seg">
+        <button id="segDemo" class="on demo" onclick="setMode('demo')">DEMO · soldi finti</button>
+        <button id="segLive" class="live" onclick="setMode('live')">SOLDI VERI</button>
+      </div>
+      <div id="liveStatus" style="margin-top:12px"></div>
+      <div class="warn">In <b>DEMO</b> il campione opera su prezzi reali ma con denaro finto: zero rischio.
+      In <b>SOLDI VERI</b> vengono piazzati ordini reali su Kraken con le tue chiavi. Attivabile solo
+      dopo aver inserito le chiavi e accettato i rischi nelle Impostazioni.</div>
+    </div>
+
+    <div class="panel" style="margin-top:14px">
+      <h2>Limiti di rischio (soldi veri)</h2>
+      <div class="row">
+        <div><label>Capitale massimo impiegabile (EUR)</label><input id="live_capital_eur" type="number" step="1"></div>
+        <div><label>Importo massimo per ordine (EUR)</label><input id="per_order_eur" type="number" step="1"></div>
+      </div>
+      <div class="row">
+        <div><label>Stop-perdita giornaliero (EUR) → ferma tutto</label><input id="daily_loss_limit_eur" type="number" step="1"></div>
+        <div><label>Take-profit</label><input id="take_profit" type="number" step="0.01"></div>
+        <div><label>Stop-loss</label><input id="stop_loss" type="number" step="0.01"></div>
+      </div>
+      <button class="btn save" onclick="saveRisk()">Salva limiti</button>
+    </div>
+
+    <div class="panel" style="margin-top:14px">
+      <h2>Emergenza</h2>
+      <p style="color:var(--muted);font-size:13px">Chiude subito la posizione aperta e ferma il trading reale.</p>
+      <button class="btn danger" onclick="killSwitch()">🛑 FERMA TUTTO E VENDI</button>
+    </div>
+  </section>
+
+  <!-- ============ IMPOSTAZIONI ============ -->
+  <section class="tab" id="tab-set">
+    <div class="panel">
+      <h2>Chiavi API Kraken (soldi veri)</h2>
+      <div class="warn">🔒 Usa chiavi con permesso <b>solo trading</b> (NIENTE prelievi). Restano sul tuo
+      computer (file <code>data/config.json</code>, mai su GitHub). Meglio ancora: impostale come
+      variabili d'ambiente <code>KRAKEN_API_KEY</code> / <code>KRAKEN_API_SECRET</code>.</div>
+      <div id="keyState" style="margin:10px 0"></div>
+      <label>API Key</label><input id="api_key" placeholder="incolla qui la API key">
+      <label>API Secret</label><input id="api_secret" type="password" placeholder="incolla qui il secret">
+      <label style="display:flex;gap:8px;align-items:center;margin-top:12px">
+        <input type="checkbox" id="acknowledged_risk" style="width:auto">
+        <span>Ho capito che il trading con soldi veri può farmi <b>perdere tutto</b> e che nessun profitto è garantito.</span>
+      </label>
+      <button class="btn save" onclick="saveKeys()">Salva chiavi e consenso</button>
+    </div>
+
+    <div class="panel" style="margin-top:14px">
+      <h2>Mercato</h2>
+      <div class="row">
+        <div><label>Coppia</label>
+          <select id="symbol"><option>BTC/EUR</option><option>ETH/EUR</option><option>SOL/EUR</option><option>BTC/USD</option></select></div>
+        <div><label>Exchange</label><input id="exchange" value="kraken" disabled></div>
+        <div><label>Frequenza controllo prezzo (sec)</label><input id="live_poll_seconds" type="number" step="5"></div>
+      </div>
+      <button class="btn save" onclick="saveMarket()">Salva mercato</button>
+    </div>
+
+    <div class="panel" style="margin-top:14px">
+      <h2>Palestra evolutiva (demo)</h2>
+      <div class="row">
+        <div><label>Popolazione iniziale</label><input id="lab_population" type="number" step="1"></div>
+        <div><label>Velocità (tick/sec)</label><input id="lab_tps" type="number" step="1"></div>
+        <div><label>Volatilità</label><input id="lab_vol" type="number" step="0.001"></div>
+        <div><label>Regime</label><select id="lab_regime"><option>meanrev</option><option>gbm</option></select></div>
+      </div>
+      <button class="btn save" onclick="saveLab()">Salva palestra</button>
+      <button class="btn" onclick="resetLab()">↻ Riavvia palestra</button>
+    </div>
+    <p class="disclaimer" style="margin-top:14px">⚠️ Software educativo. Le prestazioni passate o simulate non predicono i risultati futuri. Il trading di cripto è ad alto rischio.</p>
+  </section>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+let TOKEN=localStorage.getItem("token")||"";
+
+async function api(path,method="GET",body=null){
+  const h={}; if(TOKEN)h["X-Token"]=TOKEN;
+  if(body)h["Content-Type"]="application/json";
+  const r=await fetch(path,{method,headers:h,body:body?JSON.stringify(body):null});
+  if(r.status===401){ const t=prompt("Password (token) del sito:"); if(t){TOKEN=t;localStorage.setItem("token",t);return api(path,method,body);} }
+  return r.json();
+}
+function fmt(n){return "€"+Number(n||0).toLocaleString("it-IT",{minimumFractionDigits:2,maximumFractionDigits:2});}
+
+// tabs
+document.querySelectorAll("nav button[data-tab]").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("nav button[data-tab]").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  $("tab-"+b.dataset.tab).classList.add("active");
+});
+
+let filled=false; // riempi i form una sola volta
+function fillForms(c){
+  if(filled)return; filled=true;
+  ["live_capital_eur","per_order_eur","daily_loss_limit_eur","take_profit","stop_loss",
+   "live_poll_seconds","lab_population","lab_tps","lab_vol"].forEach(k=>{ if($(k))$(k).value=c[k]; });
+  $("symbol").value=c.symbol; $("lab_regime").value=c.lab_regime;
+  $("acknowledged_risk").checked=!!c.acknowledged_risk;
+}
+
+function drawChart(cv,data,color){
+  const ctx=cv.getContext("2d"),W=cv.width=cv.clientWidth,H=cv.height;
+  ctx.clearRect(0,0,W,H); if(!data||data.length<2)return;
+  const mn=Math.min(...data),mx=Math.max(...data),pad=10,sp=(mx-mn)||1;
+  ctx.beginPath();
+  data.forEach((v,i)=>{const x=pad+(W-2*pad)*i/(data.length-1),y=H-pad-(H-2*pad)*(v-mn)/sp; i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+  ctx.strokeStyle=color;ctx.lineWidth=2;ctx.stroke();
+  ctx.lineTo(W-pad,H-pad);ctx.lineTo(pad,H-pad);ctx.closePath();ctx.fillStyle=color+"22";ctx.fill();
+}
+
+function champText(g){
+  return `Strategia <b class="pill">${g.strategy}</b> · MA ${g.fast_ma}/${g.slow_ma} · RSI ${g.rsi_period}
+   (${Math.round(g.rsi_buy)}/${Math.round(g.rsi_sell)}) · TP ${(g.take_profit*100).toFixed(1)}% · SL ${(g.stop_loss*100).toFixed(1)}%`;
+}
+
+async function poll(){
+  let s; try{ s=await api("/api/state"); }catch(e){ return; }
+  if(!s||!s.desk)return;
+  const d=s.desk,c=s.config,lab=s.lab;
+  // header
+  const live=d.effective_mode==="live";
+  $("modeBadge").textContent=live?"SOLDI VERI":"DEMO";
+  $("modeBadge").className="mode "+(live?"live":"demo");
+  $("price").textContent=fmt(d.price); $("sym").textContent=c.symbol;
+  $("priceDot").className="dot "+(d.price_is_real?"real":"sim");
+  $("priceReal").textContent=d.price_is_real?"reale":"simulato";
+  $("pause").textContent=s.paused?"▶":"⏸";
+  // panoramica
+  $("oMode").textContent=live?"SOLDI VERI":"DEMO"; $("oMode").className="v "+(live?"red":"green");
+  $("oEquity").textContent=fmt(d.equity);
+  $("oPos").textContent=d.in_position?("aperta @ "+fmt(d.entry_price)):"chiusa";
+  const pnl=d.day_start_equity?((d.equity-d.day_start_equity)):0;
+  $("oPnl").textContent=fmt(pnl); $("oPnl").className="v "+(pnl>=0?"green":"red");
+  $("oEur").textContent=fmt(d.eur); $("oCoin").textContent=fmt(d.coin_value);
+  $("oCap").textContent=fmt(d.capital_limit);
+  $("champ").innerHTML=champText(d.champion);
+  $("labPop").textContent=lab.population; $("labGen").textContent=lab.best_generation;
+  $("labBD").textContent=lab.births+"/"+lab.deaths;
+  drawChart($("equityChart"),d.equity_hist,"#4ade80");
+  $("trades").innerHTML=(d.trades||[]).map(t=>`<tr><td>${new Date(t.t*1000).toLocaleTimeString("it-IT")}</td>
+    <td class="${t.side==='BUY'?'ok':'bad'}">${t.side==='BUY'?'COMPRA':'VENDI'}</td>
+    <td>${fmt(t.price)}</td><td>${fmt(t.eur)}</td></tr>`).join("")||"<tr><td colspan=4 style='color:#5b6577'>nessuna operazione ancora</td></tr>";
+  $("feed").innerHTML=(s.events||[]).map(e=>`<div><span>${e.t}</span>${e.msg}</div>`).join("");
+  // soldi veri
+  $("segDemo").classList.toggle("on",!live); $("segLive").classList.toggle("on",live);
+  let st=`Modalità effettiva: <b class="${live?'bad':'ok'}">${live?'SOLDI VERI':'DEMO'}</b>. `;
+  st+= c.has_keys?'<span class="ok">chiavi presenti</span>':'<span class="bad">nessuna chiave</span>';
+  if(c.keys_from_env) st+=' <span class="pill">da variabili d\'ambiente</span>';
+  if(d.live_error) st+=`<div class="warn">${d.live_error}</div>`;
+  if(d.live_stopped_reason) st+=`<div class="warn">🛑 Trading reale fermato: ${d.live_stopped_reason}. Riattivalo qui dopo aver verificato.</div>`;
+  if(d.feed_error && !d.price_is_real) st+=`<div class="warn">Prezzo non reale: ${d.feed_error}</div>`;
+  $("liveStatus").innerHTML=st;
+  // impostazioni
+  $("keyState").innerHTML = c.has_keys?`<span class="ok">✔ chiavi configurate</span> (${c.api_key})`:`<span class="bad">✖ nessuna chiave</span>`;
+  fillForms(c);
+}
+
+// azioni
+async function setMode(m){
+  const s=await api("/api/state");
+  if(m==="live"){
+    if(!s.config.has_keys){ alert("Prima inserisci le chiavi API nelle Impostazioni."); return; }
+    if(!s.config.acknowledged_risk){ alert("Prima accetta i rischi nelle Impostazioni."); return; }
+    if(!confirm("Attivare il trading con SOLDI VERI su Kraken?\nVerranno piazzati ordini reali entro i limiti impostati.")) return;
+    await api("/api/settings","POST",{mode:"live",live_enabled:true});
+  }else{
+    await api("/api/settings","POST",{mode:"demo",live_enabled:false});
+  }
+  poll();
+}
+function num(id){return parseFloat($(id).value);}
+async function saveRisk(){
+  await api("/api/settings","POST",{live_capital_eur:num("live_capital_eur"),per_order_eur:num("per_order_eur"),
+    daily_loss_limit_eur:num("daily_loss_limit_eur"),take_profit:num("take_profit"),stop_loss:num("stop_loss")});
+  alert("Limiti salvati.");
+}
+async function saveKeys(){
+  const b={acknowledged_risk:$("acknowledged_risk").checked};
+  if($("api_key").value) b.api_key=$("api_key").value.trim();
+  if($("api_secret").value) b.api_secret=$("api_secret").value.trim();
+  await api("/api/settings","POST",b);
+  $("api_key").value="";$("api_secret").value="";
+  alert("Salvato.");poll();
+}
+async function saveMarket(){
+  await api("/api/settings","POST",{symbol:$("symbol").value,live_poll_seconds:num("live_poll_seconds")});
+  alert("Mercato salvato.");
+}
+async function saveLab(){
+  await api("/api/settings","POST",{lab_population:parseInt($("lab_population").value),lab_tps:num("lab_tps"),
+    lab_vol:num("lab_vol"),lab_regime:$("lab_regime").value});
+  alert("Palestra salvata (riavviala per applicare popolazione/regime).");
+}
+async function resetLab(){ if(confirm("Riavviare la palestra da zero?")){await api("/api/reset-lab","POST",{});} }
+async function killSwitch(){ if(confirm("FERMARE tutto e vendere la posizione?")){await api("/api/kill","POST",{});poll();} }
+$("pause").onclick=async()=>{await api("/api/pause","POST",{});poll();};
+
+poll(); setInterval(poll,1500);
+</script>
+</body>
+</html>

@@ -93,9 +93,10 @@ python3 server.py
    nessuno può portarti via i fondi: si può solo comprare/vendere.
 2. Nel sito → **Impostazioni**: incolla le chiavi, spunta il consenso ai rischi,
    salva.
-3. → **Soldi veri**: nella tabella imposta **capitale iniziale**, **numero massimo
-   di bot**, **ordine minimo**, **stop-perdita giornaliero** e **giorni di analisi**,
-   poi premi **SOLDI VERI**.
+3. → **Soldi veri**: nella tabella imposti solo **capitale iniziale** e **stop-loss**
+   (quanto sei disposto a perdere); il **resto lo decide l'IA** da sola. Puoi anche
+   alzare il numero massimo di bot (**fino a 1000**). Poi premi **SOLDI VERI** e i bot
+   operano in **autonomia**, senza chiederti il permesso a ogni operazione.
 4. Inizia con **pochi euro** che puoi permetterti di perdere del tutto. Con poco
    capitale tieni **pochi bot** (es. 1–3): parte comunque da 1 Bot e si clona da solo
    crescendo. Ricorda la **fase di analisi**: per iniziare subito, premi "salta analisi".
@@ -112,8 +113,8 @@ python3 server.py
 - **Nessuna leva**: il massimo che puoi perdere è il **capitale iniziale** che decidi
   tu; i bot non spendono più di quello che hanno. Il resto del saldo non è toccato.
 - **Chiavi solo-trading**: nessun prelievo possibile, neanche in caso di bug.
-- **Stop-perdita giornaliero**: se in un giorno perde oltre la soglia, **vende e si
-  ferma da solo**.
+- **Stop-loss**: appena la perdita rispetto al capitale iniziale raggiunge l'importo
+  che hai impostato, **vende tutto e si ferma da solo**.
 - **🛑 Tasto di emergenza**: chiude tutte le posizioni e disattiva il trading reale.
 
 ---

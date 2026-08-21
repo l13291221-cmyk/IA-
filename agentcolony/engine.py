@@ -194,9 +194,9 @@ class Engine:
                 self.day_start_equity = equity
 
             if self.effective_mode == "live":
-                loss = self.day_start_equity - equity
-                if loss >= float(self.cfg["daily_loss_limit_eur"]) > 0:
-                    self._do_kill("stop-perdita giornaliero raggiunto (-€%.2f)" % loss)
+                loss = self.swarm.start_capital - equity   # perdita rispetto al capitale iniziale
+                if loss >= float(self.cfg["stop_loss_eur"]) > 0:
+                    self._do_kill("stop-loss raggiunto (perdita €%.2f)" % loss)
                     return
 
             self.swarm.step()

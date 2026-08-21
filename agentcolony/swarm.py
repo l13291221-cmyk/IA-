@@ -286,13 +286,14 @@ class TradingSwarm:
             "reproduce_threshold": round(self.reproduce_threshold, 2),
             "ruin_threshold": round(self.ruin_threshold, 2),
             "best_generation": max((b.generation for b in self.bots), default=1),
+            "bots_total": len(self.bots),
             "analysis": {
                 "active": self.in_analysis(),
                 "days": self.analysis_days,
                 "remaining_days": round(rem / 86400, 2),
                 "progress_pct": round(100 * (1 - rem / max(self.analysis_days * 86400, 1)), 1),
             },
-            "bots": [b.snapshot(price) for b in bots],
+            "bots": [b.snapshot(price) for b in bots[:60]],   # mostra i primi 60 (per tenere leggera la UI)
             "graveyard": list(self.graveyard)[:10],
             "events": list(self.events)[:12],
             "equity_hist": list(self.equity_hist),

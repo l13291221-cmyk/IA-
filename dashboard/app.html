@@ -148,14 +148,16 @@
       <h2>Capitale e limiti</h2>
       <table class="ptable">
         <tr><td>💶 Capitale iniziale del Bot 1 (EUR)</td><td><input id="start_capital_eur" type="number" step="1"></td></tr>
-        <tr><td>Numero massimo di bot vivi</td><td><input id="max_bots" type="number" step="1"></td></tr>
+        <tr><td>🛑 Stop-loss (EUR) — quanto sei disposto a perdere</td><td><input id="stop_loss_eur" type="number" step="1"></td></tr>
+        <tr><td>Numero massimo di bot (fino a 1000)</td><td><input id="max_bots" type="number" step="1" max="1000"></td></tr>
         <tr><td>Ordine minimo (EUR) — minimo di Kraken</td><td><input id="min_order_eur" type="number" step="1"></td></tr>
-        <tr><td>Stop-perdita giornaliero (EUR) → ferma tutto</td><td><input id="daily_loss_limit_eur" type="number" step="1"></td></tr>
         <tr><td>Giorni di analisi prima di iniziare</td><td><input id="analysis_days" type="number" step="1"></td></tr>
       </table>
       <button class="btn save" onclick="saveParams()">Salva</button>
-      <div class="warn">💡 Ogni bot deve poter piazzare ordini ≥ minimo di Kraken: con poco capitale tieni
-      <b>pochi bot</b>. Lo sciame parte comunque da 1 e si clona crescendo.</div>
+      <div class="warn">🤖 Tu imposti solo <b>capitale</b> e <b>stop-loss</b>: il resto (quando comprare/vendere,
+      quali strategie, quando clonarsi) lo <b>decide l'IA da sola</b> e opera in autonomia, senza chiederti
+      il permesso a ogni operazione. Se la perdita raggiunge lo stop-loss, <b>vende e si ferma da solo</b>.
+      Con poco capitale tieni pochi bot: ognuno deve poter piazzare ordini ≥ minimo di Kraken.</div>
     </div>
 
     <div class="panel" style="margin-top:14px">
@@ -228,7 +230,7 @@ document.querySelectorAll("nav button[data-tab]").forEach(b=>b.onclick=()=>{
 let filled=false;
 function fillForms(c){
   if(filled)return;filled=true;
-  ["start_capital_eur","max_bots","min_order_eur","daily_loss_limit_eur","analysis_days",
+  ["start_capital_eur","stop_loss_eur","max_bots","min_order_eur","analysis_days",
    "live_poll_seconds","lab_population","lab_tps","lab_vol"].forEach(k=>{if($(k))$(k).value=c[k];});
   $("symbol").value=c.symbol;$("lab_regime").value=c.lab_regime;$("acknowledged_risk").checked=!!c.acknowledged_risk;
 }
@@ -287,7 +289,10 @@ async function poll(){
   drawChart($("equityChart"),sw.equity_hist,"#4ade80");
   $("labPop").textContent=lab.population;$("labGen").textContent=lab.best_generation;$("labCh").textContent=lab.champion.strategy;
   $("feed").innerHTML=(sw.events||[]).map(e=>`<div>${e}</div>`).join("")+(s.events||[]).map(e=>`<div><span>${e.t}</span>${e.msg}</div>`).join("");
-  $("bots").innerHTML=(sw.bots||[]).map((b,i)=>botCard(b,i,sw.reproduce_threshold)).join("");
+  let botsHtml=(sw.bots||[]).map((b,i)=>botCard(b,i,sw.reproduce_threshold)).join("");
+  const extra=(sw.bots_total||0)-(sw.bots||[]).length;
+  if(extra>0)botsHtml+=`<div class="botcard" style="display:flex;align-items:center;justify-content:center;color:var(--muted)">…e altri <b style="color:var(--txt);margin:0 4px">${extra}</b> bot vivi</div>`;
+  $("bots").innerHTML=botsHtml;
   const gv=sw.graveyard||[];
   $("graveWrap").style.display=gv.length?"block":"none";
   $("grave").innerHTML=gv.map(g=>`<tr><td>#${g.id}</td><td>${g.gen}</td><td class="bad">${fmt(g.final)}</td><td>${g.children}</td><td>${g.n_trades}</td><td>${g.winrate}%</td><td>${g.died}</td></tr>`).join("");
@@ -318,7 +323,7 @@ async function setMode(m){
 function num(id){return parseFloat($(id).value);}
 async function saveParams(){
   await api("/api/settings","POST",{start_capital_eur:num("start_capital_eur"),max_bots:parseInt($("max_bots").value),
-    min_order_eur:num("min_order_eur"),daily_loss_limit_eur:num("daily_loss_limit_eur"),analysis_days:num("analysis_days")});
+    min_order_eur:num("min_order_eur"),stop_loss_eur:num("stop_loss_eur"),analysis_days:num("analysis_days")});
   alert("Salvato. (Il capitale iniziale si applica ai nuovi bot / al riavvio dello sciame.)");
 }
 async function saveKeys(){

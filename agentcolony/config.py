@@ -25,11 +25,11 @@ DEFAULTS: Dict[str, Any] = {
     # chiavi API (soldi veri) — meglio usare le variabili d'ambiente
     "api_key": "",
     "api_secret": "",
-    # parametri del bot / sciame
+    # parametri del bot / sciame — imposti solo questi, il resto lo decide l'IA
     "start_capital_eur": 20.0,      # soldi con cui parte il Bot 1 (quello che rischi)
-    "max_bots": 8,                  # numero massimo di bot vivi contemporaneamente
+    "stop_loss_eur": 5.0,           # quanto sei disposto a perdere → se lo raggiunge, STOP automatico
+    "max_bots": 1000,               # numero massimo di bot vivi contemporaneamente
     "min_order_eur": 5.0,           # ordine reale minimo (Kraken rifiuta ordini troppo piccoli)
-    "daily_loss_limit_eur": 5.0,    # se perde più di così in un giorno → STOP automatico
     "analysis_days": 30,            # giorni di analisi del mercato prima di iniziare a operare
     "analysis_start": 0.0,          # timestamp inizio analisi (impostato al primo avvio)
     # palestra evolutiva (demo)

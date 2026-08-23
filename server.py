@@ -108,7 +108,8 @@ def make_handler(engine: Engine):
 def main() -> None:
     global TOKEN
     p = argparse.ArgumentParser(description="AgentColony — sito di gestione + motore 24/7")
-    p.add_argument("--port", type=int, default=8000)
+    p.add_argument("--port", type=int, default=int(os.environ.get("PORT", "8000")),
+                   help="porta (di default legge la variabile PORT, es. su Render)")
     p.add_argument("--host", default="127.0.0.1", help="127.0.0.1=solo locale (sicuro) · 0.0.0.0=esposto in rete")
     p.add_argument("--token", default="", help="password per proteggere il sito se esposto in rete")
     args = p.parse_args()

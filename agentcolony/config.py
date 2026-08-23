@@ -15,7 +15,11 @@ from typing import Any, Dict
 
 _LOCK = threading.Lock()
 
-DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
+# La cartella dei dati (config, chiavi, stato) può essere spostata via variabile
+# d'ambiente: utile su Render/cloud per puntarla a un DISCO PERSISTENTE, così lo
+# stato dei bot sopravvive ai riavvii.
+DATA_DIR = os.environ.get("AGENTCOLONY_DATA_DIR") or \
+    os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
 CONFIG_PATH = os.path.join(DATA_DIR, "config.json")
 
 DEFAULTS: Dict[str, Any] = {

@@ -1,0 +1,33 @@
+# Render Blueprint — deploy di AgentColony come servizio web sempre attivo.
+# Istruzioni complete: vedi GUIDA-24-7.md → sezione "Deploy su Render".
+#
+# ⚠️ IMPORTANTE:
+#  - "plan: starter" (a pagamento): il piano GRATIS si spegne dopo ~15 min e FERMA il bot.
+#  - Il disco persistente qui sotto conserva config, chiavi e stato dei bot tra i riavvii.
+#  - Imposta AGENTCOLONY_TOKEN nel dashboard di Render: è la PASSWORD del sito (obbligatoria,
+#    perché su Render l'indirizzo è pubblico). Le chiavi Kraken (solo per i soldi veri)
+#    vanno anch'esse nel dashboard, mai nel codice.
+
+services:
+  - type: web
+    name: agentcolony
+    runtime: python
+    plan: starter               # NON "free": il gratis dorme e ferma il bot
+    numInstances: 1             # una sola istanza = un solo motore di trading
+    buildCommand: pip install -r requirements.txt
+    startCommand: python3 server.py --host 0.0.0.0
+    healthCheckPath: /
+    autoDeploy: false           # un push non riavvia il bot senza il tuo ok
+    envVars:
+      - key: AGENTCOLONY_DATA_DIR
+        value: /var/data        # punta al disco persistente (sotto)
+      - key: AGENTCOLONY_TOKEN
+        sync: false             # ← IMPOSTALA nel dashboard: password del sito (OBBLIGATORIA)
+      - key: KRAKEN_API_KEY
+        sync: false             # ← solo per i soldi veri (chiavi SOLO-TRADING, niente prelievi)
+      - key: KRAKEN_API_SECRET
+        sync: false
+    disk:
+      name: agentcolony-data
+      mountPath: /var/data      # qui vivono config, chiavi e stato dei bot → persistono
+      sizeGB: 1

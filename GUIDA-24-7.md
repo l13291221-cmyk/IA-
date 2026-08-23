@@ -151,6 +151,36 @@ Il `--restart unless-stopped` lo fa ripartire da solo. Accedi via tunnel SSH com
 
 ---
 
+## Opzione D — Render (deploy dal browser, senza terminale)
+
+Render mette il progetto online partendo da GitHub, **senza usare SSH**. Nel repo c'è
+già il file **`render.yaml`** che configura tutto (servizio a pagamento + disco
+persistente + variabili). Segui i passi e occhio alle **3 trappole** qui sotto.
+
+### Passi
+1. Vai su **render.com**, crea un account e collega il tuo **GitHub**.
+2. **New → Blueprint**, scegli il repository `IA-` e il ramo. Render legge `render.yaml`
+   e propone il servizio già configurato.
+3. Nelle **Environment Variables** del servizio imposta:
+   - `AGENTCOLONY_TOKEN` = una password lunga → è la **password del sito** (obbligatoria).
+   - (solo soldi veri) `KRAKEN_API_KEY` e `KRAKEN_API_SECRET` (chiavi **solo-trading**).
+4. Avvia il deploy. Quando è **Live**, apri l'indirizzo `https://…onrender.com`, inserisci
+   la password e usi il sito come in locale.
+
+### ⚠️ Le 3 trappole (già gestite dal `render.yaml`)
+- **Niente piano gratuito:** il *free* si spegne dopo ~15 min di inattività e **ferma il
+  bot**. Il file usa `plan: starter` (a pagamento, ~7$/mese, non dorme).
+- **Disco persistente:** senza, Render cancella `data/` ad ogni riavvio e **perdi lo
+  stato dei bot**. Il file monta un disco su `/var/data` e ci punta il bot.
+- **Sito pubblico → token obbligatorio:** su Render l'indirizzo è raggiungibile da
+  internet. Senza `AGENTCOLONY_TOKEN` chiunque potrebbe aprire il pannello (che comanda
+  **soldi veri**!). Impostalo **prima** di attivare i soldi veri.
+
+> Tieni **una sola istanza** (già impostato): più istanze = più motori che tradano in
+> parallelo sullo stesso conto.
+
+---
+
 ## Comandi utili (VPS)
 
 ```bash

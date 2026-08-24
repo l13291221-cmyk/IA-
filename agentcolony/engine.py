@@ -109,6 +109,9 @@ class Engine:
         else:
             self.effective_mode = "demo"
 
+        poll = max(5, int(self.cfg["live_poll_seconds"]))
+        # "affitto server" €/giorno → €/ciclo (in base a ogni quanto gira il motore)
+        cost_per_tick = float(self.cfg.get("compute_cost_per_day_eur", 0.0)) * poll / 86400.0
         self.swarm = TradingSwarm(
             price_fn=lambda: self.feed.price,
             start_capital=float(self.cfg["start_capital_eur"]),
@@ -118,6 +121,7 @@ class Engine:
             min_order_eur=float(self.cfg["min_order_eur"]),
             analysis_days=float(self.cfg["analysis_days"]),
             analysis_start=float(self.cfg.get("analysis_start", 0.0)),
+            compute_cost_per_tick=cost_per_tick,
         )
         if not self._restored and self._pending_state:
             self.swarm.load_state(self._pending_state)

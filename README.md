@@ -51,6 +51,11 @@ iniziale** che decidi tu. In più: **stop-perdita giornaliero automatico** e **t
 emergenza**. Le chiavi devono essere **solo-trading** (niente prelievi), quindi il resto
 del tuo saldo non è a rischio. Così la tua idea funziona sul serio, entro un limite chiaro.
 
+**Extra "paga o muori" (opzionale, ispirato al concetto *automaton*):** puoi dare a ogni
+Bot un **affitto del server** (€/giorno): chi non guadagna abbastanza da coprirlo si
+esaurisce e muore. È una **simulazione** (attiva in demo, di default spenta) che rende la
+selezione più realistica — sopravvivono solo i Bot che rendono più di quanto "costano".
+
 ---
 
 ## Il sito (3 pagine)

@@ -159,6 +159,7 @@ class TradingSwarm:
         ruin_fraction: float = 0.2,
         analysis_days: float = 30.0,
         analysis_start: float = 0.0,
+        compute_cost_per_tick: float = 0.0,
     ):
         self.price_fn = price_fn
         self.start_capital = float(start_capital)
@@ -171,6 +172,8 @@ class TradingSwarm:
         self.ruin_threshold = self.start_capital * ruin_fraction
         self.analysis_days = float(analysis_days)
         self.analysis_start = float(analysis_start) or time.time()
+        self.compute_cost = float(compute_cost_per_tick)   # "affitto server" per ciclo, per bot
+        self.compute_paid = 0.0                            # totale simulato pagato
 
         self.bots: List[Bot] = []
         self.graveyard: deque = deque(maxlen=30)
@@ -229,6 +232,14 @@ class TradingSwarm:
         for b in self.bots:
             b.step(series, price)
 
+        # 1b) "affitto del server": ogni bot paga per restare acceso; chi non se lo
+        #     ripaga scivola verso la morte. Simulazione (solo demo, per non toccare
+        #     i saldi reali su Kraken).
+        if not self.live and self.compute_cost > 0 and self.bots:
+            for b in self.bots:
+                b.cash -= self.compute_cost
+            self.compute_paid += self.compute_cost * len(self.bots)
+
         # 2) riproduzione: chi raddoppia si clona e dà METÀ al figlio
         for b in list(self.bots):
             if b.equity(price) >= self.reproduce_threshold and len(self.bots) < self.max_bots:
@@ -285,6 +296,8 @@ class TradingSwarm:
             "max_bots": self.max_bots,
             "reproduce_threshold": round(self.reproduce_threshold, 2),
             "ruin_threshold": round(self.ruin_threshold, 2),
+            "compute_cost": round(self.compute_cost, 5),
+            "compute_paid": round(self.compute_paid, 2),
             "best_generation": max((b.generation for b in self.bots), default=1),
             "bots_total": len(self.bots),
             "analysis": {
@@ -306,6 +319,7 @@ class TradingSwarm:
             "analysis_start": self.analysis_start,
             "births": self.births,
             "deaths": self.deaths,
+            "compute_paid": self.compute_paid,
             "graveyard": list(self.graveyard),
             "equity_hist": list(self.equity_hist),
             "bots": [
@@ -323,6 +337,7 @@ class TradingSwarm:
             self.analysis_start = float(st.get("analysis_start", self.analysis_start))
             self.births = int(st.get("births", 0))
             self.deaths = int(st.get("deaths", 0))
+            self.compute_paid = float(st.get("compute_paid", 0.0))
             self.graveyard = deque(st.get("graveyard", []), maxlen=30)
             self.equity_hist = deque(st.get("equity_hist", []), maxlen=400)
             self.bots = []

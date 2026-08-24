@@ -105,6 +105,7 @@
           <div class="stat"><div class="k">Nascite/Morti</div><div class="v" id="oBD">–</div></div>
           <div class="stat"><div class="k">Generazione</div><div class="v amber" id="oGen">–</div></div>
         </div>
+        <div id="computeLine" style="margin-top:10px;font-size:12px;color:var(--muted)"></div>
       </div>
       <div class="panel">
         <h2>Palestra (cervello condiviso)</h2>
@@ -151,6 +152,7 @@
         <tr><td>Numero massimo di bot (lo decidi tu)</td><td><input id="max_bots" type="number" step="1" min="1"></td></tr>
         <tr><td>Ordine minimo (EUR) — minimo di Kraken</td><td><input id="min_order_eur" type="number" step="1"></td></tr>
         <tr><td>Giorni di analisi prima di iniziare</td><td><input id="analysis_days" type="number" step="1"></td></tr>
+        <tr><td>🖥️ Affitto server (€/giorno per bot) — "paga o muori", simulazione · 0 = spento</td><td><input id="compute_cost_per_day_eur" type="number" step="0.01" min="0"></td></tr>
       </table>
       <button class="btn save" onclick="saveParams()">Salva</button>
       <div class="warn">🤖 Tu imposti <b>solo il capitale</b> (il limite): lo <b>stop-loss</b> e <b>quanto investire</b>
@@ -229,7 +231,7 @@ document.querySelectorAll("nav button[data-tab]").forEach(b=>b.onclick=()=>{
 let filled=false;
 function fillForms(c){
   if(filled)return;filled=true;
-  ["start_capital_eur","max_bots","min_order_eur","analysis_days",
+  ["start_capital_eur","max_bots","min_order_eur","analysis_days","compute_cost_per_day_eur",
    "live_poll_seconds","lab_population","lab_tps","lab_vol"].forEach(k=>{if($(k))$(k).value=c[k];});
   $("symbol").value=c.symbol;$("lab_regime").value=c.lab_regime;$("acknowledged_risk").checked=!!c.acknowledged_risk;
 }
@@ -285,6 +287,10 @@ async function poll(){
   $("oPnl").textContent=fmt(s.pnl_today);$("oPnl").className="v "+(s.pnl_today>=0?"green":"red");
   $("oBots").textContent=sw.bots_alive;
   $("oCap").textContent=fmt(sw.start_capital);$("oBD").textContent=sw.births+"/"+sw.deaths;$("oGen").textContent=sw.best_generation;
+  const cc=c.compute_cost_per_day_eur||0;
+  $("computeLine").innerHTML=cc>0
+    ? `🖥️ Affitto server (simulato): <b style="color:var(--txt)">${fmt(sw.compute_paid)}</b> pagati · ${fmt(cc)}/giorno per bot — chi non lo copre muore.`
+    : "";
   drawChart($("equityChart"),sw.equity_hist,"#4ade80");
   $("labPop").textContent=lab.population;$("labGen").textContent=lab.best_generation;$("labCh").textContent=lab.champion.strategy;
   $("feed").innerHTML=(sw.events||[]).map(e=>`<div>${e}</div>`).join("")+(s.events||[]).map(e=>`<div><span>${e.t}</span>${e.msg}</div>`).join("");
@@ -322,7 +328,7 @@ async function setMode(m){
 function num(id){return parseFloat($(id).value);}
 async function saveParams(){
   await api("/api/settings","POST",{start_capital_eur:num("start_capital_eur"),max_bots:parseInt($("max_bots").value),
-    min_order_eur:num("min_order_eur"),analysis_days:num("analysis_days")});
+    min_order_eur:num("min_order_eur"),analysis_days:num("analysis_days"),compute_cost_per_day_eur:num("compute_cost_per_day_eur")});
   alert("Salvato. (Il capitale iniziale si applica ai nuovi bot / al riavvio dello sciame.)");
 }
 async function saveKeys(){

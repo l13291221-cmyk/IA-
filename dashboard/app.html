@@ -69,6 +69,24 @@
   .ok{color:var(--green)}.bad{color:var(--red)}
   .ptable td{padding:8px}.ptable td:first-child{color:var(--muted)}.ptable input{max-width:160px}
   .disclaimer{font-size:11px;color:var(--amber)}
+  .lead{color:var(--muted)}
+  .mods{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:10px}
+  .mod{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:13px;display:flex;flex-direction:column;gap:6px}
+  .mod h3{font-size:1.02rem;margin:0}
+  .mod p{font-size:12px;color:var(--muted);margin:0}
+  .smod{align-self:flex-start;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:.06em}
+  .smod.attivo{background:#0e2a1a;color:var(--green)}
+  .smod.proposto{background:#0d2436;color:var(--blue)}
+  .smod.approvato{background:#241d0c;color:var(--amber)}
+  .smod.bloccato{background:#2a0e0e;color:var(--red)}
+  .req{border:1px solid var(--line);border-radius:10px;padding:12px;margin-top:10px;background:var(--panel2)}
+  .req .t{font-weight:700}.req .d{font-size:13px;color:var(--muted);margin-top:3px}
+  .req .acts{display:flex;gap:8px;margin-top:9px}
+  .rstat{font-size:11px;font-weight:700;padding:3px 9px;border-radius:8px}
+  .rstat.approvato{color:var(--green)}.rstat.rifiutato{color:var(--red)}
+  .approve{background:var(--green);color:#052e16;border:none;font-weight:700}
+  .reject{background:var(--panel);border:1px solid var(--line);color:var(--txt)}
+  .countbadge{font-size:11px;font-weight:800;background:var(--red);color:#450a0a;border-radius:999px;padding:1px 8px;margin-left:6px}
 </style>
 </head>
 <body>
@@ -79,6 +97,7 @@
   <nav>
     <button data-tab="over" class="active">Panoramica</button>
     <button data-tab="live">Soldi veri</button>
+    <button data-tab="mod">Moduli</button>
     <button data-tab="set">Impostazioni</button>
     <button id="pause" class="btn">⏸</button>
   </nav>
@@ -165,6 +184,24 @@
       <h2>Emergenza</h2>
       <p style="color:var(--muted);font-size:13px">Chiude subito tutte le posizioni dei bot e ferma il trading reale.</p>
       <button class="btn danger" onclick="killSwitch()">🛑 FERMA TUTTO E VENDI</button>
+    </div>
+  </section>
+
+  <!-- ============ MODULI ============ -->
+  <section class="tab" id="tab-mod">
+    <div class="panel">
+      <h2>Come guadagna</h2>
+      <p class="lead">Per ora l'unico modulo che guadagna <b>davvero</b> è il <b>trading cripto</b>. Gli altri
+      sono predisposti ma richiedono la <b>tua approvazione</b> e un'integrazione reale — e l'IA <b>non genera
+      guadagni finti</b> né opera i tuoi account di nascosto: quando le serve un accesso, <b>te lo chiede qui</b>
+      e decidi tu.</p>
+      <div class="mods" id="mods"></div>
+    </div>
+    <div class="panel" style="margin-top:14px">
+      <h2>🙋 Richieste &amp; permessi <span id="pendBadge"></span></h2>
+      <p class="lead" style="font-size:13px">Quando un modulo ha bisogno di un accesso, l'IA lo chiede qui.
+      <b>Concedi solo ciò di cui ti fidi</b> — puoi sempre rifiutare.</p>
+      <div id="reqs"></div>
     </div>
   </section>
 
@@ -312,8 +349,29 @@ async function poll(){
   if(s.feed_error&&!s.price_is_real)st+=`<div class="warn">Prezzo non reale: ${s.feed_error}</div>`;
   $("liveStatus").innerHTML=st;
   $("keyState").innerHTML=c.has_keys?`<span class="ok">✔ chiavi configurate</span> (${c.api_key})`:`<span class="bad">✖ nessuna chiave</span>`;
+  // moduli & permessi
+  const pm=s.permits||{modules:[],requests:[],pending:0};
+  $("pendBadge").innerHTML=pm.pending>0?`<span class="countbadge">${pm.pending}</span>`:"";
+  $("mods").innerHTML=(pm.modules||[]).map(m=>{
+    let action="";
+    if(m.stato==="proposto")action=`<button class="btn approve" style="margin-top:auto;align-self:flex-start" onclick="enableModule('${m.id}')">Attiva (chiede permesso)</button>`;
+    else if(m.stato==="attivo")action=`<span style="font-size:12px;color:var(--green);margin-top:auto">● operativo</span>`;
+    else if(m.stato==="approvato")action=`<span style="font-size:11px;color:var(--muted);margin-top:auto">${m.nota||"approvato"}</span>`;
+    else action=`<span style="font-size:11px;color:var(--red);margin-top:auto">non disponibile</span>`;
+    return `<div class="mod"><span class="smod ${m.stato}">${m.stato}</span><h3>${m.nome}</h3><p>${m.desc}</p>${action}</div>`;
+  }).join("");
+  $("reqs").innerHTML=(pm.requests||[]).map(r=>{
+    if(r.stato==="in_attesa")
+      return `<div class="req"><div class="t">${r.titolo}</div><div class="d">${r.dettaglio}</div>
+        <div class="acts"><button class="btn approve" onclick="approveReq(${r.id})">✅ Approva</button>
+        <button class="btn reject" onclick="denyReq(${r.id})">⛔ Rifiuta</button></div></div>`;
+    return `<div class="req"><div class="t">${r.titolo}</div><span class="rstat ${r.stato}">${r.stato==='approvato'?'✅ approvato':'⛔ rifiutato'}</span></div>`;
+  }).join("")||"<p class='lead' style='font-size:13px'>Nessuna richiesta per ora. Quando attivi un modulo che ha bisogno di un accesso, l'IA te lo chiederà qui.</p>";
   fillForms(c);
 }
+async function enableModule(id){const r=await api("/api/module/enable","POST",{id});if(r&&r.ok===false&&r.reason)alert(r.reason);poll();}
+async function approveReq(id){await api("/api/permits/approve","POST",{id});poll();}
+async function denyReq(id){await api("/api/permits/deny","POST",{id});poll();}
 
 async function setMode(m){
   const s=await api("/api/state");

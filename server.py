@@ -100,6 +100,12 @@ def make_handler(engine: Engine):
             if path == "/api/skip-analysis":
                 engine.skip_analysis()
                 return self._json({"ok": True})
+            if path == "/api/module/enable":
+                return self._json(engine.enable_module(str(self._body().get("id", ""))))
+            if path == "/api/permits/approve":
+                return self._json(engine.approve_request(int(self._body().get("id", 0))))
+            if path == "/api/permits/deny":
+                return self._json(engine.deny_request(int(self._body().get("id", 0))))
             return self._json({"error": "not found"}, 404)
 
     return Handler

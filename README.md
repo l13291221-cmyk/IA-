@@ -58,7 +58,7 @@ selezione più realistica — sopravvivono solo i Bot che rendono più di quanto
 
 ---
 
-## Il sito (3 pagine)
+## Il sito
 
 1. **Panoramica** — come sta andando: barra della **fase di analisi** (con tasto
    "salta"), valore totale, P&L di oggi, **ogni Bot** con stato **vivo/morto**,
@@ -66,7 +66,12 @@ selezione più realistica — sopravvivono solo i Bot che rendono più di quanto
    più il **cimitero** dei Bot morti e lo stato della palestra.
 2. **Soldi veri** — l'interruttore **DEMO / SOLDI VERI**, i limiti di rischio e il
    **tasto di emergenza** (chiude tutto e vende).
-3. **Impostazioni** — dove metti le **chiavi API**, la coppia (BTC/EUR…), e i
+3. **Moduli** — come guadagna. L'unico modulo operativo è il **trading cripto**; gli
+   altri sono predisposti ma richiedono la tua approvazione. Qui c'è la casella
+   **Richieste & permessi**: quando all'IA serve un accesso **te lo chiede** e tu
+   Approvi o Rifiuti. L'IA **non genera guadagni finti** né opera i tuoi account di
+   nascosto.
+4. **Impostazioni** — dove metti le **chiavi API**, la coppia (BTC/EUR…), e i
    parametri della palestra.
 
 ---

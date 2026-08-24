@@ -29,6 +29,7 @@ from . import config as cfgmod
 from .broker import LiveBroker
 from .colony import Colony
 from .livefeed import LiveFeed
+from .permits import PermitCenter
 from .swarm import TradingSwarm
 
 STATE_PATH = os.path.join(cfgmod.DATA_DIR, "state.json")
@@ -42,6 +43,7 @@ class Engine:
         self.paused = False
 
         self.events: deque = deque(maxlen=120)
+        self.permits = PermitCenter()   # moduli di guadagno + richieste/permessi
         self.effective_mode = "demo"
         self.live_error = ""
         self.live_stopped_reason = ""
@@ -147,6 +149,8 @@ class Engine:
         self.day = st.get("day", _today())
         self.day_start_equity = float(st.get("day_start_equity", 0.0))
         self.live_stopped_reason = st.get("live_stopped_reason", "")
+        if st.get("permits"):
+            self.permits.load_state(st["permits"])
 
     def _save_state(self) -> None:
         with self.lock:
@@ -155,6 +159,7 @@ class Engine:
                 "day": self.day,
                 "day_start_equity": self.day_start_equity,
                 "live_stopped_reason": self.live_stopped_reason,
+                "permits": self.permits.to_state(),
             }
         try:
             os.makedirs(cfgmod.DATA_DIR, exist_ok=True)
@@ -253,6 +258,19 @@ class Engine:
             self.colony = self._new_colony()
             self._log("↻ Palestra riavviata da zero")
 
+    # --- moduli di guadagno e permessi ---------------------------------
+    def enable_module(self, mid: str) -> Dict[str, Any]:
+        with self.lock:
+            return self.permits.request_enable(mid)
+
+    def approve_request(self, rid: int) -> Dict[str, Any]:
+        with self.lock:
+            return self.permits.approve(rid)
+
+    def deny_request(self, rid: int) -> Dict[str, Any]:
+        with self.lock:
+            return self.permits.deny(rid)
+
     # ----------------------------------------------------------------- stato
     def snapshot(self) -> Dict[str, Any]:
         with self.lock:
@@ -279,6 +297,7 @@ class Engine:
                     "deaths": lab["deaths"],
                     "champion": self.colony.best_genome().to_dict(),
                 },
+                "permits": self.permits.snapshot(),
                 "events": list(self.events)[:16],
             }
 

@@ -182,6 +182,7 @@ class TradingSwarm:
         self.series: deque = deque(maxlen=400)
         self.equity_hist: deque = deque(maxlen=400)
         self.events: deque = deque(maxlen=60)
+        self._bot_counter = itertools.count(1)  # numera i bot da 1 in questo sciame
 
         # UN SOLO bot all'avvio (come richiesto)
         self._spawn(self._fresh_genome(), generation=1, parent=None, seed=self.start_capital)
@@ -197,6 +198,7 @@ class TradingSwarm:
 
     def _spawn(self, genome: Genome, generation: int, parent, seed: float) -> Bot:
         b = Bot(copy.copy(genome), seed, generation, parent, broker=self.broker, min_order_eur=self.min_order)
+        b.id = next(self._bot_counter)   # numerazione da 1 per questo sciame (Bot 1, 2, 3…)
         self.bots.append(b)
         return b
 

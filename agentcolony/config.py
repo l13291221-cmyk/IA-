@@ -35,8 +35,8 @@ DEFAULTS: Dict[str, Any] = {
     "max_bots": 1000,               # numero massimo di bot vivi (lo decidi tu dal sito)
     "min_order_eur": 5.0,           # ordine reale minimo (Kraken rifiuta ordini troppo piccoli)
     "analysis_days": 30,            # giorni di analisi del mercato prima di iniziare a operare
-    "compute_cost_per_day_eur": 0.0,  # "affitto del server": ogni bot paga questo al giorno.
-                                    # Chi non lo guadagna, muore. Simulazione (demo). 0 = spento.
+    "daily_target_eur": 0.50,       # QUOTA: ogni bot deve GUADAGNARE almeno questo al giorno, o GAME OVER
+    "day_minutes": 1440,            # durata di una "giornata" (1440 = un giorno vero; abbassalo per i test)
     "analysis_start": 0.0,          # timestamp inizio analisi (impostato al primo avvio)
     # palestra evolutiva (demo)
     "lab_population": 12,

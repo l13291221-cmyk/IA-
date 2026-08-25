@@ -83,8 +83,19 @@ def save(update: Dict[str, Any]) -> Dict[str, Any]:
         except Exception:
             pass
         for k, v in update.items():
-            if k in DEFAULTS:
-                cfg[k] = v
+            if k not in DEFAULTS:
+                continue  # ignora chiavi sconosciute
+            d = DEFAULTS[k]
+            try:  # forza il tipo giusto: un valore sballato non manda in crash il bot
+                if isinstance(d, bool):
+                    v = bool(v)
+                elif isinstance(d, int):
+                    v = int(v)
+                elif isinstance(d, float):
+                    v = float(v)
+            except (TypeError, ValueError):
+                continue  # valore non valido → lo scarto
+            cfg[k] = v
         with open(CONFIG_PATH, "w", encoding="utf-8") as f:
             json.dump(cfg, f, indent=2)
         try:

@@ -15,9 +15,17 @@ esponi in rete con --host 0.0.0.0, usa SEMPRE --token per proteggerlo.
 from __future__ import annotations
 
 import argparse
+import hmac
 import json
 import os
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+
+def _as_int(v) -> int:
+    try:
+        return int(v)
+    except (TypeError, ValueError):
+        return 0
 
 from agentcolony.engine import Engine
 
@@ -56,7 +64,7 @@ def make_handler(engine: Engine):
                     for kv in q[1].split("&"):
                         if kv.startswith("token="):
                             got = kv[6:]
-            return got == TOKEN
+            return hmac.compare_digest(got, TOKEN)
 
         def _body(self):
             n = int(self.headers.get("Content-Length", 0) or 0)
@@ -103,9 +111,9 @@ def make_handler(engine: Engine):
             if path == "/api/module/enable":
                 return self._json(engine.enable_module(str(self._body().get("id", ""))))
             if path == "/api/permits/approve":
-                return self._json(engine.approve_request(int(self._body().get("id", 0))))
+                return self._json(engine.approve_request(_as_int(self._body().get("id"))))
             if path == "/api/permits/deny":
-                return self._json(engine.deny_request(int(self._body().get("id", 0))))
+                return self._json(engine.deny_request(_as_int(self._body().get("id"))))
             return self._json({"error": "not found"}, 404)
 
     return Handler

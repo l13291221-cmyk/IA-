@@ -78,14 +78,19 @@ selezione più realistica — sopravvivono solo i Bot che rendono più di quanto
 
 ## Come si avvia
 
-Serve **Python 3.8+**.
+Serve **Python 3.8+** installato.
 
-### Prova subito (DEMO, anche senza internet)
+### 🖱️ Il modo più facile: doppio click
+- **Windows:** doppio click su **`AVVIA-Windows.bat`**
+- **Mac:** doppio click su **`AVVIA-Mac.command`** (la prima volta: tasto destro → *Apri* → *Apri*, per superare l'avviso di sicurezza)
+
+Il programma parte e **apre il browser da solo**. Lascia aperta la finestra nera mentre lo usi.
+
+### Oppure da terminale
 ```bash
-python3 server.py
-# apri http://localhost:8000
+python3 server.py        # apri http://localhost:8000
 ```
-Parte in DEMO. La palestra evolve, il campione opera su un conto finto. Zero rischi.
+Parte in DEMO (soldi finti). La palestra evolve, i bot operano su un conto finto. Zero rischi.
 
 ### Per prezzi reali e soldi veri
 ```bash

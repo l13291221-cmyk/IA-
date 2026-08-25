@@ -18,6 +18,8 @@ import argparse
 import hmac
 import json
 import os
+import threading
+import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 
@@ -126,6 +128,7 @@ def main() -> None:
                    help="porta (di default legge la variabile PORT, es. su Render)")
     p.add_argument("--host", default="127.0.0.1", help="127.0.0.1=solo locale (sicuro) · 0.0.0.0=esposto in rete")
     p.add_argument("--token", default="", help="password per proteggere il sito se esposto in rete")
+    p.add_argument("--open", action="store_true", help="apre automaticamente il browser all'avvio")
     args = p.parse_args()
     TOKEN = args.token or os.environ.get("AGENTCOLONY_TOKEN", "")
 
@@ -138,6 +141,14 @@ def main() -> None:
     if args.host == "0.0.0.0" and not TOKEN:
         print("  ⚠️  ATTENZIONE: esposto in rete SENZA token! Usa --token per proteggerlo.")
     print("  Modalità di default: DEMO (soldi finti). Ctrl+C per fermare.")
+    if args.open:
+        # apre il browser da solo poco dopo che il server è pronto (in silenzio se non riesce)
+        def _open_browser():
+            try:
+                webbrowser.open(url)
+            except Exception:
+                pass
+        threading.Timer(1.5, _open_browser).start()
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:

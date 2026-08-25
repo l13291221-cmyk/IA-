@@ -44,6 +44,12 @@ class Bot:
         self.coin = 0.0
         self.entry_price = 0.0
         self.day_start_equity = seed   # saldo a inizio giornata (per la quota giornaliera)
+        # leva / short (usati in DEMO; il reale resta spot long)
+        self.leverage = 1.0
+        self.allow_short = False
+        self.side = 0          # 0 = flat, +1 = long, -1 = short
+        self.margin = 0.0      # capitale bloccato come margine
+        self.units = 0.0       # unità nozionali (margine × leva / prezzo)
         self.broker = broker           # None = demo · LiveBroker = soldi veri
         self.min_order = min_order_eur
         self.alive = True
@@ -58,11 +64,17 @@ class Bot:
     def live(self) -> bool:
         return self.broker is not None
 
+    def _pos_value(self, price: float) -> float:
+        # valore corrente della posizione con leva/short; a 0 = liquidazione (margine perso)
+        return max(0.0, self.margin + self.side * self.units * (price - self.entry_price))
+
     def equity(self, price: float) -> float:
+        if self.side != 0:
+            return self.cash + self._pos_value(price)
         return self.cash + self.coin * price
 
     def in_position(self) -> bool:
-        return self.coin > 0
+        return self.coin > 0 or self.side != 0
 
     def _buy(self, price: float) -> None:
         # rischio per operazione (regola della tecnica): max 25% del saldo,
@@ -118,16 +130,69 @@ class Bot:
                                 "eur": round(eur, 2), "result": "vinto" if win else "perso",
                                 "pnl": round(pnl, 1)})
 
+    # --- posizioni con leva / short (solo DEMO) ---
+    def _open_demo(self, side: int, price: float) -> None:
+        bal = self.cash
+        frac = 0.15 if bal > 35 else (0.20 if bal > 30 else 0.25)
+        margin = bal * frac
+        if margin < 0.5 or price <= 0:
+            return
+        self.cash -= margin
+        self.side = side
+        self.margin = margin
+        self.entry_price = price
+        self.units = (margin * self.leverage) / price
+        self.n_trades += 1
+        self.trades.appendleft({"t": time.time(), "side": "LONG" if side > 0 else "SHORT",
+                                "price": round(price, 2), "eur": round(margin, 2), "result": "aperto"})
+
+    def _close_demo(self, price: float, liquidated: bool = False) -> None:
+        if self.side == 0:
+            return
+        val = self._pos_value(price)
+        fee = self.units * (price + self.entry_price) * FEE   # commissioni ~ andata+ritorno
+        cash_back = max(0.0, val - fee)
+        win = cash_back > self.margin
+        self.wins += 1 if win else 0
+        self.closed += 1
+        pnl = (self.side * (price - self.entry_price) / self.entry_price * 100 * self.leverage) if self.entry_price else 0.0
+        self.cash += cash_back
+        self.n_trades += 1
+        res = "liquidato" if liquidated else ("vinto" if win else "perso")
+        self.trades.appendleft({"t": time.time(), "side": "CHIUDI", "price": round(price, 2),
+                                "eur": round(cash_back, 2), "result": res, "pnl": round(pnl, 1)})
+        self.side = 0
+        self.margin = 0.0
+        self.units = 0.0
+        self.entry_price = 0.0
+
     def step(self, series: List[float], price: float) -> None:
-        action = strategy.decide(self.genome, series, price, self.in_position(), self.entry_price)
-        if action == strategy.BUY and not self.in_position():
-            self._buy(price)
-        elif action == strategy.SELL and self.in_position():
-            self._sell(price)
+        if self.live:
+            # SOLDI VERI: spot long, invariato (leva/short reali richiedono il margine Kraken)
+            action = strategy.decide(self.genome, series, price, self.in_position(), self.entry_price)
+            if action == strategy.BUY and not self.in_position():
+                self._buy(price)
+            elif action == strategy.SELL and self.in_position():
+                self._sell(price)
+            return
+        # DEMO: supporta long, short e leva
+        if self.side != 0:
+            if self._pos_value(price) <= 0:
+                self._close_demo(price, liquidated=True)     # liquidazione
+            elif strategy.should_exit(self.genome, series, price, self.side, self.entry_price):
+                self._close_demo(price)
+        else:
+            sig = strategy.signal(self.genome, series, price)
+            if sig == "long":
+                self._open_demo(1, price)
+            elif sig == "short" and self.allow_short:
+                self._open_demo(-1, price)
 
     def flatten(self, price: float) -> None:
-        if self.in_position():
+        if self.live and self.coin > 0:
             self._sell(price)
+        elif self.side != 0:
+            self._close_demo(price)
 
     def winrate(self) -> float:
         return round(100 * self.wins / self.closed, 1) if self.closed else 0.0
@@ -140,8 +205,10 @@ class Bot:
             "status": "vivo",
             "equity": round(self.equity(price), 2),
             "cash": round(self.cash, 2),
-            "coin_value": round(self.coin * price, 2),
+            "coin_value": round((self.units * price if self.side != 0 else self.coin * price), 2),
             "in_position": self.in_position(),
+            "side": ("long" if self.side > 0 else ("short" if self.side < 0 else "flat")),
+            "leverage": round(self.leverage, 1),
             "children": self.children,
             "n_trades": self.n_trades,
             "wins": self.wins,
@@ -166,6 +233,8 @@ class TradingSwarm:
         analysis_start: float = 0.0,
         daily_target: float = 0.5,
         day_seconds: float = 86400.0,
+        leverage: float = 1.0,
+        allow_short: bool = False,
     ):
         self.price_fn = price_fn
         self.start_capital = float(start_capital)
@@ -183,6 +252,8 @@ class TradingSwarm:
         self.day_start_time = time.time()
         self.day_number = 1
         self.game_overs = 0
+        self.leverage = max(1.0, float(leverage))
+        self.allow_short = bool(allow_short)
 
         self.bots: List[Bot] = []
         self.graveyard: deque = deque(maxlen=30)
@@ -210,6 +281,8 @@ class TradingSwarm:
         b.id = next(self._bot_counter)   # numerazione da 1 per questo sciame (Bot 1, 2, 3…)
         b.genome.stop_loss = 0.10        # stop-loss -10% (regola della tecnica)
         b.genome.take_profit = 0.15      # obiettivo verso l'alto (rapporto rischio/rendimento favorevole)
+        b.leverage = self.leverage       # leva (demo)
+        b.allow_short = self.allow_short # consenti operazioni al ribasso (demo)
         self.bots.append(b)
         return b
 

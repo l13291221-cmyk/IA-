@@ -37,6 +37,8 @@ DEFAULTS: Dict[str, Any] = {
     "analysis_days": 30,            # giorni di analisi del mercato prima di iniziare a operare
     "daily_target_eur": 0.50,       # QUOTA: ogni bot deve GUADAGNARE almeno questo al giorno, o GAME OVER
     "day_minutes": 1440,            # durata di una "giornata" (1440 = un giorno vero; abbassalo per i test)
+    "leverage": 1.0,                # leva (1 = niente leva). In DEMO amplifica guadagni E perdite.
+    "allow_short": False,           # consenti operazioni al ribasso (short). In DEMO.
     "analysis_start": 0.0,          # timestamp inizio analisi (impostato al primo avvio)
     # palestra evolutiva (demo)
     "lab_population": 12,

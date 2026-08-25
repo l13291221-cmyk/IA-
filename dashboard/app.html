@@ -172,7 +172,10 @@
         <tr><td>Giorni di analisi prima di iniziare</td><td><input id="analysis_days" type="number" step="1"></td></tr>
         <tr><td>🎯 Quota giornaliera (€ da guadagnare/giorno, o GAME OVER)</td><td><input id="daily_target_eur" type="number" step="0.10" min="0"></td></tr>
         <tr><td>📅 Durata giornata (minuti) — 1440 = 1 giorno vero; abbassa per i test</td><td><input id="day_minutes" type="number" step="1" min="1"></td></tr>
+        <tr><td>⚡ Leva (1 = niente leva) — <b style="color:var(--red)">amplifica guadagni E perdite</b></td><td><input id="leverage" type="number" step="1" min="1"></td></tr>
+        <tr><td>🔻 Consenti operazioni al ribasso (short)</td><td style="text-align:right"><input id="allow_short" type="checkbox" style="width:auto;height:20px"></td></tr>
       </table>
+      <div class="warn">⚡ <b>Leva e short</b>: in DEMO funzionano subito (li vedi amplificare guadagni, perdite e persino le <b>liquidazioni</b>). Sui <b>soldi veri</b> richiedono il <b>margine attivo su Kraken</b> (permessi + idoneità del tuo Paese + minimi): sul reale il bot resta spot long finché non abiliti il margine. Con la leva puoi perdere il capitale <b>molto più in fretta</b>.</div>
       <button class="btn save" onclick="saveParams()">Salva</button>
       <div class="warn">🤖 Tu imposti <b>solo il capitale</b> (il limite): lo <b>stop-loss</b> e <b>quanto investire</b>
       ogni volta li <b>decide l'IA da sola</b>, sempre entro il tuo capitale. Comprare/vendere, strategie e
@@ -268,9 +271,10 @@ document.querySelectorAll("nav button[data-tab]").forEach(b=>b.onclick=()=>{
 let filled=false;
 function fillForms(c){
   if(filled)return;filled=true;
-  ["start_capital_eur","max_bots","min_order_eur","analysis_days","daily_target_eur","day_minutes",
+  ["start_capital_eur","max_bots","min_order_eur","analysis_days","daily_target_eur","day_minutes","leverage",
    "live_poll_seconds","lab_population","lab_tps","lab_vol"].forEach(k=>{if($(k))$(k).value=c[k];});
   $("symbol").value=c.symbol;$("lab_regime").value=c.lab_regime;$("acknowledged_risk").checked=!!c.acknowledged_risk;
+  $("allow_short").checked=!!c.allow_short;
 }
 function drawChart(cv,data,color){
   const ctx=cv.getContext("2d"),W=cv.width=cv.clientWidth,H=cv.height;ctx.clearRect(0,0,W,H);
@@ -280,15 +284,19 @@ function drawChart(cv,data,color){
 }
 function botCard(b,i,repro){
   const pct=Math.max(0,Math.min(100,(b.equity/repro)*100));
+  const esito=t=>t.result==='vinto'?'✅ vinto':t.result==='perso'?'❌ perso':t.result==='liquidato'?'💥 liquidato':'· aperto';
   const rows=(b.trades||[]).map(t=>`<tr><td>${hhmm(t.t)}</td><td>${t.side}</td><td>${fmt(t.price)}</td>
-    <td>${fmt(t.eur)}</td><td class="res ${t.result}">${t.result==='vinto'?'✅ vinto':t.result==='perso'?'❌ perso':'· aperto'}${t.pnl!==undefined?' ('+t.pnl+'%)':''}</td></tr>`).join("")
+    <td>${fmt(t.eur)}</td><td class="res ${t.result}">${esito(t)}${t.pnl!==undefined?' ('+t.pnl+'%)':''}</td></tr>`).join("")
     ||"<tr><td colspan=5 style='color:#5b6577'>nessuna operazione ancora</td></tr>";
+  const lev=b.leverage>1?`<span class="pill" style="color:var(--amber)">${b.leverage}x</span>`:"";
+  const pos=b.side==='long'?`<span class="pill" style="color:var(--green)">LONG</span>`:b.side==='short'?`<span class="pill" style="color:var(--red)">SHORT ▼</span>`:"";
   return `<div class="botcard${i===0?' top':''}">
     <div class="bothead">
       <span class="botname">Bot #${b.id}</span>
       <span class="badge vivo">VIVO</span>
       <span class="pill">gen ${b.gen}</span>
       <span class="pill tag ${b.strategy}">${b.strategy}</span>
+      ${lev}${pos}
       <span class="money">${fmt(b.equity)}</span>
     </div>
     <div style="font-size:12px;color:var(--muted);display:flex;gap:14px">
@@ -384,7 +392,8 @@ async function setMode(m){
 function num(id){return parseFloat($(id).value);}
 async function saveParams(){
   await api("/api/settings","POST",{start_capital_eur:num("start_capital_eur"),max_bots:parseInt($("max_bots").value),
-    min_order_eur:num("min_order_eur"),analysis_days:num("analysis_days"),daily_target_eur:num("daily_target_eur"),day_minutes:num("day_minutes")});
+    min_order_eur:num("min_order_eur"),analysis_days:num("analysis_days"),daily_target_eur:num("daily_target_eur"),day_minutes:num("day_minutes"),
+    leverage:num("leverage"),allow_short:$("allow_short").checked});
   alert("Salvato. (Il capitale iniziale si applica ai nuovi bot / al riavvio dello sciame.)");
 }
 async function saveKeys(){

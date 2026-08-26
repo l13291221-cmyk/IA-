@@ -39,6 +39,10 @@ class MultiFeed:
         self._stop = False
         self._d: Dict[str, dict] = {s: {"price": 0.0, "series": deque(maxlen=history), "anchor": 0.0}
                                     for s in self.symbols}
+        # candele multi-timeframe (per la tecnica Trend+Ritracciamento+Conferma). Solo dati reali.
+        self._tf: Dict[str, Dict[str, list]] = {s: {"4h": [], "1h": [], "15m": []} for s in self.symbols}
+        self._tf_lock = threading.Lock()
+        self.ta_ready = False
         self._ex = None
         try:
             import ccxt  # type: ignore
@@ -46,6 +50,34 @@ class MultiFeed:
         except Exception as e:
             self.last_error = f"ccxt non disponibile: {e}"
         self._prefetch(history)
+
+    # --- candele multi-timeframe (4H/1H/15M) per la tecnica di trading ---
+    def _refresh_tf_once(self) -> None:
+        if self._ex is None:
+            return
+        limits = {"4h": 260, "1h": 120, "15m": 60}   # abbastanza per EMA200 su 4H, EMA20 su 1H, ecc.
+        got_any = False
+        for s in self.symbols:
+            for tf, lim in limits.items():
+                try:
+                    rows = self._ex.fetch_ohlcv(s, timeframe=tf, limit=lim)
+                    if rows:
+                        with self._tf_lock:
+                            self._tf[s][tf] = [[float(x) for x in r] for r in rows]
+                        got_any = True
+                except Exception as e:
+                    self.last_error = str(e)[:120]
+        if got_any:
+            self.ta_ready = True
+
+    def _tf_loop(self) -> None:
+        while not self._stop:
+            self._refresh_tf_once()
+            time.sleep(180.0)   # i timeframe alti cambiano lentamente: basta ogni 3 min
+
+    def ohlcv(self, sym: str, tf: str) -> list:
+        with self._tf_lock:
+            return list(self._tf.get(sym, {}).get(tf, []))
 
     def _synth_base(self, sym: str) -> float:
         return float(_BASE_PRICES.get(sym.split("/")[0], 100.0))
@@ -99,6 +131,7 @@ class MultiFeed:
 
     def start(self) -> None:
         threading.Thread(target=self.run, daemon=True).start()
+        threading.Thread(target=self._tf_loop, daemon=True).start()   # candele 4H/1H/15M
 
     def stop(self) -> None:
         self._stop = True

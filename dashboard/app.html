@@ -287,8 +287,12 @@ function drawChart(cv,data,color){
 function botCard(b,i,repro){
   const pct=Math.max(0,Math.min(100,(b.equity/repro)*100));
   const esito=t=>t.result==='vinto'?'✅ vinto':t.result==='perso'?'❌ perso':t.result==='liquidato'?'💥 liquidato':'· aperto';
-  const rows=(b.trades||[]).map(t=>`<tr><td>${hhmm(t.t)}</td><td>${t.side}</td><td>${fmt(t.price)}</td>
-    <td>${fmt(t.eur)}</td><td class="res ${t.result}">${esito(t)}${t.pnl!==undefined?' ('+t.pnl+'%)':''}</td></tr>`).join("")
+  const rows=(b.trades||[]).map(t=>{
+    const main=`<tr><td>${hhmm(t.t)}</td><td>${t.side}</td><td>${fmt(t.price)}</td>
+    <td>${fmt(t.eur)}</td><td class="res ${t.result}">${esito(t)}${t.pnl!==undefined?' ('+t.pnl+'%)':''}</td></tr>`;
+    const why=t.reason?`<tr><td colspan="5" style="color:var(--muted);font-size:11px;padding:0 0 4px 0">↳ ${t.reason}</td></tr>`:"";
+    return main+why;
+  }).join("")
     ||"<tr><td colspan=5 style='color:#5b6577'>nessuna operazione ancora</td></tr>";
   const lev=b.leverage>1?`<span class="pill" style="color:var(--amber)">${b.leverage}x</span>`:"";
   const pos=b.side==='long'?`<span class="pill" style="color:var(--green)">LONG</span>`:b.side==='short'?`<span class="pill" style="color:var(--red)">SHORT ▼</span>`:"";

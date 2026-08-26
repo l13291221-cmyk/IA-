@@ -11,6 +11,17 @@ def sma(values: Sequence[float], n: int) -> Optional[float]:
     return sum(values[-n:]) / n
 
 
+def ema(values: Sequence[float], n: int) -> Optional[float]:
+    """Media mobile ESPONENZIALE (dà più peso ai prezzi recenti)."""
+    if n <= 0 or len(values) < n:
+        return None
+    k = 2.0 / (n + 1)
+    e = sum(values[:n]) / n            # innesco con la media semplice dei primi n
+    for v in values[n:]:
+        e = v * k + e * (1 - k)
+    return e
+
+
 def rsi(values: Sequence[float], n: int = 14) -> Optional[float]:
     """Relative Strength Index (0-100) sugli ultimi n periodi."""
     if len(values) < n + 1:

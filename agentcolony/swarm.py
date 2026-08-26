@@ -27,6 +27,7 @@ from typing import Any, Callable, Dict, List, Optional
 from .agent import FEE
 from .genome import Genome, crossover, mutate
 from . import strategy
+from . import signals
 
 _bot_id = itertools.count(1)
 
@@ -142,7 +143,7 @@ class Bot:
                                 "pnl": round(pnl, 1)})
 
     # --- posizioni con leva / short (solo DEMO) ---
-    def _open_demo(self, side: int, price: float) -> None:
+    def _open_demo(self, side: int, price: float, reason: str = "") -> None:
         bal = self.cash
         frac = 0.15 if bal > 35 else (0.20 if bal > 30 else 0.25)
         margin = bal * frac
@@ -154,8 +155,11 @@ class Bot:
         self.entry_price = price
         self.units = (margin * self.leverage) / price
         self.n_trades += 1
-        self.trades.appendleft({"t": time.time(), "side": "LONG" if side > 0 else "SHORT",
-                                "price": round(price, 2), "eur": round(margin, 2), "result": "aperto"})
+        row = {"t": time.time(), "side": "LONG" if side > 0 else "SHORT",
+               "price": round(price, 2), "eur": round(margin, 2), "result": "aperto"}
+        if reason:
+            row["reason"] = reason
+        self.trades.appendleft(row)
 
     def _close_demo(self, price: float, liquidated: bool = False) -> None:
         if self.side == 0:
@@ -205,18 +209,26 @@ class Bot:
             self.cooldown -= 1   # in pausa: niente nuove operazioni per qualche ciclo
         else:
             # scansiona TUTTE le cripto e sceglie dove c'è un'opportunità
+            use_ta = getattr(feed, "ta_ready", False)   # tecnica multi-timeframe solo su dati reali
             candidates = []
             for s in feed.symbols:
                 pr = feed.price(s)
                 if pr <= 0:
                     continue
-                sig = strategy.signal(self.genome, feed.series(s), pr)
-                if sig == "long" or (sig == "short" and self.allow_short):
-                    candidates.append((s, sig, pr))
+                if use_ta:
+                    # TECNICA: Trend(4H) + Ritracciamento(1H) + Conferma(15M) + Volume
+                    res = signals.evaluate(feed, s)
+                    if res and (res["side"] == "long" or (res["side"] == "short" and self.allow_short)):
+                        candidates.append((s, res["side"], pr, res.get("reason", "")))
+                else:
+                    # offline / senza dati reali: strategia semplice, così la demo non resta ferma
+                    sig = strategy.signal(self.genome, feed.series(s), pr)
+                    if sig == "long" or (sig == "short" and self.allow_short):
+                        candidates.append((s, sig, pr, ""))
             if candidates:
-                s, sig, pr = random.choice(candidates)   # bot diversi scelgono cripto diverse
+                s, sig, pr, reason = random.choice(candidates)   # bot diversi scelgono cripto diverse
                 self.symbol = s
-                self._open_demo(1 if sig == "long" else -1, pr)
+                self._open_demo(1 if sig == "long" else -1, pr, reason)
         self._mark(feed)
 
     def flatten(self, feed) -> None:

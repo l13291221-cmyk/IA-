@@ -53,6 +53,7 @@ class Bot:
         self.units = 0.0       # unità nozionali (margine × leva / prezzo)
         self.symbol: Optional[str] = None   # cripto attualmente operata (multi-asset, demo)
         self._pos_val = 0.0    # valore posizione in EUR (aggiornato a ogni ciclo)
+        self.cooldown = 0      # cicli di pausa dopo una chiusura (meno operazioni = meno commissioni)
         self.broker = broker           # None = demo · LiveBroker = soldi veri
         self.min_order = min_order_eur
         self.alive = True
@@ -176,6 +177,7 @@ class Bot:
         self.units = 0.0
         self.entry_price = 0.0
         self.symbol = None
+        self.cooldown = 6   # aspetta qualche ciclo prima di riaprire (evita di rientrare a raffica)
 
     def step(self, feed) -> None:
         if self.live:
@@ -199,6 +201,8 @@ class Bot:
                     self._close_demo(price, liquidated=True)     # liquidazione
                 elif strategy.should_exit(self.genome, series, price, self.side, self.entry_price):
                     self._close_demo(price)
+        elif self.cooldown > 0:
+            self.cooldown -= 1   # in pausa: niente nuove operazioni per qualche ciclo
         else:
             # scansiona TUTTE le cripto e sceglie dove c'è un'opportunità
             candidates = []

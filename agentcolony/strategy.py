@@ -42,21 +42,30 @@ def decide(genome: Genome, series: List[float], price: float,
 
 def signal(genome: Genome, series: List[float], price: float):
     """Che posizione APRIRE se siamo liquidi: 'long', 'short' o None.
+
+    Regole per NON operare a vanvera (le commissioni mangiano i conti piccoli):
+    - se il mercato è troppo PIATTO non si entra (non vale la commissione);
+    - si chiede una CONFERMA di slancio, così non si "prende il coltello che cade"
+      (ipervenduto ma ancora in caduta) né si insegue un rialzo già esaurito.
     (Usata in demo per supportare anche le operazioni al ribasso / con leva.)"""
     fast = ind.sma(series, genome.fast_ma)
     slow = ind.sma(series, genome.slow_ma)
     r = ind.rsi(series, genome.rsi_period)
     if fast is None or slow is None or r is None:
         return None
+    vol = ind.volatility(series, 20) or 0.0
+    if vol < 0.0012:            # mercato quasi fermo: meglio stare fuori (le fee lo dissanguano)
+        return None
+    mom = ind.momentum(series, 3) or 0.0   # micro-slancio delle ultime barre (conferma)
     if genome.strategy == "trend":
-        if fast > slow and r < genome.rsi_sell:
+        if fast > slow and r < genome.rsi_sell and mom > 0:
             return "long"
-        if fast < slow and r > genome.rsi_buy:
+        if fast < slow and r > genome.rsi_buy and mom < 0:
             return "short"
-    else:  # meanrev
-        if r < genome.rsi_buy:
+    else:  # meanrev: entra sull'eccesso SOLO quando ha iniziato a rientrare
+        if r < genome.rsi_buy and mom > 0:
             return "long"
-        if r > genome.rsi_sell:
+        if r > genome.rsi_sell and mom < 0:
             return "short"
     return None
 

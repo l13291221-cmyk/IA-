@@ -107,6 +107,7 @@
   <!-- ============ PANORAMICA ============ -->
   <section class="tab active" id="tab-over">
     <div id="analysisBox"></div>
+    <div id="renderBox"></div>
 
     <div class="grid g4">
       <div class="stat"><div class="k">Modalità</div><div class="v" id="oMode">–</div></div>
@@ -314,6 +315,10 @@ function botCard(b,i,repro){
 async function poll(){
   let s;try{s=await api("/api/state");}catch(e){return;}
   if(!s||!s.swarm)return;
+  if(s.render){RENDER={online:s.render.online,total:s.render.spindown_total,idle:s.render.idle_seconds,
+      ping_count:s.render.ping_count,interval:s.render.ping_interval,ping_last_ago:s.render.ping_last_ago,at:Date.now()};}
+  else{RENDER=null;}
+  renderRenderCard();
   const sw=s.swarm,c=s.config,lab=s.lab,live=s.effective_mode==="live",an=sw.analysis;
   $("modeBadge").textContent=live?"SOLDI VERI":"DEMO";$("modeBadge").className="mode "+(live?"live":"demo");
   $("price").textContent=fmt(s.price);$("sym").textContent=c.symbol;
@@ -411,6 +416,35 @@ async function skipAnalysis(){if(confirm("Saltare la fase di analisi e iniziare 
 async function killSwitch(){if(confirm("FERMARE tutto e vendere le posizioni?")){await api("/api/kill","POST",{});poll();}}
 $("pause").onclick=async()=>{await api("/api/pause","POST",{});poll();};
 
+// ---- Render "resta acceso": timer di spegnimento + auto-ping ----
+let RENDER=null;
+function fmtms(t){t=Math.max(0,Math.round(t));const m=Math.floor(t/60),s=t%60;return m+":"+(s<10?"0":"")+s;}
+function renderRenderCard(){
+  const box=$("renderBox");if(!box)return;
+  if(!RENDER||!RENDER.online){box.innerHTML="";return;}
+  const el=(Date.now()-RENDER.at)/1000, total=RENDER.total||900;
+  const rem=Math.max(0,total-(RENDER.idle+el));
+  const pct=Math.max(0,Math.min(100,rem/total*100));
+  const col=rem<120?"var(--red)":rem<300?"var(--amber)":"var(--green)";
+  let pingLine="";
+  if(RENDER.interval>0){
+    const ago=(RENDER.ping_last_ago==null?null:RENDER.ping_last_ago+el);
+    const next=(ago==null?RENDER.interval:Math.max(0,RENDER.interval-ago));
+    pingLine=`🔁 Prossimo auto-ping tra <b style="color:var(--txt)">${fmtms(next)}</b> · ping fatti finora: <b style="color:var(--txt)">${RENDER.ping_count}</b>`;
+  }
+  box.innerHTML=`<div class="panel" style="margin-bottom:14px">
+    <h2>🟢 Online — il bot si tiene acceso da solo</h2>
+    <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+      <span style="font-size:13px;color:var(--muted)">Render si spegnerebbe (senza visite) tra:</span>
+      <span style="font-size:30px;font-weight:800;color:${col};font-variant-numeric:tabular-nums">${fmtms(rem)}</span>
+      <span style="font-size:12px;color:var(--muted)">/ ${fmtms(total)}</span>
+    </div>
+    <div class="bar" style="margin-top:8px"><i style="width:${pct}%;background:${col}"></i></div>
+    <div style="margin-top:8px;font-size:13px">${pingLine}</div>
+    <div style="margin-top:6px;font-size:11px;color:var(--muted)">↺ Riparte da 15:00 a ogni auto-ping (o quando apri la pagina), così non arriva mai a zero e non si spegne. Anche tenere aperta questa pagina lo tiene sveglio: qui vedi cosa succede quando non lo stai guardando.</div>
+  </div>`;
+}
+setInterval(renderRenderCard,1000);
 poll();setInterval(poll,1500);
 </script>
 </body>

@@ -36,6 +36,31 @@ from agentcolony.engine import Engine
 HTML_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dashboard")
 TOKEN = ""
 
+# stato "resta acceso": per mostrare sul sito il timer di spegnimento di Render e
+# l'auto-ping. `last_visit` viene azzerato da una visita VERA (apertura pagina) o dal
+# ping automatico; NON dai controlli di stato in background, così il timer si vede scorrere.
+_STATS_LOCK = threading.Lock()
+_STATS = {"last_visit": time.time(), "ping_count": 0, "ping_last": 0.0,
+          "ping_interval": 0, "online": False}
+
+
+def _touch_visit() -> None:
+    with _STATS_LOCK:
+        _STATS["last_visit"] = time.time()
+
+
+def _render_stats() -> dict:
+    with _STATS_LOCK:
+        now = time.time()
+        return {
+            "online": _STATS["online"],
+            "spindown_total": 900,   # Render gratis: ~15 min senza visite → si spegne
+            "idle_seconds": max(0, round(now - _STATS["last_visit"])),
+            "ping_count": _STATS["ping_count"],
+            "ping_interval": _STATS["ping_interval"],
+            "ping_last_ago": (round(now - _STATS["ping_last"]) if _STATS["ping_last"] else None),
+        }
+
 
 def _page(name: str) -> bytes:
     with open(os.path.join(HTML_DIR, name), "rb") as f:
@@ -85,10 +110,13 @@ def make_handler(engine: Engine):
                 if not self._authed():
                     return self._json({"error": "token"}, 401)
                 if path == "/api/state":
-                    return self._json(engine.snapshot())
+                    snap = engine.snapshot()
+                    snap["render"] = _render_stats()   # timer spegnimento + auto-ping
+                    return self._json(snap)
                 return self._json({"error": "not found"}, 404)
             try:
                 if path in ("/", "/index.html", "/app.html"):
+                    _touch_visit()   # una visita VERA azzera il timer di spegnimento
                     return self._send(200, "text/html; charset=utf-8", _page("app.html"))
                 return self._send(404, "text/plain; charset=utf-8", b"404")
             except FileNotFoundError:
@@ -98,6 +126,7 @@ def make_handler(engine: Engine):
             path = self.path.split("?")[0]
             if not self._authed():
                 return self._json({"error": "token"}, 401)
+            _touch_visit()   # un'azione VERA (click) azzera il timer di spegnimento
             if path == "/api/settings":
                 return self._json({"ok": True, "config": engine.apply_settings(self._body())})
             if path == "/api/pause":
@@ -141,12 +170,18 @@ def _keep_awake_loop() -> None:
         return
     interval = _as_int(os.environ.get("SELF_PING_SECONDS")) or 300   # default 5 min
     interval = max(60, min(interval, 840))   # tra 1 e 14 min (sotto il limite di 15)
+    with _STATS_LOCK:
+        _STATS["online"] = True
+        _STATS["ping_interval"] = interval
     while True:
         time.sleep(interval)
         try:   # apre la home pubblica (non serve token): basta la visita a resettare il timer
             urllib.request.urlopen(url, timeout=20).read(64)
         except Exception:
             pass
+        with _STATS_LOCK:
+            _STATS["ping_count"] += 1
+            _STATS["ping_last"] = time.time()
 
 
 def main() -> None:

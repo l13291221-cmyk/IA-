@@ -26,6 +26,7 @@ from collections import deque
 from typing import Any, Dict, Optional
 
 from . import config as cfgmod
+from . import statestore
 from .broker import LiveBroker
 from .colony import Colony
 from .livefeed import MultiFeed
@@ -53,6 +54,7 @@ class Engine:
 
         self._pending_state: Optional[Dict[str, Any]] = None
         self._restored = False
+        self._last_remote = 0.0   # ultimo backup su GitHub (se configurato)
 
         # feed prezzo reale su PIÙ cripto (è il bot a scegliere su quale operare)
         self.feed = MultiFeed(self.cfg["symbol"], poll_seconds=min(20, self.cfg["live_poll_seconds"]))
@@ -140,10 +142,21 @@ class Engine:
 
     # ------------------------------------------------------------- persistenza
     def _load_state(self) -> None:
+        st = None
         try:
             with open(STATE_PATH, "r", encoding="utf-8") as f:
                 st = json.load(f)
         except Exception:
+            st = None
+        # se in locale non c'è nulla (es. host riavviato da zero), prova il backup su GitHub
+        if not st and statestore.enabled():
+            try:
+                st = statestore.load()
+                if st:
+                    self._log("💾 Stato recuperato dal backup su GitHub (il bot si era salvato da solo)")
+            except Exception:
+                st = None
+        if not st:
             return
         self._pending_state = st.get("swarm")
         self.day = st.get("day", _today())
@@ -167,6 +180,20 @@ class Engine:
                 json.dump(st, f, indent=2)
         except Exception:
             pass
+        # backup su GitHub (se configurato), a intervalli, così sopravvive ai riavvii dell'host.
+        # Salva SOLO lo stato dei bot: nessuna chiave API finisce mai qui.
+        if statestore.enabled():
+            try:
+                every = max(60.0, float(os.environ.get("STATE_BACKUP_SECONDS", "180")))
+            except (TypeError, ValueError):
+                every = 180.0
+            now = time.time()
+            if now - self._last_remote >= every:
+                self._last_remote = now
+                try:
+                    statestore.save(st)
+                except Exception:
+                    pass
 
     # -------------------------------------------------------------- i 3 loop
     def _lab_loop(self) -> None:

@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import copy
 import itertools
+import random
 import time
 from collections import deque
 from typing import Any, Callable, Dict, List, Optional
@@ -50,6 +51,8 @@ class Bot:
         self.side = 0          # 0 = flat, +1 = long, -1 = short
         self.margin = 0.0      # capitale bloccato come margine
         self.units = 0.0       # unità nozionali (margine × leva / prezzo)
+        self.symbol: Optional[str] = None   # cripto attualmente operata (multi-asset, demo)
+        self._pos_val = 0.0    # valore posizione in EUR (aggiornato a ogni ciclo)
         self.broker = broker           # None = demo · LiveBroker = soldi veri
         self.min_order = min_order_eur
         self.alive = True
@@ -68,10 +71,17 @@ class Bot:
         # valore corrente della posizione con leva/short; a 0 = liquidazione (margine perso)
         return max(0.0, self.margin + self.side * self.units * (price - self.entry_price))
 
-    def equity(self, price: float) -> float:
-        if self.side != 0:
-            return self.cash + self._pos_value(price)
-        return self.cash + self.coin * price
+    def _mark(self, feed) -> None:
+        # aggiorna il valore in EUR della posizione al prezzo attuale della sua cripto
+        if self.symbol and self.side != 0:
+            self._pos_val = self._pos_value(feed.price(self.symbol))
+        elif self.symbol and self.coin > 0:
+            self._pos_val = self.coin * feed.price(self.symbol)
+        else:
+            self._pos_val = 0.0
+
+    def equity(self) -> float:
+        return self.cash + self._pos_val
 
     def in_position(self) -> bool:
         return self.coin > 0 or self.side != 0
@@ -165,50 +175,69 @@ class Bot:
         self.margin = 0.0
         self.units = 0.0
         self.entry_price = 0.0
+        self.symbol = None
 
-    def step(self, series: List[float], price: float) -> None:
+    def step(self, feed) -> None:
         if self.live:
-            # SOLDI VERI: spot long, invariato (leva/short reali richiedono il margine Kraken)
-            action = strategy.decide(self.genome, series, price, self.in_position(), self.entry_price)
-            if action == strategy.BUY and not self.in_position():
-                self._buy(price)
-            elif action == strategy.SELL and self.in_position():
-                self._sell(price)
+            # SOLDI VERI: opera solo sulla coppia impostata (spot long, invariato/testato)
+            price = feed.price(self.symbol)
+            series = feed.series(self.symbol)
+            if price > 0:
+                action = strategy.decide(self.genome, series, price, self.in_position(), self.entry_price)
+                if action == strategy.BUY and not self.in_position():
+                    self._buy(price)
+                elif action == strategy.SELL and self.in_position():
+                    self._sell(price)
+            self._mark(feed)
             return
-        # DEMO: supporta long, short e leva
+        # DEMO multi-cripto: se in posizione la gestisce, se liquido SCEGLIE dove operare
         if self.side != 0:
-            if self._pos_value(price) <= 0:
-                self._close_demo(price, liquidated=True)     # liquidazione
-            elif strategy.should_exit(self.genome, series, price, self.side, self.entry_price):
-                self._close_demo(price)
+            price = feed.price(self.symbol)
+            series = feed.series(self.symbol)
+            if price > 0:
+                if self._pos_value(price) <= 0:
+                    self._close_demo(price, liquidated=True)     # liquidazione
+                elif strategy.should_exit(self.genome, series, price, self.side, self.entry_price):
+                    self._close_demo(price)
         else:
-            sig = strategy.signal(self.genome, series, price)
-            if sig == "long":
-                self._open_demo(1, price)
-            elif sig == "short" and self.allow_short:
-                self._open_demo(-1, price)
+            # scansiona TUTTE le cripto e sceglie dove c'è un'opportunità
+            candidates = []
+            for s in feed.symbols:
+                pr = feed.price(s)
+                if pr <= 0:
+                    continue
+                sig = strategy.signal(self.genome, feed.series(s), pr)
+                if sig == "long" or (sig == "short" and self.allow_short):
+                    candidates.append((s, sig, pr))
+            if candidates:
+                s, sig, pr = random.choice(candidates)   # bot diversi scelgono cripto diverse
+                self.symbol = s
+                self._open_demo(1 if sig == "long" else -1, pr)
+        self._mark(feed)
 
-    def flatten(self, price: float) -> None:
+    def flatten(self, feed) -> None:
         if self.live and self.coin > 0:
-            self._sell(price)
+            self._sell(feed.price(self.symbol))
         elif self.side != 0:
-            self._close_demo(price)
+            self._close_demo(feed.price(self.symbol))
+        self._mark(feed)
 
     def winrate(self) -> float:
         return round(100 * self.wins / self.closed, 1) if self.closed else 0.0
 
-    def snapshot(self, price: float) -> Dict[str, Any]:
+    def snapshot(self) -> Dict[str, Any]:
         return {
             "id": self.id,
             "gen": self.generation,
             "parent": self.parent_id,
             "status": "vivo",
-            "equity": round(self.equity(price), 2),
+            "equity": round(self.equity(), 2),
             "cash": round(self.cash, 2),
-            "coin_value": round((self.units * price if self.side != 0 else self.coin * price), 2),
+            "coin_value": round(self._pos_val, 2),
             "in_position": self.in_position(),
             "side": ("long" if self.side > 0 else ("short" if self.side < 0 else "flat")),
             "leverage": round(self.leverage, 1),
+            "asset": (self.symbol.split("/")[0] if self.symbol else "—"),
             "children": self.children,
             "n_trades": self.n_trades,
             "wins": self.wins,
@@ -221,7 +250,7 @@ class Bot:
 class TradingSwarm:
     def __init__(
         self,
-        price_fn: Callable[[], float],
+        feed,                     # MultiFeed: tiene d'occhio più cripto insieme
         start_capital: float,
         lab,                      # Colony: memoria/cervello condiviso
         broker=None,              # None = demo · LiveBroker = soldi veri
@@ -236,7 +265,8 @@ class TradingSwarm:
         leverage: float = 1.0,
         allow_short: bool = False,
     ):
-        self.price_fn = price_fn
+        self.feed = feed
+        self.primary = feed.primary
         self.start_capital = float(start_capital)
         self.lab = lab
         self.broker = broker
@@ -283,6 +313,7 @@ class TradingSwarm:
         b.genome.take_profit = 0.15      # obiettivo verso l'alto (rapporto rischio/rendimento favorevole)
         b.leverage = self.leverage       # leva (demo)
         b.allow_short = self.allow_short # consenti operazioni al ribasso (demo)
+        b.symbol = self.primary if b.live else None   # live: coppia fissa · demo: sceglie lui
         self.bots.append(b)
         return b
 
@@ -298,30 +329,28 @@ class TradingSwarm:
         self.analysis_start = time.time() - self.analysis_days * 86400 - 1
         self._log("⏩ Analisi saltata: i bot iniziano a operare")
 
-    def total_equity(self, price: Optional[float] = None) -> float:
-        p = price if price is not None else self.price_fn()
-        return sum(b.equity(p) for b in self.bots)
+    def total_equity(self) -> float:
+        return sum(b.equity() for b in self.bots)
 
     # ------------------------------------------------------------------- ciclo
     def step(self) -> None:
-        price = self.price_fn()
+        price = self.feed.price(self.primary)
         if price <= 0:
             return
         self.series.append(round(price, 2))
-        series = list(self.series)
 
         if self.in_analysis():
-            self.equity_hist.append(round(self.total_equity(price), 2))
+            self.equity_hist.append(round(self.total_equity(), 2))
             return
 
-        # 1) ogni bot decide e opera da solo
+        # 1) ogni bot decide e opera da solo (in DEMO sceglie LUI la cripto su cui operare)
         for b in self.bots:
-            b.step(series, price)
+            b.step(self.feed)
 
         # 2) riproduzione: chi raddoppia si clona e dà METÀ al figlio
         for b in list(self.bots):
-            if b.equity(price) >= self.reproduce_threshold and len(self.bots) < self.max_bots:
-                b.flatten(price)                       # incassa la posizione
+            if b.equity() >= self.reproduce_threshold and len(self.bots) < self.max_bots:
+                b.flatten(self.feed)                   # incassa la posizione
                 total = b.cash
                 half = total / 2.0
                 b.cash = half                          # il genitore tiene metà
@@ -335,13 +364,13 @@ class TradingSwarm:
 
         # 3) autoeliminazione: chi perde troppo muore (impara: il suo genoma non si propaga)
         for b in list(self.bots):
-            if b.equity(price) <= self.ruin_threshold:
-                b.flatten(price)
+            if b.equity() <= self.ruin_threshold:
+                b.flatten(self.feed)
                 self.bots.remove(b)
                 self.deaths += 1
                 self.graveyard.appendleft({
                     "id": b.id, "gen": b.generation, "parent": b.parent_id,
-                    "final": round(b.equity(price), 2), "children": b.children,
+                    "final": round(b.equity(), 2), "children": b.children,
                     "n_trades": b.n_trades, "winrate": b.winrate(),
                     "died": time.strftime("%d/%m %H:%M"),
                 })
@@ -350,16 +379,16 @@ class TradingSwarm:
         # 3b) FINE GIORNATA: chi non ha GUADAGNATO almeno la quota del giorno → GAME OVER
         if self.day_seconds > 0 and (time.time() - self.day_start_time) >= self.day_seconds:
             for b in list(self.bots):
-                gain = b.equity(price) - b.day_start_equity
+                gain = b.equity() - b.day_start_equity
                 if self.daily_target > 0 and gain < self.daily_target:
-                    b.flatten(price)
+                    b.flatten(self.feed)
                     if b in self.bots:
                         self.bots.remove(b)
                     self.deaths += 1
                     self.game_overs += 1
                     self.graveyard.appendleft({
                         "id": b.id, "gen": b.generation, "parent": b.parent_id,
-                        "final": round(b.equity(price), 2), "children": b.children,
+                        "final": round(b.equity(), 2), "children": b.children,
                         "n_trades": b.n_trades, "winrate": b.winrate(),
                         "died": time.strftime("%d/%m %H:%M"),
                     })
@@ -371,29 +400,27 @@ class TradingSwarm:
             self.day_number += 1
             self.day_start_time = time.time()
             for b in self.bots:
-                b.day_start_equity = b.equity(price)
+                b.day_start_equity = b.equity()
 
         # 4) se muoiono tutti, riparte un nuovo Bot 1 dal miglior genoma imparato
         if not self.bots:
             self._spawn(self._fresh_genome(), 1, None, self.start_capital)
             self._log("🔁 Tutti morti → riparte Bot 1 dal miglior genoma imparato")
 
-        self.equity_hist.append(round(self.total_equity(price), 2))
+        self.equity_hist.append(round(self.total_equity(), 2))
 
     def liquidate(self) -> None:
-        price = self.price_fn()
         for b in self.bots:
-            b.flatten(price)
+            b.flatten(self.feed)
 
     # ------------------------------------------------------------------ stato
     def snapshot(self) -> Dict[str, Any]:
-        price = self.price_fn()
-        bots = sorted(self.bots, key=lambda b: b.equity(price), reverse=True)
+        bots = sorted(self.bots, key=lambda b: b.equity(), reverse=True)
         rem = self.analysis_remaining()
         return {
             "mode": "live" if self.live else "demo",
             "start_capital": round(self.start_capital, 2),
-            "total_equity": round(self.total_equity(price), 2),
+            "total_equity": round(self.total_equity(), 2),
             "bots_alive": len(self.bots),
             "births": self.births,
             "deaths": self.deaths,
@@ -412,7 +439,7 @@ class TradingSwarm:
                 "remaining_days": round(rem / 86400, 2),
                 "progress_pct": round(100 * (1 - rem / max(self.analysis_days * 86400, 1)), 1),
             },
-            "bots": [b.snapshot(price) for b in bots[:60]],   # mostra i primi 60 (per tenere leggera la UI)
+            "bots": [b.snapshot() for b in bots[:60]],   # mostra i primi 60 (per tenere leggera la UI)
             "graveyard": list(self.graveyard)[:10],
             "events": list(self.events)[:12],
             "equity_hist": list(self.equity_hist),
@@ -432,7 +459,10 @@ class TradingSwarm:
                 {"genome": b.genome.to_dict(), "gen": b.generation, "parent": b.parent_id,
                  "cash": b.cash, "coin": b.coin, "entry": b.entry_price, "seed": b.seed,
                  "children": b.children, "n_trades": b.n_trades, "wins": b.wins,
-                 "closed": b.closed, "trades": list(b.trades)}
+                 "closed": b.closed, "trades": list(b.trades),
+                 # posizione demo con leva/short (così l'equity resta continua dopo un riavvio)
+                 "symbol": b.symbol, "side": b.side, "margin": b.margin, "units": b.units,
+                 "day_start_equity": b.day_start_equity}
                 for b in self.bots
             ],
         }
@@ -458,6 +488,14 @@ class TradingSwarm:
                 b.wins = int(a.get("wins", 0))
                 b.closed = int(a.get("closed", 0))
                 b.trades = deque(a.get("trades", []), maxlen=40)
+                # posizione demo con leva/short (se presente nello stato salvato)
+                if not b.live:
+                    b.symbol = a.get("symbol")
+                    b.side = int(a.get("side", 0))
+                    b.margin = float(a.get("margin", 0.0))
+                    b.units = float(a.get("units", 0.0))
+                b.day_start_equity = float(a.get("day_start_equity", b.cash))
+                b._mark(self.feed)   # ricalcola il valore della posizione al prezzo attuale
             if not self.bots:
                 self._spawn(self._fresh_genome(), 1, None, self.start_capital)
             self._log("💾 Sciame ripristinato dallo stato salvato")

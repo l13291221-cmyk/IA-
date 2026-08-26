@@ -227,8 +227,9 @@
 
     <div class="panel" style="margin-top:14px">
       <h2>Mercato</h2>
+      <p class="lead" style="margin:0 0 10px">In <b>DEMO</b> è il bot a scegliere da solo su quale cripto operare (BTC, ETH, SOL, XRP, ADA, DOGE, LTC, LINK…), anche <b>al ribasso</b> e con <b>leva</b>. Questa impostazione decide solo la <b>valuta di riferimento</b> (EUR/USD) e la coppia usata quando operi con <b>soldi veri</b>.</p>
       <div class="rowf">
-        <div><label>Coppia</label><select id="symbol"><option>BTC/EUR</option><option>ETH/EUR</option><option>SOL/EUR</option><option>BTC/USD</option></select></div>
+        <div><label>Coppia di riferimento</label><select id="symbol"><option>BTC/EUR</option><option>ETH/EUR</option><option>SOL/EUR</option><option>BTC/USD</option></select></div>
         <div><label>Frequenza controllo prezzo (sec)</label><input id="live_poll_seconds" type="number" step="5"></div>
       </div>
       <button class="btn save" onclick="saveMarket()">Salva mercato</button>
@@ -290,13 +291,14 @@ function botCard(b,i,repro){
     ||"<tr><td colspan=5 style='color:#5b6577'>nessuna operazione ancora</td></tr>";
   const lev=b.leverage>1?`<span class="pill" style="color:var(--amber)">${b.leverage}x</span>`:"";
   const pos=b.side==='long'?`<span class="pill" style="color:var(--green)">LONG</span>`:b.side==='short'?`<span class="pill" style="color:var(--red)">SHORT ▼</span>`:"";
+  const asset=(b.asset&&b.asset!=='—')?`<span class="pill" style="color:var(--txt);background:#0e1e2a;border-color:#245">${b.asset}</span>`:"";
   return `<div class="botcard${i===0?' top':''}">
     <div class="bothead">
       <span class="botname">Bot #${b.id}</span>
       <span class="badge vivo">VIVO</span>
       <span class="pill">gen ${b.gen}</span>
       <span class="pill tag ${b.strategy}">${b.strategy}</span>
-      ${lev}${pos}
+      ${asset}${lev}${pos}
       <span class="money">${fmt(b.equity)}</span>
     </div>
     <div style="font-size:12px;color:var(--muted);display:flex;gap:14px">

@@ -28,7 +28,7 @@ from typing import Any, Dict, Optional
 from . import config as cfgmod
 from .broker import LiveBroker
 from .colony import Colony
-from .livefeed import LiveFeed
+from .livefeed import MultiFeed
 from .permits import PermitCenter
 from .swarm import TradingSwarm
 
@@ -54,8 +54,8 @@ class Engine:
         self._pending_state: Optional[Dict[str, Any]] = None
         self._restored = False
 
-        # feed prezzo reale (con storico pre-caricato)
-        self.feed = LiveFeed(self.cfg["symbol"], poll_seconds=min(15, self.cfg["live_poll_seconds"]))
+        # feed prezzo reale su PIÙ cripto (è il bot a scegliere su quale operare)
+        self.feed = MultiFeed(self.cfg["symbol"], poll_seconds=min(20, self.cfg["live_poll_seconds"]))
         self.feed.start()
 
         # palestra evolutiva (demo, veloce) = fonte dei genomi campione
@@ -112,7 +112,7 @@ class Engine:
             self.effective_mode = "demo"
 
         self.swarm = TradingSwarm(
-            price_fn=lambda: self.feed.price,
+            feed=self.feed,
             start_capital=float(self.cfg["start_capital_eur"]),
             lab=self.colony,
             broker=broker,
@@ -221,7 +221,7 @@ class Engine:
                 self.live_stopped_reason = ""
             if self.cfg["symbol"] != old_symbol:
                 self.feed.stop()
-                self.feed = LiveFeed(self.cfg["symbol"], poll_seconds=min(15, self.cfg["live_poll_seconds"]))
+                self.feed = MultiFeed(self.cfg["symbol"], poll_seconds=min(20, self.cfg["live_poll_seconds"]))
                 self.feed.start()
                 self.colony = self._new_colony()
             self._build_swarm()
@@ -282,7 +282,7 @@ class Engine:
                 "config": cfgmod.public_view(self.cfg),
                 "paused": self.paused,
                 "effective_mode": self.effective_mode,
-                "price": round(self.feed.price, 2),
+                "price": round(self.feed.price(), 2),
                 "price_is_real": self.feed.is_real,
                 "feed_error": self.feed.last_error,
                 "live_error": self.live_error,

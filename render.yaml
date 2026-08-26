@@ -1,33 +1,46 @@
-# Render Blueprint — deploy di AgentColony come servizio web sempre attivo.
+# Render Blueprint — deploy di AgentColony come servizio web.
 # Istruzioni complete: vedi GUIDA-24-7.md → sezione "Deploy su Render".
 #
-# ⚠️ IMPORTANTE:
-#  - "plan: starter" (a pagamento): il piano GRATIS si spegne dopo ~15 min e FERMA il bot.
-#  - Il disco persistente qui sotto conserva config, chiavi e stato dei bot tra i riavvii.
-#  - Imposta AGENTCOLONY_TOKEN nel dashboard di Render: è la PASSWORD del sito (obbligatoria,
-#    perché su Render l'indirizzo è pubblico). Le chiavi Kraken (solo per i soldi veri)
-#    vanno anch'esse nel dashboard, mai nel codice.
+# QUI: piano GRATIS (€0), adatto alla DEMO h24.
+#  - Il free si spegne dopo ~15 min di inattività, MA il bot si tiene sveglio da
+#    solo (auto-ping sul proprio indirizzo pubblico) → resta acceso.
+#  - Il free NON ha disco persistente: la memoria non sta su Render, il bot salva
+#    da solo lo stato su GitHub (variabili STATE_GITHUB_* qui sotto).
+#  - AGENTCOLONY_TOKEN è la PASSWORD del sito (obbligatoria: online è pubblico).
+#  - Per "sempre acceso + disco" (consigliato per i SOLDI VERI) vedi le note in fondo.
 
 services:
   - type: web
     name: agentcolony
     runtime: python
-    plan: starter               # NON "free": il gratis dorme e ferma il bot
-    numInstances: 1             # una sola istanza = un solo motore di trading
+    plan: free                  # gratis. Per la versione a pagamento vedi le note in fondo.
     buildCommand: pip install -r requirements.txt
     startCommand: python3 server.py --host 0.0.0.0
     healthCheckPath: /
     autoDeploy: false           # un push non riavvia il bot senza il tuo ok
     envVars:
-      - key: AGENTCOLONY_DATA_DIR
-        value: /var/data        # punta al disco persistente (sotto)
       - key: AGENTCOLONY_TOKEN
         sync: false             # ← IMPOSTALA nel dashboard: password del sito (OBBLIGATORIA)
+      # --- il bot si salva da solo su GitHub (così non perde lo stato ai riavvii) ---
+      - key: STATE_GITHUB_REPO
+        value: l13291221-cmyk/IA-
+      - key: STATE_GITHUB_TOKEN
+        sync: false             # ← token GitHub "fine-grained": solo questo repo, Contents R/W
+      # --- solo per i SOLDI VERI (chiavi SOLO-TRADING, niente prelievi) ---
       - key: KRAKEN_API_KEY
-        sync: false             # ← solo per i soldi veri (chiavi SOLO-TRADING, niente prelievi)
+        sync: false
       - key: KRAKEN_API_SECRET
         sync: false
-    disk:
-      name: agentcolony-data
-      mountPath: /var/data      # qui vivono config, chiavi e stato dei bot → persistono
-      sizeGB: 1
+
+# ─────────────────────────────────────────────────────────────────────────────
+# VUOI "SEMPRE ACCESO" SUL SERIO (consigliato quando passi ai SOLDI VERI)?
+# 1) cambia   plan: free   →   plan: starter
+# 2) aggiungi in fondo al servizio (stessa indentazione di envVars):
+#        disk:
+#          name: agentcolony-data
+#          mountPath: /var/data
+#          sizeGB: 1
+# 3) aggiungi tra le envVars:
+#        - key: AGENTCOLONY_DATA_DIR
+#          value: /var/data
+# Così niente spegnimento e stato salvato sul disco, senza dipendere da GitHub.

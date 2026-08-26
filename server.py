@@ -19,6 +19,8 @@ import hmac
 import json
 import os
 import threading
+import time
+import urllib.request
 import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
@@ -121,6 +123,32 @@ def make_handler(engine: Engine):
     return Handler
 
 
+def _keep_awake_loop() -> None:
+    """Tiene il bot ACCESO h24 su un host gratuito (es. Render) che si spegne dopo
+    ~15 min di inattività.
+
+    Il bot "si visita" da solo sul suo indirizzo PUBBLICO ogni pochi minuti: quella
+    richiesta esce su internet e rientra dalla porta d'ingresso dell'host, quindi conta
+    come visita vera e AZZERA il timer di spegnimento. Finché il bot è sveglio continua a
+    pingarsi → il timer non arriva mai a 15 min → non si spegne più.
+
+    Si attiva SOLO se c'è un indirizzo pubblico: la variabile SELF_PING_URL, oppure
+    RENDER_EXTERNAL_URL che Render fornisce da solo. In locale (nessuna delle due) NON
+    fa nulla, quindi la demo sul tuo PC resta identica.
+    """
+    url = os.environ.get("SELF_PING_URL") or os.environ.get("RENDER_EXTERNAL_URL", "")
+    if not url:
+        return
+    interval = _as_int(os.environ.get("SELF_PING_SECONDS")) or 300   # default 5 min
+    interval = max(60, min(interval, 840))   # tra 1 e 14 min (sotto il limite di 15)
+    while True:
+        time.sleep(interval)
+        try:   # apre la home pubblica (non serve token): basta la visita a resettare il timer
+            urllib.request.urlopen(url, timeout=20).read(64)
+        except Exception:
+            pass
+
+
 def main() -> None:
     global TOKEN
     p = argparse.ArgumentParser(description="AgentColony — sito di gestione + motore 24/7")
@@ -141,6 +169,10 @@ def main() -> None:
     if args.host == "0.0.0.0" and not TOKEN:
         print("  ⚠️  ATTENZIONE: esposto in rete SENZA token! Usa --token per proteggerlo.")
     print("  Modalità di default: DEMO (soldi finti). Ctrl+C per fermare.")
+    # auto-sveglia: solo se online (indirizzo pubblico presente) → si pinga da solo h24
+    if os.environ.get("SELF_PING_URL") or os.environ.get("RENDER_EXTERNAL_URL"):
+        threading.Thread(target=_keep_awake_loop, daemon=True).start()
+        print("  🔁 Auto-sveglia ATTIVA: il bot si visita da solo per non spegnersi.")
     if args.open:
         # apre il browser da solo poco dopo che il server è pronto (in silenzio se non riesce)
         def _open_browser():

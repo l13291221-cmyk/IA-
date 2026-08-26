@@ -2,8 +2,11 @@
 
 Un'IA che fa trading da sola. Prima **analizza il mercato** per un periodo (default
 **30 giorni**), poi parte **un solo Bot** col capitale che imposti (es. **20€**).
-Ogni Bot decide **da solo** (fa investimenti diversi dagli altri) e tiene la **sua
-tabella** di operazioni (ogni segnale vinto/perso). Quando **raddoppia** (arriva a 40)
+Ogni Bot decide **da solo** su **quale cripto operare** (BTC, ETH, SOL, XRP, ADA,
+DOGE, LTC, LINK…) — non la scegli tu — e come: al rialzo o **al ribasso (short)**,
+anche con **leva** (in DEMO). Fa investimenti diversi dagli altri e tiene la **sua
+tabella** di operazioni (ogni segnale vinto/perso). Ogni Bot deve **guadagnare la
+quota giornaliera** (default €0,50) o è **GAME OVER**. Quando **raddoppia** (arriva a 40)
 si **clona e dà metà** al figlio (Bot 2), e così via; se perde troppo si **autoelimina**
 (finisce nel "cimitero", segnato morto). Ciò che i Bot imparano viene **condiviso** con
 gli altri tramite una **palestra** evolutiva (il "cervello"). Tutto in **DEMO** (soldi
@@ -46,10 +49,12 @@ nemmeno coi soldi veri — e l'avrai scoperto senza perdere niente.
 ```
 
 **Come resta sicuro anche con i soldi veri:** ogni Bot piazza i **propri** ordini reali
-su Kraken (≥ ordine minimo). Non c'è leva: il massimo che puoi perdere è il **capitale
-iniziale** che decidi tu. In più: **stop-perdita giornaliero automatico** e **tasto di
-emergenza**. Le chiavi devono essere **solo-trading** (niente prelievi), quindi il resto
-del tuo saldo non è a rischio. Così la tua idea funziona sul serio, entro un limite chiaro.
+su Kraken (≥ ordine minimo), **spot e solo al rialzo, senza leva** — la leva e lo short
+restano **solo in DEMO** (soldi finti), perché con soldi veri richiederebbero i permessi
+"margine" del conto. Quindi il massimo che puoi perdere è il **capitale iniziale** che
+decidi tu. In più: **stop-perdita giornaliero automatico** e **tasto di emergenza**. Le
+chiavi devono essere **solo-trading** (niente prelievi), quindi il resto del tuo saldo non
+è a rischio. Così la tua idea funziona sul serio, entro un limite chiaro.
 
 **Extra "paga o muori" (opzionale, ispirato al concetto *automaton*):** puoi dare a ogni
 Bot un **affitto del server** (€/giorno): chi non guadagna abbastanza da coprirlo si
@@ -71,8 +76,10 @@ selezione più realistica — sopravvivono solo i Bot che rendono più di quanto
    **Richieste & permessi**: quando all'IA serve un accesso **te lo chiede** e tu
    Approvi o Rifiuti. L'IA **non genera guadagni finti** né opera i tuoi account di
    nascosto.
-4. **Impostazioni** — dove metti le **chiavi API**, la coppia (BTC/EUR…), e i
-   parametri della palestra.
+4. **Impostazioni** — dove metti le **chiavi API**, il capitale, il numero max di
+   Bot, la **leva**, lo **short**, e la **coppia di riferimento** (BTC/EUR…): in DEMO
+   la cripto la sceglie il Bot da solo, questa serve solo per la **valuta** (EUR/USD)
+   e per la coppia usata con i **soldi veri**.
 
 ---
 
@@ -126,8 +133,10 @@ python3 server.py
   tranne che a Kraken.
 
 **Protezioni sui soldi veri**
-- **Nessuna leva**: il massimo che puoi perdere è il **capitale iniziale** che decidi
-  tu; i bot non spendono più di quello che hanno. Il resto del saldo non è toccato.
+- **Nessuna leva, solo spot al rialzo**: con soldi veri i bot **non** usano leva né
+  short (quelli sono solo in DEMO). Il massimo che puoi perdere è il **capitale
+  iniziale** che decidi tu; i bot non spendono più di quello che hanno. Il resto del
+  saldo non è toccato.
 - **Chiavi solo-trading**: nessun prelievo possibile, neanche in caso di bug.
 - **Limite = il capitale**: il massimo che puoi perdere è il capitale che imposti.
   Lo **stop-loss tattico lo decide l'IA** per ogni bot (ognuno esce e si autoelimina

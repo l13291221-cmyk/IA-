@@ -173,6 +173,7 @@
         <tr><td>Giorni di analisi prima di iniziare</td><td><input id="analysis_days" type="number" step="1"></td></tr>
         <tr><td>🎯 Quota giornaliera (€ da guadagnare/giorno, o GAME OVER)</td><td><input id="daily_target_eur" type="number" step="0.10" min="0"></td></tr>
         <tr><td>📅 Durata giornata (minuti) — 1440 = 1 giorno vero; abbassa per i test</td><td><input id="day_minutes" type="number" step="1" min="1"></td></tr>
+        <tr><td>💰 % massima per operazione (25 = tecnica sicura · 100 = tutto il saldo su un colpo)</td><td><input id="max_trade_pct" type="number" step="5" min="1" max="100"></td></tr>
         <tr><td>⚡ Leva (1 = niente leva) — <b style="color:var(--red)">amplifica guadagni E perdite</b></td><td><input id="leverage" type="number" step="1" min="1"></td></tr>
         <tr><td>🔻 Consenti operazioni al ribasso (short)</td><td style="text-align:right"><input id="allow_short" type="checkbox" style="width:auto;height:20px"></td></tr>
       </table>
@@ -273,7 +274,7 @@ document.querySelectorAll("nav button[data-tab]").forEach(b=>b.onclick=()=>{
 let filled=false;
 function fillForms(c){
   if(filled)return;filled=true;
-  ["start_capital_eur","max_bots","min_order_eur","analysis_days","daily_target_eur","day_minutes","leverage",
+  ["start_capital_eur","max_bots","min_order_eur","analysis_days","daily_target_eur","day_minutes","max_trade_pct","leverage",
    "live_poll_seconds","lab_population","lab_tps","lab_vol"].forEach(k=>{if($(k))$(k).value=c[k];});
   $("symbol").value=c.symbol;$("lab_regime").value=c.lab_regime;$("acknowledged_risk").checked=!!c.acknowledged_risk;
   $("allow_short").checked=!!c.allow_short;
@@ -404,7 +405,7 @@ function num(id){return parseFloat($(id).value);}
 async function saveParams(){
   await api("/api/settings","POST",{start_capital_eur:num("start_capital_eur"),max_bots:parseInt($("max_bots").value),
     min_order_eur:num("min_order_eur"),analysis_days:num("analysis_days"),daily_target_eur:num("daily_target_eur"),day_minutes:num("day_minutes"),
-    leverage:num("leverage"),allow_short:$("allow_short").checked});
+    max_trade_pct:num("max_trade_pct"),leverage:num("leverage"),allow_short:$("allow_short").checked});
   alert("Salvato. (Il capitale iniziale si applica ai nuovi bot / al riavvio dello sciame.)");
 }
 async function saveKeys(){

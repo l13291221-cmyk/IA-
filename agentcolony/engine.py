@@ -126,6 +126,7 @@ class Engine:
             day_seconds=max(60.0, float(self.cfg.get("day_minutes", 1440)) * 60.0),
             leverage=float(self.cfg.get("leverage", 1.0)),
             allow_short=bool(self.cfg.get("allow_short", False)),
+            max_trade_pct=float(self.cfg.get("max_trade_pct", 25)),
         )
         if not self._restored and self._pending_state:
             self.swarm.load_state(self._pending_state)

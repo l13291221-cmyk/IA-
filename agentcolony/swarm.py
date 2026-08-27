@@ -49,6 +49,7 @@ class Bot:
         # leva / short (usati in DEMO; il reale resta spot long)
         self.leverage = 1.0
         self.allow_short = False
+        self.max_trade_pct = 25.0   # % del saldo per operazione (lo decidi tu dal sito)
         self.side = 0          # 0 = flat, +1 = long, -1 = short
         self.margin = 0.0      # capitale bloccato come margine
         self.units = 0.0       # unità nozionali (margine × leva / prezzo)
@@ -89,10 +90,9 @@ class Bot:
         return self.coin > 0 or self.side != 0
 
     def _buy(self, price: float) -> None:
-        # rischio per operazione (regola della tecnica): max 25% del saldo,
-        # ridotto al 20% sopra 30€ e al 15% sopra 35€ per proteggere i guadagni.
+        # quanto investire per operazione: la % che decidi tu (default 25% = tecnica sicura)
         bal = self.cash
-        frac = 0.15 if bal > 35 else (0.20 if bal > 30 else 0.25)
+        frac = max(0.01, min(1.0, self.max_trade_pct / 100.0))
         eur = bal * frac
         if self.live:
             eur = max(eur, self.min_order)      # rispetta il minimo di Kraken
@@ -145,7 +145,7 @@ class Bot:
     # --- posizioni con leva / short (solo DEMO) ---
     def _open_demo(self, side: int, price: float, reason: str = "") -> None:
         bal = self.cash
-        frac = 0.15 if bal > 35 else (0.20 if bal > 30 else 0.25)
+        frac = max(0.01, min(1.0, self.max_trade_pct / 100.0))
         margin = bal * frac
         if margin < 0.5 or price <= 0:
             return
@@ -280,6 +280,7 @@ class TradingSwarm:
         day_seconds: float = 86400.0,
         leverage: float = 1.0,
         allow_short: bool = False,
+        max_trade_pct: float = 25.0,
     ):
         self.feed = feed
         self.primary = feed.primary
@@ -300,6 +301,7 @@ class TradingSwarm:
         self.game_overs = 0
         self.leverage = max(1.0, float(leverage))
         self.allow_short = bool(allow_short)
+        self.max_trade_pct = float(max_trade_pct)
 
         self.bots: List[Bot] = []
         self.graveyard: deque = deque(maxlen=30)
@@ -329,6 +331,7 @@ class TradingSwarm:
         b.genome.take_profit = 0.15      # obiettivo verso l'alto (rapporto rischio/rendimento favorevole)
         b.leverage = self.leverage       # leva (demo)
         b.allow_short = self.allow_short # consenti operazioni al ribasso (demo)
+        b.max_trade_pct = self.max_trade_pct  # % del saldo per operazione
         b.symbol = self.primary if b.live else None   # live: coppia fissa · demo: sceglie lui
         self.bots.append(b)
         return b

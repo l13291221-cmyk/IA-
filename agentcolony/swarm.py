@@ -90,9 +90,10 @@ class Bot:
         return self.coin > 0 or self.side != 0
 
     def _buy(self, price: float) -> None:
-        # quanto investire per operazione: la % che decidi tu (default 25% = tecnica sicura)
+        # quanto investire lo DECIDE IL BOT (il suo "istinto di rischio" che evolve),
+        # fino al tetto massimo che hai scelto (default 100% = può puntare anche tutto).
         bal = self.cash
-        frac = max(0.01, min(1.0, self.max_trade_pct / 100.0))
+        frac = min(max(0.05, self.genome.risk_fraction), self.max_trade_pct / 100.0)
         eur = bal * frac
         if self.live:
             eur = max(eur, self.min_order)      # rispetta il minimo di Kraken
@@ -144,8 +145,9 @@ class Bot:
 
     # --- posizioni con leva / short (solo DEMO) ---
     def _open_demo(self, side: int, price: float, reason: str = "") -> None:
+        # quanto puntare lo decide il BOT (istinto di rischio evolutivo), entro il tetto scelto
         bal = self.cash
-        frac = max(0.01, min(1.0, self.max_trade_pct / 100.0))
+        frac = min(max(0.05, self.genome.risk_fraction), self.max_trade_pct / 100.0)
         margin = bal * frac
         if margin < 0.5 or price <= 0:
             return

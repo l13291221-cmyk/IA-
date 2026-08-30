@@ -25,6 +25,7 @@ from collections import deque
 from typing import Any, Callable, Dict, List, Optional
 
 from .agent import FEE
+from .brain import Brain
 from .genome import Genome, crossover, mutate
 from . import strategy
 from . import signals
@@ -58,6 +59,9 @@ class Bot:
         self._pos_val = 0.0    # valore posizione in EUR (aggiornato a ogni ciclo)
         self.cooldown = 0      # cicli di pausa dopo una chiusura (meno operazioni = meno commissioni)
         self.hold = 0          # cicli da quando è aperta la posizione (per non chiuderla troppo presto)
+        self.brain: Optional[Brain] = None   # cervello condiviso (cosa fa vincere/perdere)
+        self.entry_side = 0    # direzione con cui è stata aperta (per aggiornare il cervello alla chiusura)
+        self.entry_asset = ""  # cripto con cui è stata aperta
         self.broker = broker           # None = demo · LiveBroker = soldi veri
         self.min_order = min_order_eur
         self.alive = True
@@ -112,6 +116,8 @@ class Bot:
         self.cash -= eur
         self.coin += units
         self.entry_price = price
+        self.entry_side = 1
+        self.entry_asset = (self.symbol.split("/")[0] if self.symbol else "?")
         self.n_trades += 1
         self.trades.appendleft({"t": time.time(), "side": "COMPRA", "price": round(price, 2),
                                 "eur": round(eur, 2), "result": "aperto"})
@@ -136,6 +142,8 @@ class Bot:
         self.wins += 1 if win else 0
         self.closed += 1
         pnl = (price - self.entry_price) / self.entry_price * 100 if self.entry_price else 0.0
+        if self.brain:   # anche il reale nutre il cervello condiviso
+            self.brain.record(self.entry_side, self.entry_asset, win, pnl)
         self.cash += eur
         self.coin = 0.0
         self.entry_price = 0.0
@@ -159,6 +167,8 @@ class Bot:
         self.entry_price = price
         self.units = (margin * self.leverage) / price
         self.hold = 0
+        self.entry_side = side
+        self.entry_asset = (self.symbol.split("/")[0] if self.symbol else "?")
         self.n_trades += 1
         row = {"t": time.time(), "side": "LONG" if side > 0 else "SHORT",
                "price": round(price, 2), "eur": round(margin, 2), "result": "aperto"}
@@ -176,6 +186,8 @@ class Bot:
         self.wins += 1 if win else 0
         self.closed += 1
         pnl = (self.side * (price - self.entry_price) / self.entry_price * 100 * self.leverage) if self.entry_price else 0.0
+        if self.brain:   # aggiorna il cervello condiviso: cosa mi ha fatto vincere/perdere
+            self.brain.record(self.entry_side, self.entry_asset, win, pnl)
         self.cash += cash_back
         self.n_trades += 1
         res = "liquidato" if liquidated else ("vinto" if win else "perso")
@@ -227,16 +239,21 @@ class Bot:
                 pr = feed.price(s)
                 if pr <= 0:
                     continue
+                asset = s.split("/")[0]
                 if use_ta:
                     # TECNICA: Trend(4H) + Ritracciamento(1H) + Conferma(15M) + Volume
                     res = signals.evaluate(feed, s)
                     if res and (res["side"] == "long" or (res["side"] == "short" and self.allow_short)):
-                        candidates.append((s, res["side"], pr, res.get("reason", "")))
+                        sd = 1 if res["side"] == "long" else -1
+                        if self.brain is None or self.brain.should_take(sd, asset):   # il cervello sconsiglia i tipi che perdono
+                            candidates.append((s, res["side"], pr, res.get("reason", "")))
                 else:
                     # offline / senza dati reali: strategia semplice, così la demo non resta ferma
                     sig = strategy.signal(self.genome, feed.series(s), pr)
                     if sig == "long" or (sig == "short" and self.allow_short):
-                        candidates.append((s, sig, pr, ""))
+                        sd = 1 if sig == "long" else -1
+                        if self.brain is None or self.brain.should_take(sd, asset):
+                            candidates.append((s, sig, pr, ""))
             if candidates:
                 s, sig, pr, reason = random.choice(candidates)   # bot diversi scelgono cripto diverse
                 self.symbol = s
@@ -318,6 +335,7 @@ class TradingSwarm:
         self.max_trade_pct = float(max_trade_pct)
         self.stop_loss_pct = max(1.0, float(stop_loss_pct))
         self.take_profit_pct = max(1.0, float(take_profit_pct))
+        self.brain = Brain()   # cervello CONDIVISO: impara cosa fa vincere/perdere, si tramanda e si salva
 
         self.bots: List[Bot] = []
         self.graveyard: deque = deque(maxlen=30)
@@ -348,6 +366,7 @@ class TradingSwarm:
         b.leverage = self.leverage       # leva (demo)
         b.allow_short = self.allow_short # consenti operazioni al ribasso (demo)
         b.max_trade_pct = self.max_trade_pct  # % del saldo per operazione
+        b.brain = self.brain                  # tutti i bot condividono lo STESSO cervello
         b.symbol = self.primary if b.live else None   # live: coppia fissa · demo: sceglie lui
         self.bots.append(b)
         return b
@@ -478,6 +497,7 @@ class TradingSwarm:
             "graveyard": list(self.graveyard)[:10],
             "events": list(self.events)[:12],
             "equity_hist": list(self.equity_hist),
+            "brain_lessons": self.brain.lessons(),   # cosa ha imparato (setup buoni/da evitare)
         }
 
     # ----------------------------------------------------------- persistenza
@@ -490,6 +510,7 @@ class TradingSwarm:
             "day_number": self.day_number,
             "graveyard": list(self.graveyard),
             "equity_hist": list(self.equity_hist),
+            "brain": self.brain.to_state(),
             "bots": [
                 {"genome": b.genome.to_dict(), "gen": b.generation, "parent": b.parent_id,
                  "cash": b.cash, "coin": b.coin, "entry": b.entry_price, "seed": b.seed,
@@ -512,6 +533,7 @@ class TradingSwarm:
             self.day_start_time = time.time()
             self.graveyard = deque(st.get("graveyard", []), maxlen=30)
             self.equity_hist = deque(st.get("equity_hist", []), maxlen=400)
+            self.brain.load_state(st.get("brain") or {})   # recupera ciò che ha imparato
             self.bots = []
             for a in st.get("bots", []):
                 b = self._spawn(Genome(**a["genome"]), a.get("gen", 1), a.get("parent"), a.get("seed", self.start_capital))

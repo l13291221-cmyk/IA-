@@ -127,6 +127,8 @@ class Engine:
             leverage=float(self.cfg.get("leverage", 1.0)),
             allow_short=bool(self.cfg.get("allow_short", False)),
             max_trade_pct=float(self.cfg.get("max_trade_pct", 25)),
+            stop_loss_pct=float(self.cfg.get("stop_loss_pct", 8)),
+            take_profit_pct=float(self.cfg.get("take_profit_pct", 16)),
         )
         if not self._restored and self._pending_state:
             self.swarm.load_state(self._pending_state)

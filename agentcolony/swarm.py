@@ -186,7 +186,7 @@ class Bot:
         self.units = 0.0
         self.entry_price = 0.0
         self.symbol = None
-        self.cooldown = 6   # aspetta qualche ciclo prima di riaprire (evita di rientrare a raffica)
+        self.cooldown = 20   # pausa più lunga dopo una chiusura: meno operazioni = meno commissioni
 
     def step(self, feed) -> None:
         if self.live:
@@ -293,6 +293,8 @@ class TradingSwarm:
         leverage: float = 1.0,
         allow_short: bool = False,
         max_trade_pct: float = 25.0,
+        stop_loss_pct: float = 8.0,
+        take_profit_pct: float = 16.0,
     ):
         self.feed = feed
         self.primary = feed.primary
@@ -314,6 +316,8 @@ class TradingSwarm:
         self.leverage = max(1.0, float(leverage))
         self.allow_short = bool(allow_short)
         self.max_trade_pct = float(max_trade_pct)
+        self.stop_loss_pct = max(1.0, float(stop_loss_pct))
+        self.take_profit_pct = max(1.0, float(take_profit_pct))
 
         self.bots: List[Bot] = []
         self.graveyard: deque = deque(maxlen=30)
@@ -339,8 +343,8 @@ class TradingSwarm:
     def _spawn(self, genome: Genome, generation: int, parent, seed: float) -> Bot:
         b = Bot(copy.copy(genome), seed, generation, parent, broker=self.broker, min_order_eur=self.min_order)
         b.id = next(self._bot_counter)   # numerazione da 1 per questo sciame (Bot 1, 2, 3…)
-        b.genome.stop_loss = 0.03        # stop-loss −3%: taglia le perdite in fretta
-        b.genome.take_profit = 0.06      # take-profit +6%: lascia correre i guadagni (rapporto 2:1)
+        b.genome.stop_loss = self.stop_loss_pct / 100.0      # respiro prima di tagliare (lo decidi tu dal sito)
+        b.genome.take_profit = self.take_profit_pct / 100.0  # obiettivo di guadagno per trade
         b.leverage = self.leverage       # leva (demo)
         b.allow_short = self.allow_short # consenti operazioni al ribasso (demo)
         b.max_trade_pct = self.max_trade_pct  # % del saldo per operazione

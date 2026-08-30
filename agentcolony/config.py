@@ -39,6 +39,8 @@ DEFAULTS: Dict[str, Any] = {
     "day_minutes": 1440,            # durata di una "giornata" (1440 = un giorno vero; abbassalo per i test)
     "max_trade_pct": 100,           # TETTO massimo per operazione (%): quanto mettere lo decide il BOT,
                                     # ma non oltre questo tetto. 100 = libero di puntare anche tutto il saldo.
+    "stop_loss_pct": 8,             # stop-loss (%): quanto respiro dai al trade prima di tagliare (largo = meno "stoppato" dal rumore)
+    "take_profit_pct": 16,          # take-profit (%): obiettivo di guadagno per trade (i trade durano finché non tocca questo, o lo stop, o gira il trend)
     "leverage": 1.0,                # leva (1 = niente leva). In DEMO amplifica guadagni E perdite.
     "allow_short": False,           # consenti operazioni al ribasso (short). In DEMO.
     "analysis_start": 0.0,          # timestamp inizio analisi (impostato al primo avvio)

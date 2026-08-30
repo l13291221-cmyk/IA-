@@ -52,6 +52,23 @@ def _rsi_exit(closed: List[list], side: str) -> bool:
         return r_prev > _RSI_HIGH >= r_now
 
 
+def trend_flipped(feed, symbol: str, side: int) -> bool:
+    """True se il trend di fondo (4H, EMA50 vs EMA200) si è girato CONTRO la posizione.
+    Serve per uscire quando l'onda che avevi preso è finita, non a ogni sussulto."""
+    try:
+        c4 = feed.ohlcv(symbol, "4h")
+    except Exception:
+        return False
+    if not c4:
+        return False
+    closes4 = _closes(c4)
+    e50 = ind.ema(closes4, 50)
+    e200 = ind.ema(closes4, 200)
+    if e50 is None or e200 is None:
+        return False
+    return (e50 < e200) if side > 0 else (e50 > e200)
+
+
 def evaluate(feed, symbol: str) -> Optional[dict]:
     """Ritorna {"side","price","reason"} se TUTTI gli step passano, altrimenti None."""
     try:

@@ -30,6 +30,7 @@ from . import strategy
 from . import signals
 
 _bot_id = itertools.count(1)
+_MIN_HOLD = 8   # cicli minimi prima di poter uscire per "trend girato" (evita i round-trip lampo)
 
 
 class Bot:
@@ -56,6 +57,7 @@ class Bot:
         self.symbol: Optional[str] = None   # cripto attualmente operata (multi-asset, demo)
         self._pos_val = 0.0    # valore posizione in EUR (aggiornato a ogni ciclo)
         self.cooldown = 0      # cicli di pausa dopo una chiusura (meno operazioni = meno commissioni)
+        self.hold = 0          # cicli da quando è aperta la posizione (per non chiuderla troppo presto)
         self.broker = broker           # None = demo · LiveBroker = soldi veri
         self.min_order = min_order_eur
         self.alive = True
@@ -156,6 +158,7 @@ class Bot:
         self.margin = margin
         self.entry_price = price
         self.units = (margin * self.leverage) / price
+        self.hold = 0
         self.n_trades += 1
         row = {"t": time.time(), "side": "LONG" if side > 0 else "SHORT",
                "price": round(price, 2), "eur": round(margin, 2), "result": "aperto"}
@@ -201,12 +204,19 @@ class Bot:
         # DEMO multi-cripto: se in posizione la gestisce, se liquido SCEGLIE dove operare
         if self.side != 0:
             price = feed.price(self.symbol)
-            series = feed.series(self.symbol)
             if price > 0:
+                self.hold += 1
+                # variazione DIREZIONALE dall'ingresso (+ = a favore, − = contro)
+                change = self.side * (price - self.entry_price) / self.entry_price if self.entry_price else 0.0
                 if self._pos_value(price) <= 0:
-                    self._close_demo(price, liquidated=True)     # liquidazione
-                elif strategy.should_exit(self.genome, series, price, self.side, self.entry_price):
-                    self._close_demo(price)
+                    self._close_demo(price, liquidated=True)          # liquidazione
+                elif change <= -self.genome.stop_loss:
+                    self._close_demo(price)                            # STOP-LOSS: taglia la perdita
+                elif change >= self.genome.take_profit:
+                    self._close_demo(price)                            # TAKE-PROFIT: incassa il guadagno
+                elif self.hold >= _MIN_HOLD and getattr(feed, "ta_ready", False) \
+                        and signals.trend_flipped(feed, self.symbol, self.side):
+                    self._close_demo(price)                            # il trend 4H si è girato contro
         elif self.cooldown > 0:
             self.cooldown -= 1   # in pausa: niente nuove operazioni per qualche ciclo
         else:
@@ -329,8 +339,8 @@ class TradingSwarm:
     def _spawn(self, genome: Genome, generation: int, parent, seed: float) -> Bot:
         b = Bot(copy.copy(genome), seed, generation, parent, broker=self.broker, min_order_eur=self.min_order)
         b.id = next(self._bot_counter)   # numerazione da 1 per questo sciame (Bot 1, 2, 3…)
-        b.genome.stop_loss = 0.10        # stop-loss -10% (regola della tecnica)
-        b.genome.take_profit = 0.15      # obiettivo verso l'alto (rapporto rischio/rendimento favorevole)
+        b.genome.stop_loss = 0.03        # stop-loss −3%: taglia le perdite in fretta
+        b.genome.take_profit = 0.06      # take-profit +6%: lascia correre i guadagni (rapporto 2:1)
         b.leverage = self.leverage       # leva (demo)
         b.allow_short = self.allow_short # consenti operazioni al ribasso (demo)
         b.max_trade_pct = self.max_trade_pct  # % del saldo per operazione

@@ -288,6 +288,21 @@ class Engine:
             self.colony = self._new_colony()
             self._log("↻ Palestra riavviata da zero")
 
+    def reset_swarm(self) -> None:
+        """Ricomincia da capo: nuovo Bot 1 col capitale iniziale, azzera storico e
+        cervello, e SOVRASCRIVE subito lo stato salvato (locale + backup su GitHub),
+        così non torna più indietro al vecchio stato."""
+        with self.lock:
+            self._pending_state = None
+            self._restored = True          # non ripristinare il vecchio stato
+            self.day = _today()
+            self.day_start_equity = 0.0
+            self.live_stopped_reason = ""
+            self._build_swarm()            # sciame nuovo di zecca (Bot 1, capitale iniziale, cervello vuoto)
+            self._last_remote = 0.0        # forza il backup remoto adesso (sovrascrive quello vecchio)
+            self._log("↻ Ricominciato da zero: nuovo Bot 1 con €%.0f" % self.swarm.start_capital)
+        self._save_state()                 # salva subito lo stato fresco (locale + GitHub)
+
     # --- moduli di guadagno e permessi ---------------------------------
     def enable_module(self, mid: str) -> Dict[str, Any]:
         with self.lock:

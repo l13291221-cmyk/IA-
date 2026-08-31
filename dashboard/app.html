@@ -194,6 +194,12 @@
       <p style="color:var(--muted);font-size:13px">Chiude subito tutte le posizioni dei bot e ferma il trading reale.</p>
       <button class="btn danger" onclick="killSwitch()">🛑 FERMA TUTTO E VENDI</button>
     </div>
+
+    <div class="panel" style="margin-top:14px">
+      <h2>Ricomincia da zero</h2>
+      <p style="color:var(--muted);font-size:13px">Cancella storico, operazioni e cervello e riparte con un nuovo <b>Bot 1</b> col capitale iniziale. Sovrascrive anche il salvataggio (locale + GitHub), quindi non torna indietro. Usalo per ripartire pulito e giudicare il bot da capo.</p>
+      <button class="btn" onclick="resetSwarm()">↻ Ricomincia da zero</button>
+    </div>
   </section>
 
   <!-- ============ MODULI ============ -->
@@ -428,6 +434,7 @@ async function saveKeys(){
 async function saveMarket(){await api("/api/settings","POST",{symbol:$("symbol").value,live_poll_seconds:num("live_poll_seconds")});alert("Mercato salvato.");}
 async function saveLab(){await api("/api/settings","POST",{lab_population:parseInt($("lab_population").value),lab_tps:num("lab_tps"),lab_vol:num("lab_vol"),lab_regime:$("lab_regime").value});alert("Palestra salvata.");}
 async function resetLab(){if(confirm("Riavviare la palestra da zero?")){await api("/api/reset-lab","POST",{});}}
+async function resetSwarm(){if(confirm("Ricominciare DA ZERO? Cancella storico, operazioni e cervello e riparte con un nuovo Bot 1 col capitale iniziale. Non si torna indietro.")){await api("/api/reset-swarm","POST",{});alert("Ripartito da zero.");poll();}}
 async function skipAnalysis(){if(confirm("Saltare la fase di analisi e iniziare subito a operare?")){await api("/api/skip-analysis","POST",{});poll();}}
 async function killSwitch(){if(confirm("FERMARE tutto e vendere le posizioni?")){await api("/api/kill","POST",{});poll();}}
 $("pause").onclick=async()=>{await api("/api/pause","POST",{});poll();};

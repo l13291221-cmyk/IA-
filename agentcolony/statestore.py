@@ -32,7 +32,8 @@ import urllib.error
 import urllib.request
 
 _API = "https://api.github.com"
-_sha = {"v": None}   # sha dell'ultimo file salvato, per aggiornarlo al posto giusto
+_sha: dict = {}   # path del file -> sha dell'ultima versione salvata (per aggiornarla al posto giusto)
+_CONFIG_PATH = "config.json"   # impostazioni (SENZA chiavi) salvate accanto allo stato
 
 
 def _cfg():
@@ -62,16 +63,16 @@ def _req(method: str, url: str, token: str, data=None):
         return resp.status, (json.loads(raw) if raw else {})
 
 
-def load():
-    """Ritorna lo stato salvato su GitHub (dict) o None se non c'è / non attivo."""
+def _load_file(path: str):
+    """Legge un file JSON dal ramo dedicato su GitHub (dict) o None."""
     if not enabled():
         return None
-    tok, repo, branch, path = _cfg()
+    tok, repo, branch, _ = _cfg()
     url = f"{_API}/repos/{repo}/contents/{path}?ref={branch}"
     try:
         status, j = _req("GET", url, tok)
         if status == 200 and j.get("content"):
-            _sha["v"] = j.get("sha")
+            _sha[path] = j.get("sha")
             return json.loads(base64.b64decode(j["content"]))
     except urllib.error.HTTPError as e:
         if e.code == 404:
@@ -79,6 +80,16 @@ def load():
     except Exception:
         return None
     return None
+
+
+def load():
+    """Ritorna lo STATO salvato su GitHub (dict) o None."""
+    return _load_file(_cfg()[3])
+
+
+def load_config():
+    """Ritorna le IMPOSTAZIONI salvate su GitHub (dict) o None."""
+    return _load_file(_CONFIG_PATH)
 
 
 def _ensure_branch(tok: str, repo: str, branch: str) -> None:
@@ -102,36 +113,45 @@ def _ensure_branch(tok: str, repo: str, branch: str) -> None:
         pass
 
 
-def _put(state: dict) -> bool:
-    tok, repo, branch, path = _cfg()
-    content = base64.b64encode(json.dumps(state).encode()).decode()
-    data = {"message": "agentcolony: salvataggio automatico dello stato",
+def _put_file(path: str, obj: dict) -> bool:
+    tok, repo, branch, _ = _cfg()
+    content = base64.b64encode(json.dumps(obj).encode()).decode()
+    data = {"message": f"agentcolony: salvataggio automatico ({path})",
             "content": content, "branch": branch}
-    if _sha["v"]:
-        data["sha"] = _sha["v"]
+    if _sha.get(path):
+        data["sha"] = _sha[path]
     status, j = _req("PUT", f"{_API}/repos/{repo}/contents/{path}", tok, data)
     if status in (200, 201):
-        _sha["v"] = (j.get("content") or {}).get("sha")
+        _sha[path] = (j.get("content") or {}).get("sha")
         return True
     return False
 
 
-def save(state: dict) -> bool:
-    """Salva lo stato su GitHub (ramo dedicato). True se riuscito."""
+def _save_file(path: str, obj: dict) -> bool:
     if not enabled():
         return False
     tok, repo, branch, _ = _cfg()
     try:
         _ensure_branch(tok, repo, branch)
-        return _put(state)
+        return _put_file(path, obj)
     except urllib.error.HTTPError as e:
-        # sha non aggiornato (qualcuno ha scritto nel frattempo): rileggo e riprovo una volta
+        # sha non aggiornato (scritto nel frattempo): rileggo e riprovo una volta
         if e.code in (409, 422):
             try:
-                load()          # aggiorna _sha["v"]
-                return _put(state)
+                _load_file(path)          # aggiorna lo sha
+                return _put_file(path, obj)
             except Exception:
                 return False
         return False
     except Exception:
         return False
+
+
+def save(state: dict) -> bool:
+    """Salva lo STATO su GitHub (ramo dedicato). True se riuscito."""
+    return _save_file(_cfg()[3], state)
+
+
+def save_config(cfg: dict) -> bool:
+    """Salva le IMPOSTAZIONI su GitHub (ramo dedicato). MAI le chiavi API."""
+    return _save_file(_CONFIG_PATH, cfg)

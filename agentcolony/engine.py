@@ -35,10 +35,16 @@ from .swarm import TradingSwarm
 
 STATE_PATH = os.path.join(cfgmod.DATA_DIR, "state.json")
 
+# impostazioni che NON vanno mai nel backup su GitHub: le chiavi (segrete) e gli
+# interruttori dei soldi veri (per sicurezza il reale non si riattiva da solo dopo un riavvio).
+_CONFIG_NO_BACKUP = ("api_key", "api_secret", "live_enabled", "acknowledged_risk")
+
 
 class Engine:
     def __init__(self) -> None:
+        _restore_config_if_missing()   # se il disco è vuoto (riavvio host), recupera le impostazioni da GitHub
         self.cfg = cfgmod.load()
+        self._backup_config()          # assicura che le impostazioni attuali siano nel backup
         self.lock = threading.RLock()
         self._stop = False
         self.paused = False
@@ -256,7 +262,18 @@ class Engine:
                 self.colony = self._new_colony()
             self._build_swarm()
             self._log("⚙️ Impostazioni aggiornate — modalità: " + self.effective_mode.upper())
+        self._backup_config()   # salva le impostazioni su GitHub → non si perdono ai riavvii
         return cfgmod.public_view(self.cfg)
+
+    def _backup_config(self) -> None:
+        """Salva le impostazioni su GitHub (SENZA chiavi né interruttori soldi-veri)."""
+        if not statestore.enabled():
+            return
+        try:
+            safe = {k: v for k, v in self.cfg.items() if k not in _CONFIG_NO_BACKUP}
+            statestore.save_config(safe)
+        except Exception:
+            pass
 
     def _do_kill(self, reason: str) -> None:
         try:
@@ -349,6 +366,26 @@ class Engine:
     def shutdown(self) -> None:
         self._stop = True
         self._save_state()
+
+
+def _restore_config_if_missing() -> None:
+    """Se le impostazioni non ci sono in locale (host riavviato da zero), le recupera
+    dal backup su GitHub → così le impostazioni non si azzerano ai riavvii."""
+    try:
+        if os.path.exists(cfgmod.CONFIG_PATH) or not statestore.enabled():
+            return
+        saved = statestore.load_config()
+        if not saved:
+            return
+        os.makedirs(cfgmod.DATA_DIR, exist_ok=True)
+        with open(cfgmod.CONFIG_PATH, "w", encoding="utf-8") as f:
+            json.dump(saved, f, indent=2)
+        try:
+            os.chmod(cfgmod.CONFIG_PATH, 0o600)
+        except Exception:
+            pass
+    except Exception:
+        pass
 
 
 def _today() -> str:

@@ -36,7 +36,7 @@ DEFAULTS: Dict[str, Any] = {
     "min_order_eur": 5.0,           # ordine reale minimo (Kraken rifiuta ordini troppo piccoli)
     "analysis_days": 30,            # giorni di analisi del mercato prima di iniziare a operare
     "daily_target_eur": 0.03,       # QUOTA: ogni bot deve GUADAGNARE almeno questo IN PIÙ al giorno, o GAME OVER (non chiude quando lo tocca)
-    "day_minutes": 1440,            # durata di una "giornata" (1440 = un giorno vero; abbassalo per i test)
+    "day_minutes": 10080,           # durata di una "giornata" per la quota (10080 = 7 giorni: controllo settimanale, molti meno morti)
     "max_trade_pct": 100,           # TETTO massimo per operazione (%): quanto mettere lo decide il BOT,
                                     # ma non oltre questo tetto. 100 = libero di puntare anche tutto il saldo.
     "stop_loss_pct": 8,             # stop-loss (%): quanto respiro dai al trade prima di tagliare (largo = meno "stoppato" dal rumore)

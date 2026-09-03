@@ -346,6 +346,7 @@ class Engine:
                 "effective_mode": self.effective_mode,
                 "price": round(self.feed.price(), 2),
                 "price_is_real": self.feed.is_real,
+                "price_source": getattr(self.feed, "source", ""),
                 "feed_error": self.feed.last_error,
                 "live_error": self.live_error,
                 "live_stopped_reason": self.live_stopped_reason,

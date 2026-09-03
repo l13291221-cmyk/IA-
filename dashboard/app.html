@@ -338,7 +338,9 @@ async function poll(){
   const sw=s.swarm,c=s.config,lab=s.lab,live=s.effective_mode==="live",an=sw.analysis;
   $("modeBadge").textContent=live?"SOLDI VERI":"DEMO";$("modeBadge").className="mode "+(live?"live":"demo");
   $("price").textContent=fmt(s.price);$("sym").textContent=c.symbol;
-  $("priceDot").className="dot "+(s.price_is_real?"real":"sim");$("priceReal").textContent=s.price_is_real?"reale":"simulato";
+  $("priceDot").className="dot "+(s.price_is_real?"real":"sim");
+  {const src=s.price_source?(" · "+s.price_source.charAt(0).toUpperCase()+s.price_source.slice(1)):"";
+   $("priceReal").textContent=(s.price_is_real?"reale":"simulato")+(s.price_is_real?src:"");}
   $("pause").textContent=s.paused?"▶":"⏸";
   // analisi
   if(an&&an.active){

@@ -331,7 +331,8 @@ async function poll(){
   let s;try{s=await api("/api/state");}catch(e){return;}
   if(!s||!s.swarm)return;
   if(s.render){RENDER={online:s.render.online,total:s.render.spindown_total,idle:s.render.idle_seconds,
-      ping_count:s.render.ping_count,interval:s.render.ping_interval,ping_last_ago:s.render.ping_last_ago,at:Date.now()};}
+      ping_count:s.render.ping_count,interval:s.render.ping_interval,ping_last_ago:s.render.ping_last_ago,
+      mutual:s.render.mutual||null,at:Date.now()};}
   else{RENDER=null;}
   renderRenderCard();
   const sw=s.swarm,c=s.config,lab=s.lab,live=s.effective_mode==="live",an=sw.analysis;
@@ -455,6 +456,13 @@ function renderRenderCard(){
     const next=(ago==null?RENDER.interval:Math.max(0,RENDER.interval-ago));
     pingLine=`🔁 Prossimo auto-ping tra <b style="color:var(--txt)">${fmtms(next)}</b> · ping fatti finora: <b style="color:var(--txt)">${RENDER.ping_count}</b>`;
   }
+  let mutualLine="";
+  const mu=RENDER.mutual;
+  if(mu&&mu.urls>0&&mu.interval>0){
+    const mago=(mu.last_ago==null?null:mu.last_ago+el);
+    const mnext=(mago==null?mu.interval:Math.max(0,mu.interval-mago));
+    mutualLine=`<div style="margin-top:6px;font-size:13px">🤝 Tengo sveglio anche l'altro sito · prossimo tra <b style="color:var(--txt)">${fmtms(mnext)}</b> · fatti: <b style="color:var(--txt)">${mu.count}</b></div>`;
+  }
   box.innerHTML=`<div class="panel" style="margin-bottom:14px">
     <h2>🟢 Online — il bot si tiene acceso da solo</h2>
     <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
@@ -464,6 +472,7 @@ function renderRenderCard(){
     </div>
     <div class="bar" style="margin-top:8px"><i style="width:${pct}%;background:${col}"></i></div>
     <div style="margin-top:8px;font-size:13px">${pingLine}</div>
+    ${mutualLine}
     <div style="margin-top:6px;font-size:11px;color:var(--muted)">↺ Riparte da 15:00 a ogni auto-ping (o quando apri la pagina), così non arriva mai a zero e non si spegne. Anche tenere aperta questa pagina lo tiene sveglio: qui vedi cosa succede quando non lo stai guardando.</div>
   </div>`;
 }

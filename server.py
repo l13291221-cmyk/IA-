@@ -36,12 +36,22 @@ from agentcolony.engine import Engine
 HTML_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dashboard")
 TOKEN = ""
 
+# Siti "amici" da tenere svegli A VICENDA (ping reciproco): oltre a pingare sé
+# stesso, il bot pinga anche questi indirizzi ogni pochi minuti. Così, se l'altro
+# sito non riesce ad auto-pingarsi, ci pensa questo (rete di sicurezza reciproca).
+# Modificabile con la variabile d'ambiente MUTUAL_PING_URLS (uno o più indirizzi
+# separati da virgola). Per SPEGNERLO: imposta MUTUAL_PING_URLS a vuoto.
+_DEFAULT_MUTUAL_PING = "https://vcriptov.onrender.com"
+
 # stato "resta acceso": per mostrare sul sito il timer di spegnimento di Render e
 # l'auto-ping. `last_visit` viene azzerato da una visita VERA (apertura pagina) o dal
 # ping automatico; NON dai controlli di stato in background, così il timer si vede scorrere.
 _STATS_LOCK = threading.Lock()
 _STATS = {"last_visit": time.time(), "ping_count": 0, "ping_last": 0.0,
-          "ping_interval": 0, "online": False}
+          "ping_interval": 0, "online": False,
+          # ping reciproco verso l'ALTRO sito (per tenerlo sveglio a vicenda)
+          "mping_count": 0, "mping_last": 0.0, "mping_interval": 0,
+          "mping_urls": 0, "mping_ok": 0}
 
 
 def _touch_visit() -> None:
@@ -59,6 +69,14 @@ def _render_stats() -> dict:
             "ping_count": _STATS["ping_count"],
             "ping_interval": _STATS["ping_interval"],
             "ping_last_ago": (round(now - _STATS["ping_last"]) if _STATS["ping_last"] else None),
+            # ping reciproco verso l'altro sito (rete di sicurezza a vicenda)
+            "mutual": {
+                "urls": _STATS["mping_urls"],
+                "interval": _STATS["mping_interval"],
+                "count": _STATS["mping_count"],
+                "ok": _STATS["mping_ok"],
+                "last_ago": (round(now - _STATS["mping_last"]) if _STATS["mping_last"] else None),
+            },
         }
 
 
@@ -187,6 +205,50 @@ def _keep_awake_loop() -> None:
             _STATS["ping_last"] = time.time()
 
 
+def _mutual_ping_targets() -> list:
+    """Gli indirizzi degli altri siti da tenere svegli (ping reciproco).
+
+    Di default pinga `_DEFAULT_MUTUAL_PING`. Con la variabile MUTUAL_PING_URLS
+    puoi metterne uno o più (separati da virgola o spazio), oppure lasciarla
+    VUOTA per spegnere del tutto il ping reciproco.
+    """
+    raw = os.environ.get("MUTUAL_PING_URLS")
+    if raw is None:                       # variabile non impostata → uso il default
+        raw = _DEFAULT_MUTUAL_PING
+    return [u.strip() for u in raw.replace(",", " ").split() if u.strip().startswith("http")]
+
+
+def _mutual_ping_loop() -> None:
+    """Pinga l'ALTRO sito (o più siti) ogni pochi minuti per tenerlo sveglio.
+
+    È il "gemello" dell'auto-ping: se l'altro sito non riuscisse a tenersi sveglio
+    da solo, ci pensa questo. Si attiva SOLO online (quando c'è un indirizzo
+    pubblico) e SOLO se ci sono indirizzi da pingare. Intervallo: MUTUAL_PING_SECONDS
+    (default 5 min), tra 1 e 14 min.
+    """
+    urls = _mutual_ping_targets()
+    if not urls:
+        return
+    interval = _as_int(os.environ.get("MUTUAL_PING_SECONDS")) or 300   # default 5 min
+    interval = max(60, min(interval, 840))
+    with _STATS_LOCK:
+        _STATS["mping_urls"] = len(urls)
+        _STATS["mping_interval"] = interval
+    while True:
+        time.sleep(interval)
+        ok = 0
+        for u in urls:
+            try:   # basta una visita all'altro sito per azzerare il SUO timer di spegnimento
+                urllib.request.urlopen(u, timeout=20).read(64)
+                ok += 1
+            except Exception:
+                pass
+        with _STATS_LOCK:
+            _STATS["mping_count"] += 1
+            _STATS["mping_last"] = time.time()
+            _STATS["mping_ok"] = ok
+
+
 def main() -> None:
     global TOKEN
     p = argparse.ArgumentParser(description="AgentColony — sito di gestione + motore 24/7")
@@ -211,6 +273,11 @@ def main() -> None:
     if os.environ.get("SELF_PING_URL") or os.environ.get("RENDER_EXTERNAL_URL"):
         threading.Thread(target=_keep_awake_loop, daemon=True).start()
         print("  🔁 Auto-sveglia ATTIVA: il bot si visita da solo per non spegnersi.")
+        # ping reciproco: tiene sveglio ANCHE l'altro sito (rete di sicurezza a vicenda)
+        targets = _mutual_ping_targets()
+        if targets:
+            threading.Thread(target=_mutual_ping_loop, daemon=True).start()
+            print("  🤝 Ping reciproco ATTIVO verso: " + ", ".join(targets))
     if args.open:
         # apre il browser da solo poco dopo che il server è pronto (in silenzio se non riesce)
         def _open_browser():

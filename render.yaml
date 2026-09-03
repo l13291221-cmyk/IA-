@@ -26,6 +26,10 @@ services:
         value: l13291221-cmyk/IA-
       - key: STATE_GITHUB_TOKEN
         sync: false             # ← token GitHub "fine-grained": solo questo repo, Contents R/W
+      # --- ping reciproco: questo sito tiene sveglio ANCHE l'altro (rete di sicurezza) ---
+      # più indirizzi? separali con la virgola. Vuoto = ping reciproco spento.
+      - key: MUTUAL_PING_URLS
+        value: https://vcriptov.onrender.com
       # --- solo per i SOLDI VERI (chiavi SOLO-TRADING, niente prelievi) ---
       - key: KRAKEN_API_KEY
         sync: false

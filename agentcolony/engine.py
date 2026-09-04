@@ -360,6 +360,7 @@ class Engine:
                     "ok": self._backup_ok,
                     "last_ok_ago": (round(time.time() - self._backup_last_ok)
                                     if self._backup_last_ok else None),
+                    "error": getattr(statestore, "last_error", ""),
                 },
                 "day_start_equity": round(self.day_start_equity, 2),
                 "pnl_today": round(pnl, 2),

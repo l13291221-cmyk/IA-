@@ -461,7 +461,7 @@ function renderBackup(b){
     return;
   }
   const why = b.configured
-    ? "Il token c'è ma il salvataggio non riesce (token scaduto o senza permesso sul repo?)."
+    ? ("Il token c'è ma il salvataggio non riesce"+(b.error?": <b>"+b.error+"</b>":" (token scaduto o senza permesso sul repo?)")+".")
     : "Manca la variabile <b>STATE_GITHUB_TOKEN</b> su Render.";
   box.innerHTML=`<div class="panel" style="margin-bottom:14px;border-color:rgba(248,113,113,.55);background:rgba(248,113,113,.06)">
     <div style="font-size:14px;color:var(--red);font-weight:800">⚠️ Backup su GitHub: SPENTO — nessuna rete di sicurezza</div>

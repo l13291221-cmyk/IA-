@@ -34,6 +34,20 @@ import urllib.request
 _API = "https://api.github.com"
 _sha: dict = {}   # path del file -> sha dell'ultima versione salvata (per aggiornarla al posto giusto)
 _CONFIG_PATH = "config.json"   # impostazioni (SENZA chiavi) salvate accanto allo stato
+last_error = ""   # motivo leggibile dell'ultimo problema (mostrato sul sito per capire cosa sistemare)
+
+
+def _set_err(msg: str) -> None:
+    global last_error
+    last_error = msg
+
+
+def _explain(code: int) -> str:
+    if code in (401, 403):
+        return f"token non valido o scaduto (errore {code})"
+    if code == 404:
+        return f"repo o ramo non trovato / token senza accesso a questo repo (errore {code})"
+    return f"errore GitHub (codice {code})"
 
 
 def _cfg():
@@ -77,7 +91,9 @@ def _load_file(path: str):
     except urllib.error.HTTPError as e:
         if e.code == 404:
             return None   # non ancora salvato: normale al primo avvio
-    except Exception:
+        _set_err(_explain(e.code))   # 401/403 = token scaduto/sbagliato, ecc.
+    except Exception as e:
+        _set_err(str(e)[:80])
         return None
     return None
 
@@ -133,17 +149,24 @@ def _save_file(path: str, obj: dict) -> bool:
     tok, repo, branch, _ = _cfg()
     try:
         _ensure_branch(tok, repo, branch)
-        return _put_file(path, obj)
+        ok = _put_file(path, obj)
+        _set_err("" if ok else "salvataggio rifiutato da GitHub")
+        return ok
     except urllib.error.HTTPError as e:
         # sha non aggiornato (scritto nel frattempo): rileggo e riprovo una volta
         if e.code in (409, 422):
             try:
                 _load_file(path)          # aggiorna lo sha
-                return _put_file(path, obj)
-            except Exception:
+                ok = _put_file(path, obj)
+                _set_err("" if ok else "conflitto di versione su GitHub")
+                return ok
+            except Exception as e2:
+                _set_err(str(e2)[:80])
                 return False
+        _set_err(_explain(e.code))   # es. 401 token scaduto, 404 repo/ramo non accessibile
         return False
-    except Exception:
+    except Exception as e:
+        _set_err(str(e)[:80])
         return False
 
 

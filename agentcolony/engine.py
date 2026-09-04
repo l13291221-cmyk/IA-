@@ -61,6 +61,8 @@ class Engine:
         self._pending_state: Optional[Dict[str, Any]] = None
         self._restored = False
         self._last_remote = 0.0   # ultimo backup su GitHub (se configurato)
+        self._backup_ok = False   # esito dell'ultimo salvataggio remoto (per mostrarlo sul sito)
+        self._backup_last_ok = 0.0  # quando è andato a buon fine l'ultimo backup su GitHub
 
         # feed prezzo reale su PIÙ cripto (è il bot a scegliere su quale operare)
         self.feed = MultiFeed(self.cfg["symbol"], poll_seconds=min(20, self.cfg["live_poll_seconds"]))
@@ -200,9 +202,12 @@ class Engine:
             if now - self._last_remote >= every:
                 self._last_remote = now
                 try:
-                    statestore.save(st)
+                    ok = statestore.save(st)
+                    self._backup_ok = bool(ok)
+                    if ok:
+                        self._backup_last_ok = now
                 except Exception:
-                    pass
+                    self._backup_ok = False
 
     # -------------------------------------------------------------- i 3 loop
     def _lab_loop(self) -> None:
@@ -350,6 +355,12 @@ class Engine:
                 "feed_error": self.feed.last_error,
                 "live_error": self.live_error,
                 "live_stopped_reason": self.live_stopped_reason,
+                "backup": {   # stato del salvataggio su GitHub (per vederlo dal telefono)
+                    "configured": statestore.enabled(),
+                    "ok": self._backup_ok,
+                    "last_ok_ago": (round(time.time() - self._backup_last_ok)
+                                    if self._backup_last_ok else None),
+                },
                 "day_start_equity": round(self.day_start_equity, 2),
                 "pnl_today": round(pnl, 2),
                 "swarm": sw,

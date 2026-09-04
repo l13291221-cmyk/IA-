@@ -107,6 +107,7 @@
   <!-- ============ PANORAMICA ============ -->
   <section class="tab active" id="tab-over">
     <div id="analysisBox"></div>
+    <div id="backupBox"></div>
     <div id="renderBox"></div>
 
     <div class="grid g4">
@@ -335,6 +336,7 @@ async function poll(){
       mutual:s.render.mutual||null,at:Date.now()};}
   else{RENDER=null;}
   renderRenderCard();
+  renderBackup(s.backup);
   const sw=s.swarm,c=s.config,lab=s.lab,live=s.effective_mode==="live",an=sw.analysis;
   $("modeBadge").textContent=live?"SOLDI VERI":"DEMO";$("modeBadge").className="mode "+(live?"live":"demo");
   $("price").textContent=fmt(s.price);$("sym").textContent=c.symbol;
@@ -445,6 +447,28 @@ $("pause").onclick=async()=>{await api("/api/pause","POST",{});poll();};
 // ---- Render "resta acceso": timer di spegnimento + auto-ping ----
 let RENDER=null;
 function fmtms(t){t=Math.max(0,Math.round(t));const m=Math.floor(t/60),s=t%60;return m+":"+(s<10?"0":"")+s;}
+function fmtAgo(s){if(s==null)return "mai";if(s<90)return s+" sec fa";if(s<5400)return Math.round(s/60)+" min fa";return Math.round(s/3600)+" ore fa";}
+function renderBackup(b){
+  const box=$("backupBox");if(!box)return;
+  if(!b){box.innerHTML="";return;}
+  // salva DAVVERO solo se: configurato + almeno un salvataggio riuscito di recente (< 20 min)
+  const recent = b.last_ok_ago!=null && b.last_ok_ago < 1200;
+  if(b.configured && recent){
+    box.innerHTML=`<div class="panel" style="margin-bottom:14px;border-color:rgba(52,211,153,.35)">
+      <div style="font-size:14px;color:var(--green);font-weight:700">💾 Backup su GitHub: ATTIVO</div>
+      <div style="margin-top:4px;font-size:12px;color:var(--muted)">Ultimo salvataggio ${fmtAgo(b.last_ok_ago)}. Se Render si riavvia, cronologia e cervello si rimettono da soli.</div>
+    </div>`;
+    return;
+  }
+  const why = b.configured
+    ? "Il token c'è ma il salvataggio non riesce (token scaduto o senza permesso sul repo?)."
+    : "Manca la variabile <b>STATE_GITHUB_TOKEN</b> su Render.";
+  box.innerHTML=`<div class="panel" style="margin-bottom:14px;border-color:rgba(248,113,113,.55);background:rgba(248,113,113,.06)">
+    <div style="font-size:14px;color:var(--red);font-weight:800">⚠️ Backup su GitHub: SPENTO — nessuna rete di sicurezza</div>
+    <div style="margin-top:6px;font-size:12px;color:var(--muted)">${why} Il bot gira, ma se Render si riavvia <b>perdi cronologia e cervello</b>.</div>
+    <div style="margin-top:6px;font-size:12px;color:var(--muted)">Come sistemarlo dal telefono: Render → il tuo servizio → <b>Environment</b> → aggiungi <b>STATE_GITHUB_TOKEN</b> (il token GitHub) e <b>STATE_GITHUB_REPO</b> = <b>l13291221-cmyk/IA-</b> → Save. Qui sopra diventa verde quando riparte.</div>
+  </div>`;
+}
 function renderRenderCard(){
   const box=$("renderBox");if(!box)return;
   if(!RENDER||!RENDER.online){box.innerHTML="";return;}

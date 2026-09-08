@@ -31,7 +31,7 @@ from . import strategy
 from . import signals
 
 _bot_id = itertools.count(1)
-_MIN_HOLD = 8   # cicli minimi prima di poter uscire per "trend girato" (evita i round-trip lampo)
+_MIN_HOLD = 5   # cicli minimi prima di poter uscire per "trend girato" (evita i round-trip lampo)
 
 
 class Bot:
@@ -198,7 +198,7 @@ class Bot:
         self.units = 0.0
         self.entry_price = 0.0
         self.symbol = None
-        self.cooldown = 20   # pausa più lunga dopo una chiusura: meno operazioni = meno commissioni
+        self.cooldown = 6    # pausa dopo una chiusura (profilo attivo: riparte prima a cercare)
 
     def step(self, feed) -> None:
         if self.live:

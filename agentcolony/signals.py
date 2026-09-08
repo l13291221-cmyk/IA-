@@ -16,8 +16,11 @@ from typing import List, Optional
 
 from . import indicators as ind
 
-_PULLBACK_BAND = 0.015   # "vicino" alla EMA20 1H = entro ±1.5% (oltre = sta pompando, non inseguire)
-_VOL_MULT = 1.30         # volume di conferma richiesto: > 130% della media a 20
+# profilo "più attivo" (DEMO, per imparare più in fretta): filtri più larghi = più
+# operazioni. NON cambia quanto punta, solo QUANTO SPESSO entra. Valori più stretti
+# (0.015 / 1.30) = meno operazioni ma più selettive.
+_PULLBACK_BAND = 0.035   # "vicino" alla EMA20 1H = entro ±3.5% (più largo = entra più spesso)
+_VOL_MULT = 1.05         # volume di conferma richiesto: > 105% della media a 20 (meno restrittivo)
 _RSI_LOW, _RSI_HIGH = 30.0, 70.0
 
 

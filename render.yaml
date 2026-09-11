@@ -1,13 +1,16 @@
 # Render Blueprint — MOTORE VIDEO di VcriptoV (crea i reel).
 # Sostituisce il vecchio progetto: stesso servizio, stesso indirizzo, ma ora fa
 # SOLO i video per VcriptoV e tiene sveglia VcriptoV con l'auto-ping.
+#
+# Usa DOCKER (il Dockerfile qui accanto): così Render non deve "indovinare" il
+# linguaggio (prima lo sbagliava e non installava Flask). Il Dockerfile fa tutto:
+# Python + librerie + font + avvio.
 services:
   - type: web
     name: agentcolony            # NON cambiare il nome: mantiene lo stesso indirizzo
-    runtime: python
+    runtime: docker
+    dockerfilePath: ./Dockerfile
     plan: free
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn worker_app:app --timeout 150 --workers 1 --threads 2 --bind 0.0.0.0:$PORT
     healthCheckPath: /health
     autoDeploy: true             # d'ora in poi un push aggiorna il motore da solo
     envVars:

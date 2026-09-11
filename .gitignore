@@ -1,25 +1,3 @@
-# === SICUREZZA: non committare MAI chiavi o stato locale ===
-# config, API key e stato della colonia vivono SOLO in locale, in data/
-data/
-*.key
-*.secret
-.env
-.env.*
-config.local.json
-
-# Python
 __pycache__/
-*.py[cod]
-*.egg-info/
-.venv/
-venv/
-env/
-.mypy_cache/
-.pytest_cache/
-
-# OS / editor
-.DS_Store
-Thumbs.db
-.idea/
-.vscode/
-*.log
+*.pyc
+static/auto/

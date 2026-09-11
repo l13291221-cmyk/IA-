@@ -1,0 +1,8 @@
+# Motore VIDEO di VcriptoV — dipendenze SOLO per creare i reel.
+Flask==3.0.3
+gunicorn>=21
+# Disegno delle schede + montaggio video (Ken Burns) con ffmpeg incluso.
+Pillow>=10
+numpy>=1.26
+imageio>=2.34
+imageio-ffmpeg>=0.5

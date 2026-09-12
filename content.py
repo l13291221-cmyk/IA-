@@ -307,17 +307,44 @@ def _finalize_reel(raw_path, out_path, audio_path=None):
     return out_path
 
 
-def _draw_corner_logo(d, cx, cy, s):
-    """Disegna il logo VcriptoV (scudo con la V verde) in piccolo, centrato in
-    (cx, cy) e scalato di 's'. È l'UNICA cosa che si muove nel reel: pulsa."""
-    half = 30 * s
-    box = [cx - half, cy - half, cx + half, cy + half]
-    lw = max(3, int(5 * s))
+_LOGO_RGBA = {"img": None, "tried": False}
+
+
+def _corner_logo_base():
+    """Carica il LOGO VERO (static/logo.png) UNA volta e lo trasforma in un timbro
+    color inchiostro con trasparenza (lo scudo pieno, lo sfondo trasparente), così
+    si posa bene sulla scheda color crema. In cache: si prepara una volta sola."""
+    if _LOGO_RGBA["tried"]:
+        return _LOGO_RGBA["img"]
+    _LOGO_RGBA["tried"] = True
     try:
-        d.rounded_rectangle(box, radius=max(4, int(11 * s)), outline=INK, width=lw)
+        import os as _os
+        p = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "static", "logo.png")
+        L = _np.asarray(Image.open(p).convert("L")).astype("float32")
+        bg = float(_np.median(_np.concatenate([L[0], L[-1], L[:, 0], L[:, -1]])))
+        # lo scudo è PIÙ SCURO dello sfondo: l'opacità è quanto un pixel è più scuro
+        alpha = _np.clip((bg - L) / max(1.0, bg - float(L.min())), 0, 1) ** 0.8
+        rgba = _np.zeros((L.shape[0], L.shape[1], 4), dtype="uint8")
+        rgba[..., 0], rgba[..., 1], rgba[..., 2] = INK[0], INK[1], INK[2]
+        rgba[..., 3] = (alpha * 255).astype("uint8")
+        _LOGO_RGBA["img"] = Image.fromarray(rgba, "RGBA")
     except Exception:
-        d.rectangle(box, outline=INK, width=lw)
-    # la "V" verde dentro lo scudo
+        _LOGO_RGBA["img"] = None
+    return _LOGO_RGBA["img"]
+
+
+def _paste_corner_logo(frame, cx, cy, s):
+    """Posa il logo vero, scalato di 's' (per la pulsazione), centrato in (cx, cy).
+    Se il file non c'è, disegna un piccolo scudo di ripiego."""
+    logo = _corner_logo_base()
+    if logo is not None:
+        sz = max(8, int(120 * s))
+        lg = logo.resize((sz, sz), Image.LANCZOS)
+        frame.paste(lg, (int(cx - sz / 2), int(cy - sz / 2)), lg)
+        return
+    d = ImageDraw.Draw(frame)          # ripiego se manca logo.png
+    half = 30 * s
+    lw = max(3, int(5 * s))
     d.line([(cx - half * 0.5, cy - half * 0.18), (cx, cy + half * 0.52)], fill=GREEN, width=lw)
     d.line([(cx, cy + half * 0.52), (cx + half * 0.5, cy - half * 0.18)], fill=GREEN, width=lw)
 
@@ -370,7 +397,7 @@ def _card_to_reel(card, out_path, seconds=5, fps=24):
     base = Image.new("RGB", (REEL_W, REEL_H), BG)
     base.paste(card, ((REEL_W - card.width) // 2, (REEL_H - card.height) // 2))
     total = max(1, int(seconds * fps))
-    cx, cy = REEL_W - 92, 104          # angolo in alto a destra
+    cx, cy = REEL_W - 96, 116          # angolo in alto a destra
     raw_path = out_path + ".raw.mp4"
     w = _imageio.get_writer(
         raw_path, fps=fps, codec="libx264", quality=7, macro_block_size=1,
@@ -387,10 +414,9 @@ def _card_to_reel(card, out_path, seconds=5, fps=24):
             # pulsazione morbida (respiro): la scala oscilla ~0.9 → ~1.12
             s = 1.0 + 0.11 * _math.sin(2 * _math.pi * t / 1.6)
             fr = base.copy()
-            dd = ImageDraw.Draw(fr)
-            _draw_corner_logo(dd, cx, cy, s)
+            _paste_corner_logo(fr, cx, cy, s)
             w.append_data(_np.asarray(fr))
-            del fr, dd
+            del fr
             _gc.collect()
     finally:
         w.close()

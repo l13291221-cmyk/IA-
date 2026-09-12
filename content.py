@@ -267,6 +267,41 @@ def video_available() -> bool:
     return _VIDEO_OK and VIDEO_ENABLED
 
 
+def _finalize_reel(raw_path, out_path):
+    """Rende il video PRONTO per Instagram e per aprirsi ovunque (anche iPhone):
+    aggiunge una TRACCIA AUDIO muta (i Reel di solito la pretendono) e sposta il
+    'moov atom' all'inizio (+faststart, così parte subito in streaming). Se per
+    qualsiasi motivo ffmpeg non ci riesce, tengo comunque il video grezzo: meglio
+    un reel senza rifiniture che nessun reel."""
+    import os as _os
+    import subprocess as _sp
+    try:
+        import imageio_ffmpeg as _iff
+        ff = _iff.get_ffmpeg_exe()
+        cmd = [ff, "-y", "-i", raw_path,
+               "-f", "lavfi", "-i",
+               "anullsrc=channel_layout=stereo:sample_rate=44100", "-shortest",
+               "-c:v", "libx264", "-profile:v", "main", "-pix_fmt", "yuv420p",
+               "-c:a", "aac", "-b:a", "128k",
+               "-movflags", "+faststart", out_path]
+        r = _sp.run(cmd, stdout=_sp.DEVNULL, stderr=_sp.DEVNULL)
+        if r.returncode == 0 and _os.path.exists(out_path) and _os.path.getsize(out_path) > 0:
+            try:
+                _os.remove(raw_path)
+            except Exception:
+                pass
+            return out_path
+    except Exception:
+        pass
+    # Ripiego: uso il video grezzo così com'è (senza audio/faststart).
+    try:
+        if raw_path != out_path:
+            _os.replace(raw_path, out_path)
+    except Exception:
+        return raw_path
+    return out_path
+
+
 def _card_to_reel(card, out_path, seconds=5, fps=24, zoom_end=1.08, steps=16):
     # Reel con ZOOM (Ken Burns) MA leggero per i 512MB del free tier. Trucco: NON
     # ingrandisco 120 fotogrammi (era quello che faceva saturare la memoria →
@@ -286,7 +321,10 @@ def _card_to_reel(card, out_path, seconds=5, fps=24, zoom_end=1.08, steps=16):
     total = max(1, int(seconds * fps))
     steps = max(2, min(steps, total))
     bw, bh = big.size
-    w = _imageio.get_writer(out_path, fps=fps, codec="libx264", quality=7,
+    # Scrivo prima il video "grezzo" (solo immagini), poi lo rifinisco per
+    # Instagram (audio muto + faststart) in _finalize_reel.
+    raw_path = out_path + ".raw.mp4"
+    w = _imageio.get_writer(raw_path, fps=fps, codec="libx264", quality=7,
                             macro_block_size=1, ffmpeg_params=["-pix_fmt", "yuv420p"])
     try:
         for s in range(steps):
@@ -309,6 +347,9 @@ def _card_to_reel(card, out_path, seconds=5, fps=24, zoom_end=1.08, steps=16):
         except Exception:
             pass
         _gc.collect()
+    # Rifinitura per Instagram (audio muto + faststart). Il file finale resta in
+    # out_path, così chi ha chiamato la funzione lo trova dov'è previsto.
+    _finalize_reel(raw_path, out_path)
 
 
 def make_educational_reel(index: int):

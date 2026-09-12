@@ -278,11 +278,15 @@ def _finalize_reel(raw_path, out_path):
     try:
         import imageio_ffmpeg as _iff
         ff = _iff.get_ffmpeg_exe()
+        # IMPORTANTE per la memoria (512MB): NON ri-codifico il video (sarebbe una
+        # seconda codifica x264 = picco di RAM → l'istanza sforava e si riavviava).
+        # COPIO il flusso video già pronto (-c:v copy) e aggiungo solo la traccia
+        # audio muta (codifica minuscola) + faststart. Operazione leggerissima.
         cmd = [ff, "-y", "-i", raw_path,
                "-f", "lavfi", "-i",
                "anullsrc=channel_layout=stereo:sample_rate=44100", "-shortest",
-               "-c:v", "libx264", "-profile:v", "main", "-pix_fmt", "yuv420p",
-               "-c:a", "aac", "-b:a", "128k",
+               "-c:v", "copy",
+               "-c:a", "aac", "-b:a", "96k",
                "-movflags", "+faststart", out_path]
         r = _sp.run(cmd, stdout=_sp.DEVNULL, stderr=_sp.DEVNULL)
         if r.returncode == 0 and _os.path.exists(out_path) and _os.path.getsize(out_path) > 0:

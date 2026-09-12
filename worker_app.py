@@ -22,12 +22,45 @@ Endpoint:
   GET  /reels/<file>  → serve il video creato (Instagram lo scarica da qui)
 """
 import os
-import threading
-import time
+import subprocess
+import sys
 
-from flask import Flask, request, jsonify, send_from_directory
 
-import content
+def _ensure_deps():
+    """A PROVA DI TUTTO: se le librerie del motore mancano (Render a volte NON
+    esegue il build e non installa nulla → 'No module named flask'), le installo
+    io stesso PRIMA di importarle, nello STESSO Python che sta girando. Così il
+    motore parte comunque, qualunque cosa faccia Render."""
+    try:
+        import flask  # noqa: F401
+        import PIL  # noqa: F401
+        import numpy  # noqa: F401
+        import imageio  # noqa: F401
+        return  # già tutto presente
+    except Exception:
+        pass
+    req = os.path.join(os.path.dirname(os.path.abspath(__file__)), "requirements.txt")
+    for cmd in (
+        [sys.executable, "-m", "pip", "install", "--no-cache-dir", "-r", req],
+        [sys.executable, "-m", "pip", "install", "--no-cache-dir",
+         "Flask", "gunicorn", "Pillow", "numpy", "imageio", "imageio-ffmpeg", "requests"],
+    ):
+        try:
+            print("Installo le librerie del motore video…", flush=True)
+            subprocess.check_call(cmd)
+            return
+        except Exception as exc:
+            print(f"Tentativo di installazione fallito: {exc}", flush=True)
+
+
+_ensure_deps()
+
+import threading  # noqa: E402
+import time  # noqa: E402
+
+from flask import Flask, request, jsonify, send_from_directory  # noqa: E402
+
+import content  # noqa: E402
 # QUI il video è ACCESO: è lo scopo unico di questa istanza (sul sito principale
 # resta spento per non sforare la memoria).
 content.VIDEO_ENABLED = True

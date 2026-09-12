@@ -12,6 +12,7 @@ Tutto robusto: se un font manca o qualcosa va storto, ritorna None senza crash.
 """
 
 import os
+import random
 import time
 
 try:
@@ -26,14 +27,19 @@ _FONT_BOLD = "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf"
 _FONT_REG = "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
 
 W, H = 1080, 1350
-BG = (14, 17, 22)          # sfondo scuro
-CARD = (22, 27, 34)
-GREEN = (34, 197, 94)
-RED = (239, 68, 68)
-TXT = (232, 238, 245)
-MUT = (159, 176, 195)
-BRAND = (61, 220, 132)
-LINE = (38, 48, 60)
+# --- Stile "quaderno / disegnato a mano" (foglio di carta, evidenziatore, candele
+# disegnate). Colori tenui su carta chiara, come gli appunti a mano. ---
+BG = (246, 241, 228)       # carta color crema
+CARD = (238, 231, 212)     # riquadro (nota) leggermente più scuro
+GREEN = (56, 158, 92)      # verde "pennarello"
+RED = (206, 82, 70)        # rosso "pennarello"
+TXT = (44, 45, 52)         # inchiostro scuro
+MUT = (120, 118, 120)      # grigio matita
+BRAND = (44, 150, 96)      # accento verde
+LINE = (206, 212, 222)     # righe del quaderno (azzurrino tenue)
+HILITE = (255, 230, 110)   # evidenziatore giallo
+MARGIN = (223, 156, 156)   # riga rossa del margine
+INK = TXT
 
 
 def _font(size, bold=True):
@@ -44,8 +50,31 @@ def _font(size, bold=True):
         return ImageFont.load_default()
 
 
+def _sk_line(d, p1, p2, fill, width=4, jitter=2.0, passes=2):
+    """Linea 'disegnata a mano': due passate con piccoli scostamenti casuali, così
+    sembra tracciata a penna invece che al computer."""
+    (x1, y1), (x2, y2) = p1, p2
+    for _ in range(passes):
+        def j():
+            return random.uniform(-jitter, jitter)
+        d.line([(x1 + j(), y1 + j()), (x2 + j(), y2 + j())], fill=fill, width=width)
+
+
+def _sk_rect(d, box, fill=None, outline=None, width=3, jitter=1.8):
+    """Rettangolo riempito con contorno 'a mano' (quattro linee sketchate)."""
+    x0, y0, x1, y1 = box
+    if fill is not None:
+        d.rectangle([x0, y0, x1, y1], fill=fill)
+    if outline is not None:
+        _sk_line(d, (x0, y0), (x1, y0), outline, width, jitter)
+        _sk_line(d, (x1, y0), (x1, y1), outline, width, jitter)
+        _sk_line(d, (x1, y1), (x0, y1), outline, width, jitter)
+        _sk_line(d, (x0, y1), (x0, y0), outline, width, jitter)
+
+
 def _candles(d, specs, x0, y0, w, h):
-    """Disegna una mini-serie di candele. specs = lista di (open, close, low, high)
+    """Disegna una mini-serie di candele DISEGNATE A MANO: corpo colorato con
+    contorno d'inchiostro e stoppino sketchato. specs = (open, close, low, high)
     in unità 0..100 (0 = basso del riquadro, 100 = alto). Verde se close>open."""
     if not specs:
         return
@@ -59,30 +88,45 @@ def _candles(d, specs, x0, y0, w, h):
     for i, (o, c, lo, hi) in enumerate(specs):
         cx = x0 + slot * (i + 0.5)
         color = GREEN if c >= o else RED
-        d.line([(cx, yy(hi)), (cx, yy(lo))], fill=color, width=6)
+        # stoppino (wick) a mano, in inchiostro scuro
+        _sk_line(d, (cx, yy(hi)), (cx, yy(lo)), INK, 4, jitter=1.5)
         top, bot = yy(max(o, c)), yy(min(o, c))
-        if abs(bot - top) < 4:
-            bot = top + 4
-        d.rectangle([cx - cw / 2, top, cx + cw / 2, bot], fill=color)
+        if abs(bot - top) < 8:
+            bot = top + 8
+        # corpo: riempito col colore + contorno d'inchiostro disegnato a mano
+        _sk_rect(d, (cx - cw / 2, top, cx + cw / 2, bot),
+                 fill=color, outline=INK, width=3, jitter=1.5)
 
 
 def _base(title, subtitle, tag):
     img = Image.new("RGB", (W, H), BG)
     d = ImageDraw.Draw(img)
-    # header brand
-    d.ellipse([60, 55, 118, 113], outline=BRAND, width=6)
-    d.line([(74, 84), (104, 84)], fill=BRAND, width=6)
-    d.text((135, 60), "VcriptoV", font=_font(46), fill=TXT)
+    # --- foglio di quaderno: righe orizzontali tenui + margine rosso a sinistra ---
+    y = 140
+    while y < H - 30:
+        d.line([(30, y), (W - 30, y)], fill=LINE, width=2)
+        y += 58
+    d.line([(48, 30), (48, H - 30)], fill=MARGIN, width=3)
+    # --- header: cerchio "logo" disegnato a mano + nome ---
+    _sk_rect(d, (60, 55, 118, 113), outline=INK, width=5, jitter=1.4)
+    _sk_line(d, (74, 84), (104, 84), GREEN, 6, jitter=1.2)
+    d.text((135, 60), "VcriptoV", font=_font(46), fill=INK)
     d.text((137, 112), "crypto signals", font=_font(26, False), fill=MUT)
-    # title
-    d.text((60, 195), title, font=_font(58), fill=TXT)
+    # --- titolo con EVIDENZIATORE giallo dietro (come gli appunti) ---
+    tf = _font(58)
+    try:
+        bb = d.textbbox((60, 195), title, font=tf)
+        d.rectangle([bb[0] - 8, bb[1] + 14, min(bb[2] + 14, W - 40), bb[3] + 2], fill=HILITE)
+    except Exception:
+        pass
+    d.text((60, 195), title, font=tf, fill=INK)
     if subtitle:
-        d.text((60, 270), subtitle, font=_font(30, False), fill=BRAND)
-    d.line([(60, 320), (W - 60, 320)], fill=LINE, width=3)
-    # footer
-    d.line([(60, H - 150), (W - 60, H - 150)], fill=LINE, width=3)
+        d.text((60, 272), subtitle, font=_font(30, False), fill=BRAND)
+    _sk_line(d, (60, 322), (W - 60, 322), INK, 3, jitter=1.2)
+    # --- footer ---
+    _sk_line(d, (60, H - 150), (W - 60, H - 150), INK, 3, jitter=1.2)
     d.text((60, H - 122), tag, font=_font(27, False), fill=MUT)
-    d.text((60, H - 80), "👉  link in bio", font=_font(30), fill=BRAND)
+    d.text((60, H - 80), "→  link in bio", font=_font(30), fill=BRAND)
     return img, d
 
 
@@ -433,12 +477,14 @@ def make_signal_card(coin: str, is_buy: bool, price: float, sl: float, tp: float
     try:
         has_ex = gain_pct is not None and gain_pct > 0
         risk_en = {"basso": "low", "medio": "medium", "alto": "high"}.get(risk, risk)
-        subtitle = (f"This signal hit +{gain_pct:.0f}% 🚀" if has_ex else "")
+        subtitle = (f"This signal hit +{gain_pct:.0f}%" if has_ex else "")
         img, d = _base("Signal of the day", subtitle,
                        "Not financial advice • past results don't guarantee future ones")
         d.rounded_rectangle([60, 360, W - 60, 360 + 660], 24, fill=CARD)
-        verso = "🟢 LONG" if is_buy else "🔴 SHORT"
-        d.text((110, 400), verso, font=_font(56), fill=GREEN if is_buy else RED)
+        vcol = GREEN if is_buy else RED
+        # pallino disegnato a mano (verde=long, rosso=short) + etichetta
+        d.ellipse([112, 410, 150, 448], fill=vcol, outline=INK, width=3)
+        d.text((170, 400), "LONG" if is_buy else "SHORT", font=_font(56), fill=vcol)
         d.text((110, 480), coin, font=_font(64), fill=TXT)
         try:
             pstr = f"{price:,.4f}".rstrip("0").rstrip(".")
@@ -454,9 +500,9 @@ def make_signal_card(coin: str, is_buy: bool, price: float, sl: float, tp: float
                    + f" you'd have made (+{gain_pct:.0f}%)", font=_font(28, False), fill=MUT)
             y += 165
         rows = [("Entry", f"{pstr} USDT", TXT),
-                ("🛑 Stop-loss", f"-{sl:.0f}%", RED),
-                ("🎯 Target", f"+{tp:.0f}%", GREEN),
-                ("📊 Risk", risk_en, MUT)]
+                ("Stop-loss", f"-{sl:.0f}%", RED),
+                ("Target", f"+{tp:.0f}%", GREEN),
+                ("Risk", risk_en, MUT)]
         for k, v, c in rows:
             d.text((110, y), k, font=_font(34, False), fill=MUT)
             d.text((W - 110, y), v, font=_font(38), fill=c, anchor="ra")

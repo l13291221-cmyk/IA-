@@ -326,8 +326,19 @@ def _card_to_reel(card, out_path, seconds=5, fps=24, steps=60):
     steps = max(2, min(steps, total))
     bw, bh = big.size
     raw_path = out_path + ".raw.mp4"
-    w = _imageio.get_writer(raw_path, fps=fps, codec="libx264", quality=7,
-                            macro_block_size=1, ffmpeg_params=["-pix_fmt", "yuv420p"])
+    # CODIFICA A BASSA MEMORIA (il motore ha 512MB): x264 con più thread tiene in
+    # RAM molti fotogrammi in anticipo (lookahead) → è quello che faceva sforare la
+    # memoria. Forzo UN SOLO thread, preset ultrafast, niente B-frame né lookahead:
+    # il video esce uguale, ma la codifica usa una frazione della RAM.
+    w = _imageio.get_writer(
+        raw_path, fps=fps, codec="libx264", quality=7, macro_block_size=1,
+        ffmpeg_params=[
+            "-pix_fmt", "yuv420p",
+            "-preset", "ultrafast",
+            "-threads", "1",
+            "-bf", "0",
+            "-x264-params", "rc-lookahead=5:sync-lookahead=0:ref=1:me=dia:subme=1",
+        ])
     try:
         for s in range(steps):
             t = s / (steps - 1)                 # avanzamento 0 → 1

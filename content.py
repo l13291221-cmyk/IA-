@@ -267,27 +267,28 @@ def video_available() -> bool:
     return _VIDEO_OK and VIDEO_ENABLED
 
 
-def _finalize_reel(raw_path, out_path):
+def _finalize_reel(raw_path, out_path, audio_path=None):
     """Rende il video PRONTO per Instagram e per aprirsi ovunque (anche iPhone):
-    aggiunge una TRACCIA AUDIO muta (i Reel di solito la pretendono) e sposta il
-    'moov atom' all'inizio (+faststart, così parte subito in streaming). Se per
-    qualsiasi motivo ffmpeg non ci riesce, tengo comunque il video grezzo: meglio
-    un reel senza rifiniture che nessun reel."""
+    aggiunge l'AUDIO (la musichetta di sottofondo se c'è, altrimenti una traccia
+    muta — i Reel di solito la pretendono) e sposta il 'moov atom' all'inizio
+    (+faststart, così parte subito in streaming). NON ri-codifico il video (sarebbe
+    un secondo x264 = picco di RAM sui 512MB): COPIO il flusso già pronto e aggiungo
+    solo l'audio. Se ffmpeg non ci riesce, tengo il video grezzo."""
     import os as _os
     import subprocess as _sp
     try:
         import imageio_ffmpeg as _iff
         ff = _iff.get_ffmpeg_exe()
-        # IMPORTANTE per la memoria (512MB): NON ri-codifico il video (sarebbe una
-        # seconda codifica x264 = picco di RAM → l'istanza sforava e si riavviava).
-        # COPIO il flusso video già pronto (-c:v copy) e aggiungo solo la traccia
-        # audio muta (codifica minuscola) + faststart. Operazione leggerissima.
-        cmd = [ff, "-y", "-i", raw_path,
-               "-f", "lavfi", "-i",
-               "anullsrc=channel_layout=stereo:sample_rate=44100", "-shortest",
-               "-c:v", "copy",
-               "-c:a", "aac", "-b:a", "96k",
-               "-movflags", "+faststart", out_path]
+        if audio_path and _os.path.exists(audio_path):
+            audio_in = ["-i", audio_path]           # la musichetta di sottofondo
+            abr = "128k"
+        else:
+            audio_in = ["-f", "lavfi", "-i",
+                        "anullsrc=channel_layout=stereo:sample_rate=44100"]
+            abr = "96k"
+        cmd = ([ff, "-y", "-i", raw_path] + audio_in +
+               ["-shortest", "-c:v", "copy", "-c:a", "aac", "-b:a", abr,
+                "-movflags", "+faststart", out_path])
         r = _sp.run(cmd, stdout=_sp.DEVNULL, stderr=_sp.DEVNULL)
         if r.returncode == 0 and _os.path.exists(out_path) and _os.path.getsize(out_path) > 0:
             try:
@@ -306,30 +307,71 @@ def _finalize_reel(raw_path, out_path):
     return out_path
 
 
-def _card_to_reel(card, out_path, seconds=5, fps=24, steps=60):
-    # Reel con MOVIMENTO VERO (Ken Burns): zoom DECISO + PANORAMICA in diagonale,
-    # così si vede chiaramente che è un video e non una foto ferma. Resta leggero
-    # per i 512MB del free tier con lo stesso trucco: preparo UNA sola immagine più
-    # grande e per ~60 passi ne RITAGLIO una finestra che si stringe e SCORRE; un
-    # fotogramma alla volta in RAM, quindi la memoria resta bassa.
+def _draw_corner_logo(d, cx, cy, s):
+    """Disegna il logo VcriptoV (scudo con la V verde) in piccolo, centrato in
+    (cx, cy) e scalato di 's'. È l'UNICA cosa che si muove nel reel: pulsa."""
+    half = 30 * s
+    box = [cx - half, cy - half, cx + half, cy + half]
+    lw = max(3, int(5 * s))
+    try:
+        d.rounded_rectangle(box, radius=max(4, int(11 * s)), outline=INK, width=lw)
+    except Exception:
+        d.rectangle(box, outline=INK, width=lw)
+    # la "V" verde dentro lo scudo
+    d.line([(cx - half * 0.5, cy - half * 0.18), (cx, cy + half * 0.52)], fill=GREEN, width=lw)
+    d.line([(cx, cy + half * 0.52), (cx + half * 0.5, cy - half * 0.18)], fill=GREEN, width=lw)
+
+
+def _make_bg_music(path, seconds=5.0, sr=44100):
+    """Crea una MUSICHETTA di sottofondo dolce (arpeggio morbido in La minore +
+    un 'tappeto' grave leggero), a volume basso: rende il reel più carino senza
+    diventare fastidioso. La genero io, così non ci sono problemi di diritti."""
+    import wave as _wave
+    n_total = int(seconds * sr)
+    audio = _np.zeros(n_total, dtype=_np.float32)
+    notes = [220.00, 261.63, 329.63, 392.00, 329.63, 261.63]  # La do mi sol mi do
+    step = 0.45
+    tt, i = 0.0, 0
+    while tt < seconds:
+        f = notes[i % len(notes)]
+        n = int(step * sr)
+        et = _np.linspace(0, step, n, endpoint=False)
+        env = _np.minimum(et / 0.04, 1.0) * _np.exp(-3.0 * et)   # attacco dolce + coda
+        tone = _np.sin(2 * _np.pi * f * et) * env * 0.22
+        idx = int(tt * sr)
+        end = min(idx + n, n_total)
+        audio[idx:end] += tone[:end - idx]
+        tt += step
+        i += 1
+    tfull = _np.linspace(0, seconds, n_total, endpoint=False)
+    audio += (_np.sin(2 * _np.pi * 110.0 * tfull) +
+              0.5 * _np.sin(2 * _np.pi * 220.0 * tfull)) * 0.05   # tappeto grave
+    fade = int(0.15 * sr)
+    audio[:fade] *= _np.linspace(0, 1, fade)
+    audio[-fade:] *= _np.linspace(1, 0, fade)
+    peak = float(_np.max(_np.abs(audio))) or 1.0
+    pcm = ((audio / peak) * 0.5 * 32767).astype("<i2")
+    with _wave.open(path, "w") as wf:
+        wf.setnchannels(1)
+        wf.setsampwidth(2)
+        wf.setframerate(sr)
+        wf.writeframes(pcm.tobytes())
+    return path
+
+
+def _card_to_reel(card, out_path, seconds=5, fps=24):
+    # Reel come li vuole il proprietario: la SCHEDA sta FERMA (niente zoom, niente
+    # panoramica) e l'UNICA cosa che si muove è il LOGO in alto a destra, piccolo,
+    # che PULSA. In più una musichetta di sottofondo. Leggerissimo per i 512MB:
+    # il frame è quasi identico (x264 lo comprime a nulla) e disegno solo il
+    # logo, un fotogramma alla volta in RAM.
     import gc as _gc
-    Z_MAX = 1.32                 # quanto ingrandisco l'immagine sorgente (spazio per pan)
-    Z0, Z1 = 1.14, 1.30          # lo zoom va da 1.14 a 1.30 (sempre "dentro" = c'è pan)
+    import math as _math
     base = Image.new("RGB", (REEL_W, REEL_H), BG)
     base.paste(card, ((REEL_W - card.width) // 2, (REEL_H - card.height) // 2))
-    big = base.resize((int(REEL_W * Z_MAX), int(REEL_H * Z_MAX)), Image.LANCZOS)
-    try:
-        base.close()
-    except Exception:
-        pass
     total = max(1, int(seconds * fps))
-    steps = max(2, min(steps, total))
-    bw, bh = big.size
+    cx, cy = REEL_W - 92, 104          # angolo in alto a destra
     raw_path = out_path + ".raw.mp4"
-    # CODIFICA A BASSA MEMORIA (il motore ha 512MB): x264 con più thread tiene in
-    # RAM molti fotogrammi in anticipo (lookahead) → è quello che faceva sforare la
-    # memoria. Forzo UN SOLO thread, preset ultrafast, niente B-frame né lookahead:
-    # il video esce uguale, ma la codifica usa una frazione della RAM.
     w = _imageio.get_writer(
         raw_path, fps=fps, codec="libx264", quality=7, macro_block_size=1,
         ffmpeg_params=[
@@ -340,34 +382,36 @@ def _card_to_reel(card, out_path, seconds=5, fps=24, steps=60):
             "-x264-params", "rc-lookahead=5:sync-lookahead=0:ref=1:me=dia:subme=1",
         ])
     try:
-        for s in range(steps):
-            t = s / (steps - 1)                 # avanzamento 0 → 1
-            # ease-in-out morbido, così il movimento non "scatta" all'inizio/fine
-            e = t * t * (3 - 2 * t)
-            z = Z0 + (Z1 - Z0) * e               # zoom che aumenta
-            cw, ch = int(REEL_W * Z_MAX / z), int(REEL_H * Z_MAX / z)
-            # PANORAMICA: la finestra scorre in diagonale da alto-sx a basso-dx,
-            # usando tutto lo spazio disponibile (quello che avanza tra 'big' e la
-            # finestra ritagliata). È questo scorrimento che fa "muovere" il video.
-            x0 = int((bw - cw) * (0.12 + 0.76 * e))
-            y0 = int((bh - ch) * (0.15 + 0.70 * e))
-            fr = big.crop((x0, y0, x0 + cw, y0 + ch)).resize((REEL_W, REEL_H), Image.BILINEAR)
-            arr = _np.asarray(fr)
-            reps = total // steps + (1 if s < total % steps else 0)
-            for _ in range(reps):
-                w.append_data(arr)
-            del fr, arr
+        for fidx in range(total):
+            t = fidx / fps
+            # pulsazione morbida (respiro): la scala oscilla ~0.9 → ~1.12
+            s = 1.0 + 0.11 * _math.sin(2 * _math.pi * t / 1.6)
+            fr = base.copy()
+            dd = ImageDraw.Draw(fr)
+            _draw_corner_logo(dd, cx, cy, s)
+            w.append_data(_np.asarray(fr))
+            del fr, dd
             _gc.collect()
     finally:
         w.close()
         try:
-            big.close()
+            base.close()
         except Exception:
             pass
         _gc.collect()
-    # Rifinitura per Instagram (audio muto + faststart). Il file finale resta in
-    # out_path, così chi ha chiamato la funzione lo trova dov'è previsto.
-    _finalize_reel(raw_path, out_path)
+    # musichetta di sottofondo (se qualcosa va storto, resta l'audio muto) + faststart
+    music = out_path + ".wav"
+    try:
+        _make_bg_music(music, seconds)
+    except Exception:
+        music = None
+    _finalize_reel(raw_path, out_path, music)
+    if music:
+        try:
+            import os as _os
+            _os.remove(music)
+        except Exception:
+            pass
 
 
 def make_educational_reel(index: int):

@@ -3,27 +3,64 @@ MOTORE VIDEO di VcriptoV — micro-servizio che crea SOLO i reel (video).
 
 Perché esiste: su Render free tier (512MB) montare un video con ffmpeg SUL sito
 principale fa sforare la memoria (email "exceeded its memory limit" + riavvii).
-Questo servizio gira su una SECONDA istanza Render (gratis), dove non c'è
-nient'altro: ha tutti i 512MB liberi per il video → nessun problema. Il sito
-principale gli chiede il reel via HTTP, riceve un URL pubblico e lo pubblica su
-Instagram. Così il sito principale non tocca MAI ffmpeg.
+Questo servizio gira su un'istanza DEDICATA: tutti i 512MB liberi per il video, e
+il sito principale non tocca mai ffmpeg. Il sito principale gli chiede il reel via
+HTTP, riceve un URL pubblico e lo pubblica su Instagram.
 
-COME ATTIVARLO (seconda istanza Render, STESSO repository):
-  • Start command:   gunicorn worker_app:app
-  • Environment:     REEL_WORKER_SECRET = <una password a caso>
-    (LA STESSA password va messa anche sul sito principale, in REEL_WORKER_SECRET,
-     insieme a REEL_WORKER_URL = https://<nome-seconda-istanza>.onrender.com)
+In più tiene sveglia VcriptoV (auto-ping reciproco), come faceva il vecchio bot
+che stava qui: così i segnali del sito principale non si fermano mai.
+
+AVVIO su Render:
+  • Start command:   gunicorn worker_app:app --timeout 150 --bind 0.0.0.0:$PORT
+  • Env (opzionale): REEL_WORKER_SECRET = password (la stessa su VcriptoV)
+  • Env (ping):      MUTUAL_PING_URLS   = https://vcriptov.onrender.com
 
 Endpoint:
-  GET  /health         → stato del motore
-  POST /render-reel    → { kind, ... }  ⇒  { url, caption }   (header: X-Worker-Secret)
-  GET  /reels/<file>   → serve il video creato (Instagram lo scarica da qui)
+  GET  /              → ok (health)
+  GET  /health        → stato del motore
+  POST /render-reel   → { kind, ... } ⇒ { url, caption }   (header X-Worker-Secret)
+  GET  /reels/<file>  → serve il video creato (Instagram lo scarica da qui)
 """
 import os
+import subprocess
+import sys
 
-from flask import Flask, request, jsonify, send_from_directory
 
-import content
+def _ensure_deps():
+    """A PROVA DI TUTTO: se le librerie del motore mancano (Render a volte NON
+    esegue il build e non installa nulla → 'No module named flask'), le installo
+    io stesso PRIMA di importarle, nello STESSO Python che sta girando. Così il
+    motore parte comunque, qualunque cosa faccia Render."""
+    try:
+        import flask  # noqa: F401
+        import PIL  # noqa: F401
+        import numpy  # noqa: F401
+        import imageio  # noqa: F401
+        return  # già tutto presente
+    except Exception:
+        pass
+    req = os.path.join(os.path.dirname(os.path.abspath(__file__)), "requirements.txt")
+    for cmd in (
+        [sys.executable, "-m", "pip", "install", "--no-cache-dir", "-r", req],
+        [sys.executable, "-m", "pip", "install", "--no-cache-dir",
+         "Flask", "gunicorn", "Pillow", "numpy", "imageio", "imageio-ffmpeg", "requests"],
+    ):
+        try:
+            print("Installo le librerie del motore video…", flush=True)
+            subprocess.check_call(cmd)
+            return
+        except Exception as exc:
+            print(f"Tentativo di installazione fallito: {exc}", flush=True)
+
+
+_ensure_deps()
+
+import threading  # noqa: E402
+import time  # noqa: E402
+
+from flask import Flask, request, jsonify, send_from_directory  # noqa: E402
+
+import content  # noqa: E402
 # QUI il video è ACCESO: è lo scopo unico di questa istanza (sul sito principale
 # resta spento per non sforare la memoria).
 content.VIDEO_ENABLED = True
@@ -36,6 +73,11 @@ def _authorized(req) -> bool:
     """Se è impostato un segreto, la richiesta deve portarlo (così solo il TUO
     sito principale può usare il motore, non estranei)."""
     return (not SECRET) or (req.headers.get("X-Worker-Secret") == SECRET)
+
+
+@app.get("/")
+def home():
+    return "VcriptoV — motore video attivo. 🎬", 200
 
 
 @app.get("/health")
@@ -78,6 +120,33 @@ def render_reel():
 def serve_reel(name):
     # Instagram scarica il video da questo URL pubblico.
     return send_from_directory(content.OUT_DIR, name, mimetype="video/mp4")
+
+
+# ── Auto-ping: tiene sveglia VcriptoV (e se stesso) sul free tier ──────────────
+def _keepalive_loop():
+    """Ogni ~10 min fa un ping agli indirizzi in MUTUAL_PING_URLS (VcriptoV) e a
+    se stesso, così nessuno dei due si addormenta. È la stessa rete di sicurezza
+    che c'era prima su questo servizio."""
+    try:
+        import requests as _rq
+    except Exception:
+        return
+    urls = [u.strip() for u in os.environ.get("MUTUAL_PING_URLS", "").split(",") if u.strip()]
+    self_url = (os.environ.get("RENDER_EXTERNAL_URL") or "").strip()
+    if self_url:
+        urls.append(self_url.rstrip("/") + "/health")
+    if not urls:
+        return
+    while True:
+        time.sleep(600)
+        for u in urls:
+            try:
+                _rq.get(u, timeout=15)
+            except Exception:
+                pass
+
+
+threading.Thread(target=_keepalive_loop, name="keepalive", daemon=True).start()
 
 
 if __name__ == "__main__":

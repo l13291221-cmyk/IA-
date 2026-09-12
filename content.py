@@ -12,6 +12,7 @@ Tutto robusto: se un font manca o qualcosa va storto, ritorna None senza crash.
 """
 
 import os
+import random
 import time
 
 try:
@@ -26,14 +27,19 @@ _FONT_BOLD = "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf"
 _FONT_REG = "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
 
 W, H = 1080, 1350
-BG = (14, 17, 22)          # sfondo scuro
-CARD = (22, 27, 34)
-GREEN = (34, 197, 94)
-RED = (239, 68, 68)
-TXT = (232, 238, 245)
-MUT = (159, 176, 195)
-BRAND = (61, 220, 132)
-LINE = (38, 48, 60)
+# --- Stile "quaderno / disegnato a mano" (foglio di carta, evidenziatore, candele
+# disegnate). Colori tenui su carta chiara, come gli appunti a mano. ---
+BG = (246, 241, 228)       # carta color crema
+CARD = (238, 231, 212)     # riquadro (nota) leggermente più scuro
+GREEN = (56, 158, 92)      # verde "pennarello"
+RED = (206, 82, 70)        # rosso "pennarello"
+TXT = (44, 45, 52)         # inchiostro scuro
+MUT = (120, 118, 120)      # grigio matita
+BRAND = (44, 150, 96)      # accento verde
+LINE = (206, 212, 222)     # righe del quaderno (azzurrino tenue)
+HILITE = (255, 230, 110)   # evidenziatore giallo
+MARGIN = (223, 156, 156)   # riga rossa del margine
+INK = TXT
 
 
 def _font(size, bold=True):
@@ -44,8 +50,31 @@ def _font(size, bold=True):
         return ImageFont.load_default()
 
 
+def _sk_line(d, p1, p2, fill, width=4, jitter=2.0, passes=2):
+    """Linea 'disegnata a mano': due passate con piccoli scostamenti casuali, così
+    sembra tracciata a penna invece che al computer."""
+    (x1, y1), (x2, y2) = p1, p2
+    for _ in range(passes):
+        def j():
+            return random.uniform(-jitter, jitter)
+        d.line([(x1 + j(), y1 + j()), (x2 + j(), y2 + j())], fill=fill, width=width)
+
+
+def _sk_rect(d, box, fill=None, outline=None, width=3, jitter=1.8):
+    """Rettangolo riempito con contorno 'a mano' (quattro linee sketchate)."""
+    x0, y0, x1, y1 = box
+    if fill is not None:
+        d.rectangle([x0, y0, x1, y1], fill=fill)
+    if outline is not None:
+        _sk_line(d, (x0, y0), (x1, y0), outline, width, jitter)
+        _sk_line(d, (x1, y0), (x1, y1), outline, width, jitter)
+        _sk_line(d, (x1, y1), (x0, y1), outline, width, jitter)
+        _sk_line(d, (x0, y1), (x0, y0), outline, width, jitter)
+
+
 def _candles(d, specs, x0, y0, w, h):
-    """Disegna una mini-serie di candele. specs = lista di (open, close, low, high)
+    """Disegna una mini-serie di candele DISEGNATE A MANO: corpo colorato con
+    contorno d'inchiostro e stoppino sketchato. specs = (open, close, low, high)
     in unità 0..100 (0 = basso del riquadro, 100 = alto). Verde se close>open."""
     if not specs:
         return
@@ -59,30 +88,45 @@ def _candles(d, specs, x0, y0, w, h):
     for i, (o, c, lo, hi) in enumerate(specs):
         cx = x0 + slot * (i + 0.5)
         color = GREEN if c >= o else RED
-        d.line([(cx, yy(hi)), (cx, yy(lo))], fill=color, width=6)
+        # stoppino (wick) a mano, in inchiostro scuro
+        _sk_line(d, (cx, yy(hi)), (cx, yy(lo)), INK, 4, jitter=1.5)
         top, bot = yy(max(o, c)), yy(min(o, c))
-        if abs(bot - top) < 4:
-            bot = top + 4
-        d.rectangle([cx - cw / 2, top, cx + cw / 2, bot], fill=color)
+        if abs(bot - top) < 8:
+            bot = top + 8
+        # corpo: riempito col colore + contorno d'inchiostro disegnato a mano
+        _sk_rect(d, (cx - cw / 2, top, cx + cw / 2, bot),
+                 fill=color, outline=INK, width=3, jitter=1.5)
 
 
 def _base(title, subtitle, tag):
     img = Image.new("RGB", (W, H), BG)
     d = ImageDraw.Draw(img)
-    # header brand
-    d.ellipse([60, 55, 118, 113], outline=BRAND, width=6)
-    d.line([(74, 84), (104, 84)], fill=BRAND, width=6)
-    d.text((135, 60), "VcriptoV", font=_font(46), fill=TXT)
-    d.text((137, 112), "segnali crypto", font=_font(26, False), fill=MUT)
-    # title
-    d.text((60, 195), title, font=_font(58), fill=TXT)
+    # --- foglio di quaderno: righe orizzontali tenui + margine rosso a sinistra ---
+    y = 140
+    while y < H - 30:
+        d.line([(30, y), (W - 30, y)], fill=LINE, width=2)
+        y += 58
+    d.line([(48, 30), (48, H - 30)], fill=MARGIN, width=3)
+    # --- header: cerchio "logo" disegnato a mano + nome ---
+    _sk_rect(d, (60, 55, 118, 113), outline=INK, width=5, jitter=1.4)
+    _sk_line(d, (74, 84), (104, 84), GREEN, 6, jitter=1.2)
+    d.text((135, 60), "VcriptoV", font=_font(46), fill=INK)
+    d.text((137, 112), "crypto signals", font=_font(26, False), fill=MUT)
+    # --- titolo con EVIDENZIATORE giallo dietro (come gli appunti) ---
+    tf = _font(58)
+    try:
+        bb = d.textbbox((60, 195), title, font=tf)
+        d.rectangle([bb[0] - 8, bb[1] + 14, min(bb[2] + 14, W - 40), bb[3] + 2], fill=HILITE)
+    except Exception:
+        pass
+    d.text((60, 195), title, font=tf, fill=INK)
     if subtitle:
-        d.text((60, 270), subtitle, font=_font(30, False), fill=BRAND)
-    d.line([(60, 320), (W - 60, 320)], fill=LINE, width=3)
-    # footer
-    d.line([(60, H - 150), (W - 60, H - 150)], fill=LINE, width=3)
+        d.text((60, 272), subtitle, font=_font(30, False), fill=BRAND)
+    _sk_line(d, (60, 322), (W - 60, 322), INK, 3, jitter=1.2)
+    # --- footer ---
+    _sk_line(d, (60, H - 150), (W - 60, H - 150), INK, 3, jitter=1.2)
     d.text((60, H - 122), tag, font=_font(27, False), fill=MUT)
-    d.text((60, H - 80), "👉  link in bio", font=_font(30), fill=BRAND)
+    d.text((60, H - 80), "→  link in bio", font=_font(30), fill=BRAND)
     return img, d
 
 
@@ -106,89 +150,89 @@ def _wrap(d, text, font, max_w):
 # Ogni voce: titolo, sottotitolo, spiegazione, e una mini-serie di candele che la
 # rappresenta. È generica (educativa), NON i tuoi segnali live.
 PATTERNS = [
-    {"title": "Engulfing rialzista", "sub": "Pattern di inversione ↑",
-     "expl": "Una candela verde grande ingloba del tutto la rossa precedente: chi "
-             "compra ha ripreso il controllo. Spesso segna la fine di una discesa.",
+    {"title": "Bullish Engulfing", "sub": "Reversal pattern ↑",
+     "expl": "A big green candle completely swallows the previous red one: buyers "
+             "took back control. Often marks the end of a downtrend.",
      "candles": [(70, 55, 50, 72), (60, 48, 44, 62), (49, 44, 40, 51),
                  (44, 62, 42, 64), (46, 30, 44, 48), (31, 66, 29, 68)]},
-    {"title": "Engulfing ribassista", "sub": "Pattern di inversione ↓",
-     "expl": "Una candela rossa grande ingloba la verde precedente: chi vende prende "
-             "il sopravvento. Spesso indica la fine di una salita.",
+    {"title": "Bearish Engulfing", "sub": "Reversal pattern ↓",
+     "expl": "A big red candle swallows the previous green one: sellers take over. "
+             "Often signals the end of an uptrend.",
      "candles": [(35, 50, 33, 52), (48, 60, 46, 62), (58, 64, 56, 66),
                  (64, 50, 48, 66), (52, 68, 50, 70), (69, 40, 38, 71)]},
-    {"title": "Martello (Hammer)", "sub": "Possibile rimbalzo dal basso",
-     "expl": "Corpo piccolo in alto e lunga ombra sotto: il prezzo è sceso ma è "
-             "stato ricomprato. Dopo una discesa può anticipare un rimbalzo.",
+    {"title": "Hammer", "sub": "Possible bounce from below",
+     "expl": "Small body on top and a long lower wick: price dropped but got bought "
+             "back. After a fall it can signal a bounce.",
      "candles": [(70, 60, 58, 72), (60, 50, 48, 62), (50, 44, 42, 52),
                  (44, 47, 20, 49), (47, 58, 45, 60)]},
-    {"title": "Stella cadente", "sub": "Possibile inversione dall'alto",
-     "expl": "Corpo piccolo in basso e lunga ombra sopra: il prezzo è salito ma è "
-             "stato respinto. Dopo una salita può anticipare una discesa.",
+    {"title": "Shooting Star", "sub": "Possible reversal from the top",
+     "expl": "Small body at the bottom and a long upper wick: price rose but got "
+             "rejected. After a rally it can signal a drop.",
      "candles": [(30, 40, 28, 42), (40, 50, 38, 52), (50, 56, 48, 58),
                  (56, 53, 51, 80), (53, 42, 40, 55)]},
-    {"title": "Tre soldati bianchi", "sub": "Forza rialzista",
-     "expl": "Tre candele verdi consecutive, ognuna che chiude più in alto: segno "
-             "di uno slancio deciso al rialzo dopo una fase debole.",
+    {"title": "Three White Soldiers", "sub": "Bullish strength",
+     "expl": "Three green candles in a row, each closing higher: a sign of strong "
+             "upward momentum after a weak phase.",
      "candles": [(38, 34, 32, 40), (34, 48, 32, 50), (48, 62, 46, 64), (62, 76, 60, 78)]},
-    {"title": "Tre corvi neri", "sub": "Forza ribassista",
-     "expl": "Tre candele rosse consecutive, ognuna che chiude più in basso: slancio "
-             "deciso al ribasso. Meglio non comprare 'contro corrente'.",
+    {"title": "Three Black Crows", "sub": "Bearish strength",
+     "expl": "Three red candles in a row, each closing lower: strong downward "
+             "momentum. Better not to buy 'against the tide'.",
      "candles": [(64, 68, 62, 70), (68, 54, 52, 70), (54, 40, 38, 56), (40, 26, 24, 42)]},
-    {"title": "Supporto e resistenza", "sub": "I livelli chiave",
-     "expl": "Il supporto è un 'pavimento' dove il prezzo rimbalza; la resistenza un "
-             "'soffitto' dove si ferma. Si compra vicino al supporto, non sui massimi.",
+    {"title": "Support & Resistance", "sub": "The key levels",
+     "expl": "Support is a 'floor' where price bounces; resistance a 'ceiling' where "
+             "it stalls. Buy near support, not at the highs.",
      "candles": [(35, 45, 30, 48), (45, 38, 32, 47), (38, 46, 31, 49),
                  (46, 40, 33, 48), (40, 55, 38, 66), (55, 62, 52, 68)]},
-    {"title": "Non inseguire il prezzo", "sub": "Gestione del rischio",
-     "expl": "Se una moneta è già corsa tanto, comprare 'sul treno in corsa' è "
-             "rischioso: spesso arriva uno storno. Meglio aspettare un ritracciamento.",
+    {"title": "Don't chase the price", "sub": "Risk management",
+     "expl": "If a coin has already run a lot, jumping on the moving train is risky: "
+             "a pullback often comes. Better to wait for a retracement.",
      "candles": [(30, 40, 28, 42), (40, 55, 38, 57), (55, 72, 53, 74),
                  (72, 88, 70, 90), (88, 74, 72, 90)]},
-    {"title": "Usa sempre lo stop-loss", "sub": "Regola d'oro",
-     "expl": "Lo stop-loss chiude il trade se va storto, limitando la perdita. È la "
-             "differenza tra perdere poco ed esplodere il conto. Rispettalo, sempre.",
+    {"title": "Always use a stop-loss", "sub": "Golden rule",
+     "expl": "A stop-loss closes the trade if it goes wrong, capping your loss. It's "
+             "the difference between losing little and blowing up your account.",
      "candles": [(60, 52, 50, 62), (52, 44, 34, 54), (44, 40, 30, 46), (40, 46, 30, 48)]},
-    {"title": "Doji: indecisione", "sub": "Il mercato è in bilico",
-     "expl": "Apertura e chiusura quasi uguali: né compratori né venditori vincono. "
-             "Spesso precede un movimento deciso: si aspetta la conferma.",
+    {"title": "Doji: indecision", "sub": "The market is on the fence",
+     "expl": "Open and close almost equal: neither buyers nor sellers win. Often "
+             "precedes a strong move: wait for confirmation.",
      "candles": [(40, 48, 38, 50), (48, 55, 46, 57), (55, 54, 48, 62), (54, 44, 42, 56)]},
-    # --- Consigli / gestione del rischio (sempreverdi) ---
-    {"title": "Non mettere tutto in una moneta", "sub": "Diversifica",
-     "expl": "Se punti tutto su una sola cripto e va male, perdi tutto. Dividere su "
-             "più monete riduce il rischio: un colpo storto non ti azzera.",
+    # --- Tips / risk management (evergreen) ---
+    {"title": "Don't put it all in one coin", "sub": "Diversify",
+     "expl": "Bet everything on one crypto and if it goes bad, you lose it all. "
+             "Splitting across coins lowers the risk: one bad hit won't wipe you out.",
      "candles": [(40, 52, 38, 54), (52, 46, 44, 55), (46, 58, 44, 60), (58, 50, 48, 61)]},
-    {"title": "DCA: compra a piccole rate", "sub": "Strategia da principianti",
-     "expl": "Invece di entrare tutto in una volta, comprare un po' alla volta media "
-             "il prezzo e toglie l'ansia di 'sbagliare il momento'. Semplice ed efficace.",
+    {"title": "DCA: buy in small amounts", "sub": "Beginner strategy",
+     "expl": "Instead of entering all at once, buying a bit at a time averages your "
+             "price and removes the stress of timing it wrong. Simple and effective.",
      "candles": [(60, 52, 50, 62), (52, 46, 44, 54), (46, 50, 43, 52), (50, 58, 48, 60)]},
-    {"title": "Le emozioni fanno perdere", "sub": "Testa fredda",
-     "expl": "Comprare per FOMO sui massimi e vendere in panico sui minimi è l'errore "
-             "n°1. Un piano con regole (e stop) batte l'istinto quasi sempre.",
+    {"title": "Emotions make you lose", "sub": "Cool head",
+     "expl": "Buying out of FOMO at the highs and panic-selling at the lows is mistake "
+             "#1. A plan with rules (and stops) beats instinct almost every time.",
      "candles": [(30, 44, 28, 46), (44, 62, 42, 64), (62, 80, 60, 82), (80, 58, 56, 82)]},
-    {"title": "Prendi i guadagni (take profit)", "sub": "Non aspettare troppo",
-     "expl": "Un profitto non incassato non è tuo finché non chiudi. Fissare un target "
-             "e rispettarlo evita di riconsegnare al mercato quello che avevi guadagnato.",
+    {"title": "Take your profits", "sub": "Don't wait too long",
+     "expl": "An unrealized profit isn't yours until you close. Setting a target and "
+             "respecting it keeps you from handing back what you'd earned.",
      "candles": [(35, 48, 33, 50), (48, 60, 46, 62), (60, 72, 58, 74), (72, 70, 66, 78)]},
-    {"title": "Pochi trade buoni > tanti a caso", "sub": "Qualità, non quantità",
-     "expl": "Non serve operare tutto il giorno. Aspettare solo le occasioni chiare, "
-             "con trend e conferma, rende più che rincorrere ogni movimento.",
+    {"title": "Few good trades > many random", "sub": "Quality, not quantity",
+     "expl": "You don't need to trade all day. Waiting only for clear setups, with "
+             "trend and confirmation, pays more than chasing every move.",
      "candles": [(45, 43, 41, 47), (43, 45, 41, 47), (45, 44, 42, 47), (44, 58, 42, 60)]},
-    {"title": "Segui il trend, non le news", "sub": "Il grafico prima di tutto",
-     "expl": "Le notizie arrivano quando il movimento è già avvenuto. Il trend sulle "
-             "medie mobili dice dove sta andando davvero il prezzo: quello conta.",
+    {"title": "Follow the trend, not the news", "sub": "Chart first",
+     "expl": "News arrives after the move already happened. The trend on moving "
+             "averages shows where price is really going: that's what matters.",
      "candles": [(34, 40, 32, 42), (40, 50, 38, 52), (50, 58, 48, 60), (58, 66, 56, 68)]},
-    # --- Cosa fa VcriptoV (prodotto) ---
-    {"title": "Crypto senza capirci niente?", "sub": "Ci pensa VcriptoV",
-     "expl": "Il bot analizza il mercato per te e ti manda il segnale su Telegram: "
-             "cosa comprare, dove mettere stop e target. Tu non devi studiare grafici.",
+    # --- What VcriptoV does (product) ---
+    {"title": "Crypto but clueless?", "sub": "VcriptoV's got you",
+     "expl": "The bot analyzes the market for you and sends the signal on Telegram: "
+             "what to buy, where to set stop and target. No chart studying needed.",
      "candles": [(40, 52, 38, 54), (52, 64, 50, 66), (64, 60, 56, 68), (60, 72, 58, 74)]},
-    {"title": "Ricevi il segnale, tocca, fatto", "sub": "Investi con un tocco",
-     "expl": "Arriva il segnale su Telegram con i tasti Investi / Non investire. Un "
-             "tocco e (se colleghi il tuo exchange) l'ordine parte da solo, con stop e target.",
+    {"title": "Get the signal, tap, done", "sub": "Invest with one tap",
+     "expl": "The signal lands on Telegram with Invest / Skip buttons. One tap and "
+             "(if you connect your exchange) the order fires by itself, with stop and target.",
      "candles": [(38, 50, 36, 52), (50, 46, 44, 53), (46, 58, 44, 60), (58, 68, 56, 70)]},
-    {"title": "Guadagni anche quando scende", "sub": "Segnali long e short",
-     "expl": "Un mercato che scende non è un problema: con i segnali short si può "
-             "puntare anche sul ribasso. L'importante è seguire il trend, in su o in giù.",
+    {"title": "Profit even when it drops", "sub": "Long and short signals",
+     "expl": "A falling market isn't a problem: with short signals you can bet on the "
+             "downside too. What matters is following the trend, up or down.",
      "candles": [(66, 54, 52, 68), (54, 42, 40, 56), (42, 30, 28, 44), (30, 22, 20, 32)]},
 ]
 
@@ -317,7 +361,7 @@ def make_educational(index: int):
     try:
         item = PATTERNS[index % len(PATTERNS)]
         img, d = _base(item["title"], item.get("sub", ""),
-                       "Impara con VcriptoV • educativo, non consulenza")
+                       "Learn with VcriptoV • educational, not financial advice")
         # spiegazione a capo automatico
         y = 355
         for line in _wrap(d, item["expl"], _font(32, False), W - 120):
@@ -331,8 +375,8 @@ def make_educational(index: int):
         path = _new_path("edu")
         img.save(path, "PNG")
         caption = (f"{item['title']} — {item.get('sub','')}\n\n{item['expl']}\n\n"
-                   "📊 Segnali crypto automatici su VcriptoV — link in bio.\n"
-                   "#crypto #trading #bitcoin #cripto #investimenti #vcriptov")
+                   "📊 Automatic crypto signals on VcriptoV — link in bio.\n"
+                   "#crypto #trading #bitcoin #cryptocurrency #investing #vcriptov")
         return path, caption
     except Exception:
         return None, None
@@ -361,15 +405,15 @@ def make_ai_educational(topic_hint: str = ""):
         if not ai_assistant.is_configured(key):
             return None, None
         prompt = (
-            "Genera UN consiglio breve ed 'evergreen' su crypto/trading/finanza per "
-            "principianti, per un post social. Deve essere sensato e vario (evita i "
-            "soliti banali). Rispondi SOLO in JSON valido con queste chiavi: "
-            '{"title": "max 5 parole", "sub": "max 5 parole", '
-            '"expl": "max 45 parole, chiaro"}. '
-            "Niente promesse di guadagno. In italiano."
-            + (f" Tema di oggi: {topic_hint}." if topic_hint else "")
+            "Generate ONE short, evergreen tip about crypto/trading/finance for "
+            "beginners, for a social post. It must be sensible and varied (avoid the "
+            "usual clichés). Reply ONLY with valid JSON with these keys: "
+            '{"title": "max 5 words", "sub": "max 5 words", '
+            '"expl": "max 45 words, clear"}. '
+            "No profit promises. In English."
+            + (f" Today's theme: {topic_hint}." if topic_hint else "")
         )
-        res = ai_assistant.ask_ai(prompt, api_key=key, lang="it")
+        res = ai_assistant.ask_ai(prompt, api_key=key, lang="en")
         if not (res.get("ok") and res.get("answer")):
             return None, None
         raw = res["answer"]
@@ -382,7 +426,7 @@ def make_ai_educational(topic_hint: str = ""):
         expl = (data.get("expl") or "").strip()
         if not (title and expl):
             return None, None
-        img, d = _base(title, sub, "Impara con VcriptoV • educativo, non consulenza")
+        img, d = _base(title, sub, "Learn with VcriptoV • educational, not financial advice")
         y = 355
         for line in _wrap(d, expl, _font(32, False), W - 120)[:6]:
             d.text((60, y), line, font=_font(32, False), fill=TXT)
@@ -395,8 +439,8 @@ def make_ai_educational(topic_hint: str = ""):
         path = _new_path("aiedu")
         img.save(path, "PNG")
         caption = (f"{title} — {sub}\n\n{expl}\n\n"
-                   "📊 Segnali crypto automatici su VcriptoV — link in bio.\n"
-                   "#crypto #trading #bitcoin #cripto #investimenti #vcriptov")
+                   "📊 Automatic crypto signals on VcriptoV — link in bio.\n"
+                   "#crypto #trading #bitcoin #cryptocurrency #investing #vcriptov")
         return path, caption
     except Exception:
         return None, None
@@ -432,12 +476,15 @@ def make_signal_card(coin: str, is_buy: bool, price: float, sl: float, tp: float
         return None, None
     try:
         has_ex = gain_pct is not None and gain_pct > 0
-        subtitle = (f"Segnale andato a +{gain_pct:.0f}% 🚀" if has_ex else "")
-        img, d = _base("Segnale del giorno", subtitle,
-                       "Non è consulenza finanziaria • i risultati passati non garantiscono quelli futuri")
+        risk_en = {"basso": "low", "medio": "medium", "alto": "high"}.get(risk, risk)
+        subtitle = (f"This signal hit +{gain_pct:.0f}%" if has_ex else "")
+        img, d = _base("Signal of the day", subtitle,
+                       "Not financial advice • past results don't guarantee future ones")
         d.rounded_rectangle([60, 360, W - 60, 360 + 660], 24, fill=CARD)
-        verso = "🟢 LONG" if is_buy else "🔴 SHORT"
-        d.text((110, 400), verso, font=_font(56), fill=GREEN if is_buy else RED)
+        vcol = GREEN if is_buy else RED
+        # pallino disegnato a mano (verde=long, rosso=short) + etichetta
+        d.ellipse([112, 410, 150, 448], fill=vcol, outline=INK, width=3)
+        d.text((170, 400), "LONG" if is_buy else "SHORT", font=_font(56), fill=vcol)
         d.text((110, 480), coin, font=_font(64), fill=TXT)
         try:
             pstr = f"{price:,.4f}".rstrip("0").rstrip(".")
@@ -449,32 +496,32 @@ def make_signal_card(coin: str, is_buy: bool, price: float, sl: float, tp: float
             d.text((110, y), f"+{euros:,.0f}€".replace(",", "."),
                    font=_font(82), fill=GREEN)
             d.text((113, y + 96),
-                   f"con {example_stake:,.0f}€".replace(",", ".")
-                   + f" avresti guadagnato (+{gain_pct:.0f}%)", font=_font(28, False), fill=MUT)
+                   f"with €{example_stake:,.0f}".replace(",", ".")
+                   + f" you'd have made (+{gain_pct:.0f}%)", font=_font(28, False), fill=MUT)
             y += 165
-        rows = [("Ingresso", f"{pstr} USDT", TXT),
-                ("🛑 Stop-loss", f"-{sl:.0f}%", RED),
-                ("🎯 Target", f"+{tp:.0f}%", GREEN),
-                ("📊 Rischio", risk, MUT)]
+        rows = [("Entry", f"{pstr} USDT", TXT),
+                ("Stop-loss", f"-{sl:.0f}%", RED),
+                ("Target", f"+{tp:.0f}%", GREEN),
+                ("Risk", risk_en, MUT)]
         for k, v, c in rows:
             d.text((110, y), k, font=_font(34, False), fill=MUT)
             d.text((W - 110, y), v, font=_font(38), fill=c, anchor="ra")
             y += 72
         path = _new_path("sig")
         img.save(path, "PNG")
-        verso_txt = "LONG (comprare)" if is_buy else "SHORT (vendere)"
+        verso_txt = "LONG (buy)" if is_buy else "SHORT (sell)"
         ex_line = ""
         if has_ex:
             euros = int(round(example_stake * gain_pct / 100.0))
-            ex_line = (f"💶 Con {example_stake:,.0f}€".replace(",", ".")
-                       + f" avresti guadagnato +{euros:,.0f}€".replace(",", ".")
-                       + f" (segnale reale andato a +{gain_pct:.0f}%).\n")
-        caption = (f"Segnale {coin} — {verso_txt}\n"
-                   f"Ingresso {pstr} • Stop -{sl:.0f}% • Target +{tp:.0f}% • rischio {risk}.\n"
+            ex_line = (f"💶 With €{example_stake:,.0f}".replace(",", ".")
+                       + f" you'd have made +€{euros:,.0f}".replace(",", ".")
+                       + f" (real signal that hit +{gain_pct:.0f}%).\n")
+        caption = (f"{coin} signal — {verso_txt}\n"
+                   f"Entry {pstr} • Stop -{sl:.0f}% • Target +{tp:.0f}% • risk {risk_en}.\n"
                    + ex_line +
-                   "\n⚠️ Non è consulenza finanziaria; i risultati passati non garantiscono quelli futuri.\n"
-                   "Segnali automatici su VcriptoV — link in bio.\n"
-                   "#crypto #trading #bitcoin #cripto #segnali #vcriptov")
+                   "\n⚠️ Not financial advice; past results don't guarantee future ones.\n"
+                   "Automatic signals on VcriptoV — link in bio.\n"
+                   "#crypto #trading #bitcoin #cryptocurrency #signals #vcriptov")
         return path, caption
     except Exception:
         return None, None

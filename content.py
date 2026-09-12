@@ -302,18 +302,18 @@ def _finalize_reel(raw_path, out_path):
     return out_path
 
 
-def _card_to_reel(card, out_path, seconds=5, fps=24, zoom_end=1.08, steps=16):
-    # Reel con ZOOM (Ken Burns) MA leggero per i 512MB del free tier. Trucco: NON
-    # ingrandisco 120 fotogrammi (era quello che faceva saturare la memoria →
-    # email Render "exceeded its memory limit"). Preparo UNA sola immagine un po'
-    # più grande e poi, per ~16 passi di zoom, ne RITAGLIO un pezzo sempre più
-    # stretto e lo riporto a misura: pochi ridimensionamenti, un fotogramma alla
-    # volta in RAM. Lo zoom resta fluido all'occhio, la memoria resta bassa.
+def _card_to_reel(card, out_path, seconds=5, fps=24, steps=60):
+    # Reel con MOVIMENTO VERO (Ken Burns): zoom DECISO + PANORAMICA in diagonale,
+    # così si vede chiaramente che è un video e non una foto ferma. Resta leggero
+    # per i 512MB del free tier con lo stesso trucco: preparo UNA sola immagine più
+    # grande e per ~60 passi ne RITAGLIO una finestra che si stringe e SCORRE; un
+    # fotogramma alla volta in RAM, quindi la memoria resta bassa.
     import gc as _gc
+    Z_MAX = 1.32                 # quanto ingrandisco l'immagine sorgente (spazio per pan)
+    Z0, Z1 = 1.14, 1.30          # lo zoom va da 1.14 a 1.30 (sempre "dentro" = c'è pan)
     base = Image.new("RGB", (REEL_W, REEL_H), BG)
     base.paste(card, ((REEL_W - card.width) // 2, (REEL_H - card.height) // 2))
-    # Immagine sorgente leggermente ingrandita, creata UNA volta sola (zoom nitido).
-    big = base.resize((int(REEL_W * zoom_end), int(REEL_H * zoom_end)), Image.LANCZOS)
+    big = base.resize((int(REEL_W * Z_MAX), int(REEL_H * Z_MAX)), Image.LANCZOS)
     try:
         base.close()
     except Exception:
@@ -321,18 +321,21 @@ def _card_to_reel(card, out_path, seconds=5, fps=24, zoom_end=1.08, steps=16):
     total = max(1, int(seconds * fps))
     steps = max(2, min(steps, total))
     bw, bh = big.size
-    # Scrivo prima il video "grezzo" (solo immagini), poi lo rifinisco per
-    # Instagram (audio muto + faststart) in _finalize_reel.
     raw_path = out_path + ".raw.mp4"
     w = _imageio.get_writer(raw_path, fps=fps, codec="libx264", quality=7,
                             macro_block_size=1, ffmpeg_params=["-pix_fmt", "yuv420p"])
     try:
         for s in range(steps):
-            z = 1.0 + (zoom_end - 1.0) * (s / (steps - 1))
-            # Ritaglio da 'big' che, riportato a misura, dà lo zoom z (z=1 tutta
-            # l'immagine, z=max ritaglio centrale più stretto = più "vicino").
-            cw, ch = int(REEL_W * zoom_end / z), int(REEL_H * zoom_end / z)
-            x0, y0 = (bw - cw) // 2, (bh - ch) // 2
+            t = s / (steps - 1)                 # avanzamento 0 → 1
+            # ease-in-out morbido, così il movimento non "scatta" all'inizio/fine
+            e = t * t * (3 - 2 * t)
+            z = Z0 + (Z1 - Z0) * e               # zoom che aumenta
+            cw, ch = int(REEL_W * Z_MAX / z), int(REEL_H * Z_MAX / z)
+            # PANORAMICA: la finestra scorre in diagonale da alto-sx a basso-dx,
+            # usando tutto lo spazio disponibile (quello che avanza tra 'big' e la
+            # finestra ritagliata). È questo scorrimento che fa "muovere" il video.
+            x0 = int((bw - cw) * (0.12 + 0.76 * e))
+            y0 = int((bh - ch) * (0.15 + 0.70 * e))
             fr = big.crop((x0, y0, x0 + cw, y0 + ch)).resize((REEL_W, REEL_H), Image.BILINEAR)
             arr = _np.asarray(fr)
             reps = total // steps + (1 if s < total % steps else 0)

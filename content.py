@@ -482,30 +482,151 @@ def make_signal_reel(coin, is_buy, price, sl, tp, risk="medio", gain_pct=None,
         return None, None
 
 
+_EDU_FOOTER = "Learn with VcriptoV • educational, not financial advice"
+_EDU_TAGS = ("\n\n📊 Automatic crypto signals on VcriptoV — link in bio.\n"
+             "#crypto #trading #bitcoin #candlestick #investing #vcriptov")
+
+# Regole di trading (per il modello 'lista di regole')
+RULES = [
+    ("Always use a stop-loss", "Decide your max loss BEFORE you enter. No stop, no trade."),
+    ("Don't chase the price", "Already ran a lot? Wait for a pullback. Chasing gets you trapped."),
+    ("Take your profits", "A gain isn't real until you close. Bank part of it on the way up."),
+    ("Follow the trend", "Trade WITH the direction, not against it. The trend is your friend."),
+    ("Risk small per trade", "Never risk more than 1–2% on one idea. Survive first, win later."),
+    ("Don't put it all in one coin", "Spread it out. One bad bet shouldn't wipe you out."),
+    ("Emotions lose money", "Fear and greed are the enemy. Follow the plan, not the feeling."),
+]
+
+
+def _signal_of(item):
+    """Deduce BUY / SELL / WAIT dal pattern (dalla freccia nel sottotitolo o dal testo)."""
+    sub = item.get("sub", "")
+    s = (sub + " " + item.get("title", "") + " " + item.get("expl", "")).lower()
+    if "↑" in sub or "bullish" in s or "bounce" in s or "buyers" in s:
+        return "BUY"
+    if "↓" in sub or "bearish" in s or "drop" in s or "sellers" in s or "reject" in s:
+        return "SELL"
+    return "WAIT"
+
+
+def _fit(d, text, font, max_w):
+    """Accorcia il testo con … finché entra nella larghezza."""
+    if d.textlength(text, font=font) <= max_w:
+        return text
+    while text and d.textlength(text + "…", font=font) > max_w:
+        text = text[:-1]
+    return text + "…"
+
+
+def _tag(d, cx, y, kind, fs=26):
+    """Etichetta BUY/SELL/WAIT evidenziata (verde/rosso/giallo)."""
+    col = {"BUY": (26, 110, 60), "SELL": (150, 40, 34), "WAIT": (120, 92, 30)}[kind]
+    bg = {"BUY": (200, 236, 210), "SELL": (246, 205, 199), "WAIT": HILITE}[kind]
+    f = _font(fs)
+    tw = d.textlength(kind, font=f)
+    pad = 12
+    box = [cx - tw / 2 - pad, y, cx + tw / 2 + pad, y + fs + 12]
+    d.rounded_rectangle(box, 8, fill=bg)
+    _sk_rect(d, box, outline=INK, width=2, jitter=1.0)
+    d.text((cx - tw / 2, y + 5), kind, font=f, fill=col)
+
+
+def _mini_panel(d, x0, y0, x1, y1, item, tag=True):
+    """Riquadro con: nome del pattern, mini-candele disegnate, etichetta BUY/SELL."""
+    _sk_rect(d, (x0, y0, x1, y1), outline=INK, width=4, jitter=1.3)
+    f = _font(30)
+    name = _fit(d, item["title"], f, (x1 - x0) - 24)
+    d.text((x0 + ((x1 - x0) - d.textlength(name, font=f)) / 2, y0 + 12), name, font=f, fill=INK)
+    tag_h = 46 if tag else 6
+    cy0, cy1 = y0 + 56, y1 - tag_h - 10
+    _candles(d, item.get("candles", [])[:6], x0 + 16, cy0, (x1 - x0) - 32, max(30, cy1 - cy0))
+    if tag:
+        k = _signal_of(item)
+        _tag(d, (x0 + x1) / 2, y1 - tag_h - 2, k, fs=24)
+
+
+def _edu_single(index):
+    item = PATTERNS[index % len(PATTERNS)]
+    img, d = _base(item["title"], item.get("sub", ""), _EDU_FOOTER)
+    y = 355
+    for line in _wrap(d, item["expl"], _font(32, False), W - 120):
+        d.text((60, y), line, font=_font(32, False), fill=TXT)
+        y += 46
+    py = y + 30
+    ph = H - 150 - py - 30
+    d.rounded_rectangle([60, py, W - 60, py + ph], 20, fill=CARD)
+    _candles(d, item["candles"], 110, py + 40, W - 220, ph - 80)
+    caption = f"{item['title']} — {item.get('sub','')}\n\n{item['expl']}" + _EDU_TAGS
+    return img, caption
+
+
+def _edu_grid4(index):
+    items = [PATTERNS[(index + i) % len(PATTERNS)] for i in range(4)]
+    img, d = _base("Candlestick Patterns", "4 setups to know", _EDU_FOOTER)
+    gx0, gy0, gx1, gy1 = 60, 360, W - 60, H - 175
+    mx, my, g = (gx0 + gx1) // 2, (gy0 + gy1) // 2, 16
+    cells = [(gx0, gy0, mx - g, my - g), (mx + g, gy0, gx1, my - g),
+             (gx0, my + g, mx - g, gy1), (mx + g, my + g, gx1, gy1)]
+    for cell, it in zip(cells, items):
+        _mini_panel(d, *cell, it, tag=True)
+    caption = ("Candlestick patterns 101 — 4 setups to know:\n • " +
+               "\n • ".join(f"{it['title']} → {_signal_of(it)}" for it in items) + _EDU_TAGS)
+    return img, caption
+
+
+def _edu_signals6(index):
+    items = [PATTERNS[(index + i) % len(PATTERNS)] for i in range(6)]
+    img, d = _base("Patterns & Signals", "buy / sell at a glance", _EDU_FOOTER)
+    gx0, gy0, gx1, gy1 = 60, 360, W - 60, H - 175
+    g = 14
+    colw = (gx1 - gx0 - g) // 2
+    rowh = (gy1 - gy0 - 2 * g) // 3
+    cells = []
+    for r in range(3):
+        for c in range(2):
+            x0 = gx0 + c * (colw + g)
+            y0 = gy0 + r * (rowh + g)
+            cells.append((x0, y0, x0 + colw, y0 + rowh))
+    for cell, it in zip(cells, items):
+        _mini_panel(d, *cell, it, tag=True)
+    caption = ("Candlestick patterns & their signals:\n • " +
+               "\n • ".join(f"{it['title']} → {_signal_of(it)}" for it in items) + _EDU_TAGS)
+    return img, caption
+
+
+def _edu_rules(index):
+    img, d = _base("Trading rules", "the basics that keep you alive", _EDU_FOOTER)
+    rules = [RULES[(index + i) % len(RULES)] for i in range(5)]
+    y = 372
+    row = (H - 175 - y) // 5
+    tf, bf = _font(34), _font(27, False)
+    for i, (title, txt) in enumerate(rules):
+        cyc = y + i * row + 26
+        d.ellipse([66, cyc - 26, 66 + 52, cyc + 26], fill=HILITE, outline=INK, width=3)
+        num = str(i + 1)
+        d.text((66 + (52 - d.textlength(num, font=tf)) / 2, cyc - 22), num, font=tf, fill=INK)
+        d.text((146, cyc - 30), _fit(d, title, tf, W - 200), font=tf, fill=INK)
+        d.text((146, cyc + 8), _fit(d, txt, bf, W - 200), font=bf, fill=MUT)
+    caption = ("Trading rules that keep you alive:\n • " +
+               "\n • ".join(t for t, _ in rules) + _EDU_TAGS)
+    return img, caption
+
+
+# Modelli di scheda che RUOTANO, così i contenuti non sono mai tutti uguali.
+_EDU_LAYOUTS = (_edu_single, _edu_grid4, _edu_rules, _edu_signals6)
+
+
 def make_educational(index: int):
-    """Crea la scheda didattica numero `index` (a rotazione). Ritorna (path, caption)
-    o (None, None)."""
+    """Crea la scheda didattica numero `index`. RUOTA tra vari MODELLI (singolo,
+    griglia 2×2, regole, griglia segnali) così ogni contenuto è diverso.
+    Ritorna (path, caption) o (None, None)."""
     if Image is None:
         return None, None
     try:
-        item = PATTERNS[index % len(PATTERNS)]
-        img, d = _base(item["title"], item.get("sub", ""),
-                       "Learn with VcriptoV • educational, not financial advice")
-        # spiegazione a capo automatico
-        y = 355
-        for line in _wrap(d, item["expl"], _font(32, False), W - 120):
-            d.text((60, y), line, font=_font(32, False), fill=TXT)
-            y += 46
-        # riquadro con le candele
-        py = y + 30
-        ph = H - 150 - py - 30
-        d.rounded_rectangle([60, py, W - 60, py + ph], 20, fill=CARD)
-        _candles(d, item["candles"], 110, py + 40, W - 220, ph - 80)
+        layout = _EDU_LAYOUTS[index % len(_EDU_LAYOUTS)]
+        img, caption = layout(index)
         path = _new_path("edu")
         img.save(path, "PNG")
-        caption = (f"{item['title']} — {item.get('sub','')}\n\n{item['expl']}\n\n"
-                   "📊 Automatic crypto signals on VcriptoV — link in bio.\n"
-                   "#crypto #trading #bitcoin #cryptocurrency #investing #vcriptov")
         return path, caption
     except Exception:
         return None, None

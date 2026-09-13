@@ -777,15 +777,34 @@ def make_signal_card(coin: str, is_buy: bool, price: float, sl: float, tp: float
         return None, None
 
 
-def cleanup_old(keep_seconds: int = 7 * 24 * 3600):
-    """Cancella le immagini vecchie (già pubblicate) per non riempire il disco."""
+def cleanup_old(keep_seconds: int = 2 * 3600, keep_last: int = 6):
+    """Cancella i video/immagini già pubblicati per NON riempire il disco.
+    Instagram scarica il video in pochi minuti, quindi NON serve conservarlo:
+    - cancella tutto ciò che ha più di `keep_seconds` (default 2 ore);
+    - e comunque tiene al massimo gli ultimi `keep_last` file (i più recenti).
+    Così, anche generando tanti video (es. molti tentativi), il disco resta piccolo."""
     try:
         now = time.time()
+        entries = []
         for name in os.listdir(OUT_DIR):
             p = os.path.join(OUT_DIR, name)
             try:
-                if now - os.path.getmtime(p) > keep_seconds:
+                entries.append((os.path.getmtime(p), p))
+            except Exception:
+                pass
+        # 1) via i più vecchi della soglia di tempo
+        for mt, p in entries:
+            if now - mt > keep_seconds:
+                try:
                     os.remove(p)
+                except Exception:
+                    pass
+        # 2) se ne restano ancora troppi, tieni solo gli ultimi keep_last (per data)
+        remaining = [(mt, p) for mt, p in entries if os.path.exists(p)]
+        remaining.sort(reverse=True)   # più recenti per primi
+        for mt, p in remaining[keep_last:]:
+            try:
+                os.remove(p)
             except Exception:
                 pass
     except Exception:

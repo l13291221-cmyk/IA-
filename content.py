@@ -716,6 +716,56 @@ def make_ai_educational_reel(topic_hint: str = ""):
         return None, None
 
 
+def make_custom(title: str, sub: str, expl: str):
+    """Crea una scheda-immagine dal TESTO fornito dal sito (già scritto dall'AI lì:
+    qui NON serve l'AI). Serve per i reel 'sempre diversi' su Instagram. Ritorna
+    (path, None) o (None, None)."""
+    if Image is None:
+        return None, None
+    try:
+        import random as _random
+        title = (title or "").strip()[:38]
+        sub = (sub or "").strip()[:38]
+        expl = (expl or "").strip()
+        if not (title and expl):
+            return None, None
+        img, d = _base(title, sub, "Learn with VcriptoV • educational, not financial advice")
+        y = 355
+        for line in _wrap(d, expl, _font(32, False), W - 120)[:6]:
+            d.text((60, y), line, font=_font(32, False), fill=TXT)
+            y += 46
+        py = y + 30
+        ph = H - 150 - py - 30
+        if ph > 160:
+            d.rounded_rectangle([60, py, W - 60, py + ph], 20, fill=CARD)
+            _candles(d, _random.choice(_GENERIC_CANDLES), 110, py + 40, W - 220, ph - 80)
+        path = _new_path("custom")
+        img.save(path, "PNG")
+        return path, None
+    except Exception:
+        return None, None
+
+
+def make_custom_reel(title: str, sub: str, expl: str):
+    """Reel (video) dalla scheda-testo fornita dal sito. (path_mp4, None) o (None, None)."""
+    if Image is None or not _VIDEO_OK:
+        return None, None
+    try:
+        path, _ = make_custom(title, sub, expl)
+        if not path:
+            return None, None
+        card = Image.open(path).convert("RGB")
+        out = _new_path("reelcustom", "mp4")
+        _card_to_reel(card, out)
+        try:
+            os.remove(path)
+        except Exception:
+            pass
+        return out, None
+    except Exception:
+        return None, None
+
+
 def make_signal_card(coin: str, is_buy: bool, price: float, sl: float, tp: float,
                      risk: str = "medio", gain_pct: float | None = None,
                      example_stake: int = 10000):

@@ -105,6 +105,11 @@ def render_reel():
                 spec.get("risk", "medio"),
                 gain_pct=spec.get("gain_pct"),
             )
+        elif kind == "custom":
+            # Testo GIÀ scritto dal sito (AI lì): reel "sempre diverso" senza AI qui.
+            path, _cap = content.make_custom_reel(
+                spec.get("title", ""), spec.get("sub", ""), spec.get("expl", ""))
+            caption = spec.get("caption") or _cap or ""
         else:  # "educational": scheda-pattern dalla libreria (nessuna AI/DB qui)
             path, caption = content.make_educational_reel(int(spec.get("index", 0) or 0))
     except Exception as exc:

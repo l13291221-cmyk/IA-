@@ -640,6 +640,365 @@ _GENERIC_CANDLES = [
 ]
 
 
+# ==============================================================================
+#  STILI GRAFICI MULTIPLI — così i post NON sono mai tutti uguali
+# ------------------------------------------------------------------------------
+#  Ogni "tip" (titolo + sottotitolo + spiegazione) può essere disegnato in stili
+#  molto diversi tra loro (quaderno, neon scuro, gradiente, minimale, terminale).
+#  Uno stile diverso a rotazione a ogni post → il profilo sembra vario e curato,
+#  non lo stesso template ripetuto. Tutto in Pillow, robusto: se uno stile fallisce
+#  si ripiega sul quaderno (che c'è sempre).
+# ==============================================================================
+
+_FONT_FILES = {
+    "sansB": ["/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+              "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"],
+    "sans":  ["/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+              "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"],
+    "serifB": ["/usr/share/fonts/truetype/liberation/LiberationSerif-Bold.ttf",
+               "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf"],
+    "serif": ["/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf",
+              "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf"],
+    "monoB": ["/usr/share/fonts/truetype/liberation/LiberationMono-Bold.ttf",
+              "/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf"],
+    "mono":  ["/usr/share/fonts/truetype/liberation/LiberationMono-Regular.ttf",
+              "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"],
+}
+_FONT_CACHE = {}
+
+
+def _f(size, fam="sansB"):
+    key = (size, fam)
+    if key in _FONT_CACHE:
+        return _FONT_CACHE[key]
+    font = None
+    for p in _FONT_FILES.get(fam, []):
+        try:
+            font = ImageFont.truetype(p, size)
+            break
+        except Exception:
+            continue
+    if font is None:
+        try:
+            font = ImageFont.load_default()
+        except Exception:
+            font = None
+    _FONT_CACHE[key] = font
+    return font
+
+
+def _draw_wrapped(d, x, y, text, font, fill, max_w, line_h, max_lines=99, center=False, cx=None):
+    """Scrive `text` andando a capo dentro `max_w`. Ritorna la y finale."""
+    for i, line in enumerate(_wrap(d, text, font, max_w)):
+        if i >= max_lines:
+            break
+        if center and cx is not None:
+            tw = d.textlength(line, font=font)
+            d.text((cx - tw / 2, y), line, font=font, fill=fill)
+        else:
+            d.text((x, y), line, font=font, fill=fill)
+        y += line_h
+    return y
+
+
+def _vgrad(w, h, top, bottom):
+    """Sfondo con gradiente verticale (solo Pillow, niente numpy)."""
+    img = Image.new("RGB", (w, h), top)
+    d = ImageDraw.Draw(img)
+    for yy in range(h):
+        t = yy / max(1, h - 1)
+        d.line([(0, yy), (w, yy)],
+               fill=(int(top[0] + (bottom[0] - top[0]) * t),
+                     int(top[1] + (bottom[1] - top[1]) * t),
+                     int(top[2] + (bottom[2] - top[2]) * t)))
+    return img
+
+
+def _series(seed, n=30, up=True):
+    """Serie di valori 0..1 morbida e in trend (per le linee/sparkline)."""
+    rnd = random.Random(hash(("s", seed)) & 0xFFFFFFFF)
+    v = 0.32 if up else 0.68
+    drift = (0.42 if up else -0.42) / n
+    out = []
+    for _ in range(n):
+        v += drift + rnd.uniform(-0.045, 0.045)
+        v = max(0.08, min(0.92, v))
+        out.append(v)
+    return out
+
+
+def _gen_candles(seed, n=7, up=True):
+    """Candele (o,c,lo,hi) in unità 0..100, in trend, diverse per ogni titolo."""
+    rnd = random.Random(hash(("c", seed)) & 0xFFFFFFFF)
+    base = 28.0 if up else 72.0
+    out = []
+    for _ in range(n):
+        o = max(10, min(90, base + rnd.uniform(-5, 5)))
+        move = (rnd.uniform(3, 11) if up else -rnd.uniform(3, 11)) + rnd.uniform(-4, 4)
+        c = max(8, min(92, o + move))
+        lo = max(3, min(o, c) - rnd.uniform(2, 6))
+        hi = min(97, max(o, c) + rnd.uniform(2, 6))
+        out.append((o, c, lo, hi))
+        base = max(14, min(86, c + (rnd.uniform(0, 6) if up else -rnd.uniform(0, 6))))
+    return out
+
+
+def _sparkline(d, box, vals, color, width=6, glow=None, dot=True):
+    """Linea morbida dentro `box` (x0,y0,x1,y1). `glow` = colore alone opzionale."""
+    x0, y0, x1, y1 = box
+    n = len(vals)
+    pts = [(x0 + (x1 - x0) * i / (n - 1), y1 - (y1 - y0) * v) for i, v in enumerate(vals)]
+    try:
+        if glow:
+            for gw in (width + 12, width + 6):
+                d.line(pts, fill=glow, width=gw, joint="curve")
+        d.line(pts, fill=color, width=width, joint="curve")
+    except TypeError:  # Pillow più vecchio senza joint="curve"
+        if glow:
+            for gw in (width + 12, width + 6):
+                d.line(pts, fill=glow, width=gw)
+        d.line(pts, fill=color, width=width)
+    if dot:
+        px, py = pts[-1]
+        r = width + 4
+        d.ellipse([px - r, py - r, px + r, py + r], fill=color)
+
+
+def _candles_on(d, box, specs, up_col, down_col, wick_col):
+    """Candele dentro `box` con colori a piacere (per fondi scuri o chiari)."""
+    x0, y0, x1, y1 = box
+    n = len(specs)
+    slot = (x1 - x0) / n
+    cw = min(52, slot * 0.52)
+
+    def yy(v):
+        return y1 - (v / 100.0) * (y1 - y0)
+
+    for i, (o, c, lo, hi) in enumerate(specs):
+        cx = x0 + slot * (i + 0.5)
+        col = up_col if c >= o else down_col
+        d.line([(cx, yy(hi)), (cx, yy(lo))], fill=wick_col, width=3)
+        top, bot = yy(max(o, c)), yy(min(o, c))
+        if abs(bot - top) < 8:
+            bot = top + 8
+        d.rounded_rectangle([cx - cw / 2, top, cx + cw / 2, bot], 4, fill=col)
+
+
+def _uptrend(title, sub, expl):
+    """Indovina se il tip è 'positivo/rialzista' per orientare il grafichino."""
+    s = (title + " " + sub + " " + expl).lower()
+    neg = ("don't", "not", "lose", "loss", "avoid", "panic", "mistake", "risk",
+           "fear", "drop", "bear", "wipe", "never", "stop-loss", "stop loss")
+    return not any(w in s for w in neg)
+
+
+# ---- STILE 1: quaderno (il classico VcriptoV) --------------------------------
+def _style_notebook(title, sub, expl):
+    img, d = _base(title, sub, "Learn with VcriptoV • educational, not financial advice")
+    y = 355
+    for line in _wrap(d, expl, _font(32, False), W - 120)[:6]:
+        d.text((60, y), line, font=_font(32, False), fill=TXT)
+        y += 46
+    py = y + 30
+    ph = H - 150 - py - 30
+    if ph > 160:
+        d.rounded_rectangle([60, py, W - 60, py + ph], 20, fill=CARD)
+        _candles(d, _gen_candles(title, 7, _uptrend(title, sub, expl)),
+                 110, py + 40, W - 220, ph - 80)
+    return img
+
+
+# ---- STILE 2: neon su fondo scuro (look "crypto/tech") -----------------------
+def _style_neon(title, sub, expl):
+    BG2 = (11, 14, 20)
+    NEON = (54, 245, 160)
+    CYAN = (96, 214, 255)
+    GRID = (24, 30, 42)
+    GREY = (168, 176, 190)
+    img = Image.new("RGB", (W, H), BG2)
+    d = ImageDraw.Draw(img)
+    for gx in range(0, W, 60):
+        d.line([(gx, 0), (gx, H)], fill=GRID, width=1)
+    for gy in range(0, H, 60):
+        d.line([(0, gy), (W, gy)], fill=GRID, width=1)
+    d.ellipse([60, 66, 104, 110], outline=NEON, width=5)
+    d.line([(72, 92), (92, 92)], fill=NEON, width=6)
+    d.text((122, 64), "VcriptoV", font=_f(44, "sansB"), fill=(240, 244, 250))
+    d.text((124, 112), "crypto signals", font=_f(26, "sans"), fill=GREY)
+    y = 210
+    y = _draw_wrapped(d, 60, y, title, _f(84, "sansB"), NEON, W - 120, 92, max_lines=3)
+    if sub:
+        d.text((62, y + 6), sub.upper(), font=_f(30, "monoB"), fill=CYAN)
+        y += 56
+    y += 24
+    y = _draw_wrapped(d, 60, y, expl, _f(37, "sans"), (214, 220, 230), W - 120, 52, max_lines=6)
+    py = max(y + 34, H - 520)
+    d.rounded_rectangle([60, py, W - 60, H - 170], 26, fill=(17, 22, 31),
+                        outline=(38, 48, 64), width=2)
+    _sparkline(d, (110, py + 60, W - 110, H - 230),
+               _series(title, 30, _uptrend(title, sub, expl)),
+               NEON, width=7, glow=(20, 90, 66))
+    d.line([(60, H - 150), (W - 60, H - 150)], fill=(38, 48, 64), width=2)
+    d.text((60, H - 128), "educational • not financial advice", font=_f(24, "sans"), fill=GREY)
+    d.text((60, H - 92), "→  link in bio", font=_f(30, "sansB"), fill=NEON)
+    return img
+
+
+# ---- STILE 3: gradiente audace (moderno, colori vivaci) ----------------------
+_GRADS = [((99, 63, 214), (39, 24, 92)),    # viola → indaco
+          ((17, 153, 142), (56, 239, 125)),  # verde acqua → verde
+          ((255, 126, 95), (254, 180, 123)),  # arancio → pesca
+          ((41, 128, 185), (109, 213, 250)),  # blu → azzurro
+          ((131, 58, 180), (253, 89, 118))]   # magenta → rosa
+
+
+def _style_gradient(title, sub, expl):
+    top, bot = random.choice(_GRADS)
+    img = _vgrad(W, H, top, bot).convert("RGBA")
+    d = ImageDraw.Draw(img)
+    WHITE = (255, 255, 255)
+    SOFT = (255, 255, 255, 235)
+    d.ellipse([60, 66, 104, 110], outline=WHITE, width=5)
+    d.line([(72, 92), (92, 92)], fill=WHITE, width=6)
+    d.text((122, 66), "VcriptoV", font=_f(42, "sansB"), fill=WHITE)
+    # pill sottotitolo (bianco pieno + testo scuro, così è sempre leggibile)
+    y = 210
+    if sub:
+        pf = _f(28, "sansB")
+        tw = d.textlength(sub.upper(), font=pf)
+        d.rounded_rectangle([60, y, 60 + tw + 44, y + 50], 25, fill=(255, 255, 255, 255))
+        d.text((82, y + 9), sub.upper(), font=pf, fill=(30, 32, 44))
+        y += 78
+    y = _draw_wrapped(d, 60, y, title, _f(90, "serifB"), WHITE, W - 120, 98, max_lines=3)
+    # scheda semi-trasparente con la spiegazione
+    py = y + 34
+    card_h = 0
+    tmp = _wrap(d, expl, _f(38, "sans"), W - 200)[:6]
+    card_h = 60 + len(tmp) * 54
+    overlay = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    od = ImageDraw.Draw(overlay)
+    od.rounded_rectangle([60, py, W - 60, py + card_h], 26, fill=(0, 0, 0, 70))
+    img = Image.alpha_composite(img, overlay)
+    d = ImageDraw.Draw(img)
+    ty = py + 30
+    for line in tmp:
+        d.text((100, ty), line, font=_f(38, "sans"), fill=SOFT)
+        ty += 54
+    _sparkline(d, (100, py + card_h + 40, W - 100, H - 210),
+               _series(title, 26, _uptrend(title, sub, expl)),
+               WHITE, width=6, glow=(255, 255, 255, 60))
+    d.text((60, H - 92), "→  link in bio", font=_f(30, "sansB"), fill=WHITE)
+    return img.convert("RGB")
+
+
+# ---- STILE 4: minimale chiaro (editoriale, elegante) -------------------------
+def _style_minimal(title, sub, expl):
+    BG4 = (246, 245, 241)
+    INK4 = (26, 28, 32)
+    ACC = (44, 150, 96)
+    GREY = (120, 124, 130)
+    img = Image.new("RGB", (W, H), BG4)
+    d = ImageDraw.Draw(img)
+    d.rectangle([0, 0, W, 12], fill=ACC)
+    d.text((60, 70), "VcriptoV", font=_f(40, "serifB"), fill=INK4)
+    d.text((62, 120), "crypto signals", font=_f(24, "sans"), fill=GREY)
+    if sub:
+        d.text((62, 210), sub.upper(), font=_f(28, "sansB"), fill=ACC)
+    y = 258
+    y = _draw_wrapped(d, 60, y, title, _f(88, "serifB"), INK4, W - 120, 94, max_lines=3)
+    d.line([(62, y + 20), (240, y + 20)], fill=ACC, width=4)
+    y += 60
+    y = _draw_wrapped(d, 60, y, expl, _f(37, "sans"), (62, 66, 72), W - 120, 52, max_lines=6)
+    _sparkline(d, (62, max(y + 40, H - 430), W - 62, H - 200),
+               _series(title, 28, _uptrend(title, sub, expl)),
+               ACC, width=6, glow=None)
+    d.line([(60, H - 150), (W - 60, H - 150)], fill=(214, 212, 205), width=2)
+    d.text((60, H - 128), "educational • not financial advice", font=_f(24, "sans"), fill=GREY)
+    d.text((60, H - 92), "→  link in bio", font=_f(30, "sansB"), fill=ACC)
+    return img
+
+
+# ---- STILE 5: pannello "terminale" scuro (candele) ---------------------------
+def _style_ticker(title, sub, expl):
+    BG5 = (15, 21, 36)
+    PANEL = (20, 28, 46)
+    BORD = (44, 56, 82)
+    WHITE = (236, 240, 248)
+    AMBER = (255, 196, 87)
+    GREEN2 = (49, 208, 138)
+    RED2 = (255, 107, 107)
+    GREY = (150, 160, 180)
+    img = Image.new("RGB", (W, H), BG5)
+    d = ImageDraw.Draw(img)
+    # header con "chip" mono e pallino LIVE
+    d.rounded_rectangle([60, 64, 250, 116], 10, fill=PANEL, outline=BORD, width=2)
+    d.text((80, 76), "VCRIPTOV", font=_f(28, "monoB"), fill=WHITE)
+    d.ellipse([W - 190, 80, W - 172, 98], fill=GREEN2)
+    d.text((W - 160, 76), "LIVE", font=_f(26, "monoB"), fill=GREEN2)
+    y = 200
+    y = _draw_wrapped(d, 60, y, title, _f(78, "sansB"), WHITE, W - 120, 88, max_lines=3)
+    if sub:
+        d.text((62, y + 4), sub.upper(), font=_f(28, "monoB"), fill=AMBER)
+        y += 52
+    y += 20
+    y = _draw_wrapped(d, 60, y, expl, _f(35, "sans"), (206, 214, 228), W - 120, 50, max_lines=5)
+    py = max(y + 30, H - 560)
+    d.rounded_rectangle([60, py, W - 60, H - 170], 20, fill=PANEL, outline=BORD, width=2)
+    # righe griglia orizzontali del "grafico"
+    for k in range(1, 5):
+        gy = py + 40 + (H - 210 - py - 40) * k / 5
+        d.line([(90, gy), (W - 90, gy)], fill=(30, 40, 62), width=1)
+    _candles_on(d, (110, py + 40, W - 110, H - 210),
+                _gen_candles(title, 8, _uptrend(title, sub, expl)),
+                GREEN2, RED2, (95, 108, 135))
+    d.text((60, H - 128), "educational • not financial advice", font=_f(24, "mono"), fill=GREY)
+    d.text((60, H - 92), "→  link in bio", font=_f(30, "monoB"), fill=AMBER)
+    return img
+
+
+_TIP_STYLES = (_style_notebook, _style_neon, _style_gradient, _style_minimal, _style_ticker)
+
+
+def _next_style_index():
+    """Contatore persistente su file: fa RUOTARE gli stili così due post di fila
+    non hanno mai lo stesso look. Se il file non è scrivibile, sceglie a caso."""
+    try:
+        os.makedirs(OUT_DIR, exist_ok=True)
+        p = os.path.join(OUT_DIR, ".stylecounter")
+        n = 0
+        try:
+            with open(p) as fh:
+                n = int((fh.read() or "0").strip() or 0)
+        except Exception:
+            n = random.randint(0, 9999)
+        n += 1
+        try:
+            with open(p, "w") as fh:
+                fh.write(str(n))
+        except Exception:
+            pass
+        return n
+    except Exception:
+        return random.randint(0, 9999)
+
+
+def _render_tip(title, sub, expl, idx=None):
+    """Disegna il tip in UNO stile a rotazione. Ripiego sicuro: il quaderno."""
+    if idx is None:
+        idx = _next_style_index()
+    style = _TIP_STYLES[idx % len(_TIP_STYLES)]
+    try:
+        img = style(title, sub, expl)
+        if img is not None:
+            return img
+    except Exception:
+        pass
+    try:
+        return _style_notebook(title, sub, expl)
+    except Exception:
+        return None
+
+
 def make_ai_educational(topic_hint: str = ""):
     """Contenuto didattico NUOVO scritto dall'assistente AI (così i contenuti non
     finiscono mai). Ritorna (path, caption) o (None, None) se l'AI non è configurata
@@ -676,16 +1035,9 @@ def make_ai_educational(topic_hint: str = ""):
         expl = (data.get("expl") or "").strip()
         if not (title and expl):
             return None, None
-        img, d = _base(title, sub, "Learn with VcriptoV • educational, not financial advice")
-        y = 355
-        for line in _wrap(d, expl, _font(32, False), W - 120)[:6]:
-            d.text((60, y), line, font=_font(32, False), fill=TXT)
-            y += 46
-        py = y + 30
-        ph = H - 150 - py - 30
-        if ph > 160:
-            d.rounded_rectangle([60, py, W - 60, py + ph], 20, fill=CARD)
-            _candles(d, _random.choice(_GENERIC_CANDLES), 110, py + 40, W - 220, ph - 80)
+        img = _render_tip(title, sub, expl)
+        if img is None:
+            return None, None
         path = _new_path("aiedu")
         img.save(path, "PNG")
         caption = (f"{title} — {sub}\n\n{expl}\n\n"
@@ -729,16 +1081,9 @@ def make_custom(title: str, sub: str, expl: str):
         expl = (expl or "").strip()
         if not (title and expl):
             return None, None
-        img, d = _base(title, sub, "Learn with VcriptoV • educational, not financial advice")
-        y = 355
-        for line in _wrap(d, expl, _font(32, False), W - 120)[:6]:
-            d.text((60, y), line, font=_font(32, False), fill=TXT)
-            y += 46
-        py = y + 30
-        ph = H - 150 - py - 30
-        if ph > 160:
-            d.rounded_rectangle([60, py, W - 60, py + ph], 20, fill=CARD)
-            _candles(d, _random.choice(_GENERIC_CANDLES), 110, py + 40, W - 220, ph - 80)
+        img = _render_tip(title, sub, expl)
+        if img is None:
+            return None, None
         path = _new_path("custom")
         img.save(path, "PNG")
         return path, None

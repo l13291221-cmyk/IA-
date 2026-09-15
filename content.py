@@ -999,6 +999,243 @@ def _render_tip(title, sub, expl, idx=None):
         return None
 
 
+# ==============================================================================
+#  DIAGRAMMI EDUCATIVI — ognuno una FORMA DIVERSA (non lo stesso riquadro!)
+# ------------------------------------------------------------------------------
+#  Schemi di trading disegnati a mano sul foglio di quaderno: doppio minimo,
+#  testa e spalle, triangoli, supporti/resistenze, canale, rischio/rendimento,
+#  anatomia della candela, bandiera. Ogni post pesca un diagramma diverso →
+#  il profilo sembra fatto da un vero creator, con disegni sempre nuovi.
+#  Ognuno è AUTONOMO: si porta dietro il titolo giusto e la sua didascalia.
+# ==============================================================================
+
+_DGA = (95, 388, W - 95, H - 210)   # area di disegno del diagramma
+
+
+def _P(nx, ny):
+    x0, y0, x1, y1 = _DGA
+    return (x0 + (x1 - x0) * nx, y1 - (y1 - y0) * ny)
+
+
+def _dash(d, p1, p2, fill, width=3, dash=22, gap=15):
+    import math
+    (x1, y1), (x2, y2) = p1, p2
+    dist = math.hypot(x2 - x1, y2 - y1) or 1
+    ux, uy = (x2 - x1) / dist, (y2 - y1) / dist
+    s = 0.0
+    while s < dist:
+        e = min(s + dash, dist)
+        d.line([(x1 + ux * s, y1 + uy * s), (x1 + ux * e, y1 + uy * e)], fill=fill, width=width)
+        s += dash + gap
+
+
+def _arrow(d, p1, p2, fill, width=7, head=24):
+    import math
+    d.line([p1, p2], fill=fill, width=width)
+    (x1, y1), (x2, y2) = p1, p2
+    ang = math.atan2(y2 - y1, x2 - x1)
+    for a in (ang + math.radians(148), ang - math.radians(148)):
+        d.line([(x2, y2), (x2 + head * math.cos(a), y2 + head * math.sin(a))], fill=fill, width=width)
+
+
+def _ring(d, center, r, fill, width=5):
+    cx, cy = center
+    d.ellipse([cx - r, cy - r, cx + r, cy + r], outline=fill, width=width)
+
+
+def _poly(d, pts, fill, width=7):
+    try:
+        d.line(pts, fill=fill, width=width, joint="curve")
+    except TypeError:
+        d.line(pts, fill=fill, width=width)
+
+
+def _dlbl(d, xy, text, size=24, fill=None, anchor=None):
+    try:
+        d.text(xy, text, font=_font(size), fill=fill if fill is not None else INK, anchor=anchor)
+    except Exception:
+        d.text(xy, text, font=_font(size), fill=fill if fill is not None else INK)
+
+
+def _shband(d, ny0, ny1, color):
+    (x0, _, x1, _) = _DGA
+    (_, ya) = _P(0, ny1)
+    (_, yb) = _P(0, ny0)
+    d.rectangle([x0, ya, x1, yb], fill=color)
+
+
+_LR = (245, 214, 208)   # banda rossa tenue (resistenza)
+_LG = (208, 234, 214)   # banda verde tenue (supporto)
+
+
+def dg_double_bottom(index=0):
+    img, d = _base("Double Bottom", "Bullish reversal ↑", _EDU_FOOTER)
+    neck = 0.60
+    _dash(d, _P(0.10, neck), _P(0.95, neck), RED, 3)
+    _dlbl(d, _P(0.30, neck + 0.03), "NECKLINE", 24, RED)
+    path = [(0.00, 0.88), (0.13, 0.55), (0.22, 0.22), (0.26, 0.15), (0.30, 0.22),
+            (0.42, 0.52), (0.50, 0.60), (0.58, 0.52), (0.70, 0.22), (0.74, 0.15),
+            (0.78, 0.24), (0.88, 0.52), (0.98, 0.92)]
+    _poly(d, [_P(x, y) for x, y in path], INK, 7)
+    _ring(d, _P(0.26, 0.15), 36, GREEN, 6)
+    _ring(d, _P(0.74, 0.15), 36, GREEN, 6)
+    _dlbl(d, _P(0.26, 0.05), "BOTTOM 1", 22, GREEN, anchor="ma")
+    _dlbl(d, _P(0.74, 0.05), "BOTTOM 2", 22, GREEN, anchor="ma")
+    _arrow(d, _P(0.86, 0.56), _P(0.97, 0.90), GREEN, 7, 22)
+    _dlbl(d, _P(0.70, 0.92), "BREAKOUT", 24, GREEN)
+    cap = ("Double Bottom — a 'W' shape: price makes two lows at about the same level, "
+           "then breaks ABOVE the neckline. It's one of the most reliable bullish "
+           "reversal patterns after a downtrend." + _EDU_TAGS)
+    return img, cap
+
+
+def dg_head_shoulders(index=0):
+    img, d = _base("Head & Shoulders", "Bearish reversal ↓", _EDU_FOOTER)
+    neck = 0.34
+    _dash(d, _P(0.14, neck), _P(0.82, neck), RED, 3)
+    _dlbl(d, _P(0.36, neck - 0.02), "NECKLINE", 22, RED, anchor="ra")
+    path = [(0.02, 0.28), (0.20, 0.56), (0.30, 0.34), (0.42, 0.80), (0.54, 0.34),
+            (0.64, 0.56), (0.74, 0.34), (0.86, 0.14), (0.98, 0.05)]
+    _poly(d, [_P(x, y) for x, y in path], INK, 7)
+    _dlbl(d, _P(0.20, 0.60), "L. SHOULDER", 21, MUT, anchor="ma")
+    _dlbl(d, _P(0.42, 0.84), "HEAD", 24, INK, anchor="ma")
+    _dlbl(d, _P(0.64, 0.60), "R. SHOULDER", 21, MUT, anchor="ma")
+    _arrow(d, _P(0.80, 0.30), _P(0.95, 0.06), RED, 7, 22)
+    _dlbl(d, _P(0.78, 0.34), "BREAKDOWN", 23, RED, anchor="ra")
+    cap = ("Head & Shoulders — three peaks: a higher one (head) between two lower ones "
+           "(shoulders). When price breaks BELOW the neckline it often signals the end "
+           "of an uptrend. The mirror version (inverse) is bullish." + _EDU_TAGS)
+    return img, cap
+
+
+def dg_asc_triangle(index=0):
+    img, d = _base("Ascending Triangle", "Bullish continuation ↑", _EDU_FOOTER)
+    res = 0.70
+    _dash(d, _P(0.06, res), _P(0.84, res), RED, 3)
+    _dlbl(d, _P(0.06, res + 0.03), "RESISTANCE", 22, RED)
+    _poly(d, [_P(0.05, 0.16), _P(0.84, 0.64)], BRAND, 4)
+    _dlbl(d, _P(0.30, 0.30), "RISING SUPPORT", 22, BRAND)
+    path = [(0.05, 0.16), (0.16, 0.70), (0.30, 0.36), (0.44, 0.70), (0.56, 0.50),
+            (0.70, 0.70), (0.80, 0.66), (0.88, 0.90)]
+    _poly(d, [_P(x, y) for x, y in path], INK, 6)
+    _arrow(d, _P(0.82, 0.74), _P(0.92, 0.94), GREEN, 7, 20)
+    _dlbl(d, _P(0.66, 0.94), "BREAKOUT", 23, GREEN)
+    cap = ("Ascending Triangle — flat resistance on top, higher and higher lows pushing "
+           "underneath. Pressure builds until price usually BREAKS OUT upward. A classic "
+           "continuation pattern in an uptrend." + _EDU_TAGS)
+    return img, cap
+
+
+def dg_support_resistance(index=0):
+    img, d = _base("Support & Resistance", "Where price reacts", _EDU_FOOTER)
+    _shband(d, 0.66, 0.75, _LR)
+    _shband(d, 0.14, 0.23, _LG)
+    _dlbl(d, _P(0.02, 0.80), "RESISTANCE", 24, RED)
+    _dlbl(d, _P(0.02, 0.03), "SUPPORT", 24, BRAND)
+    path = [(0.00, 0.48), (0.12, 0.70), (0.26, 0.19), (0.40, 0.70),
+            (0.54, 0.19), (0.68, 0.70), (0.82, 0.19), (0.98, 0.46)]
+    _poly(d, [_P(x, y) for x, y in path], INK, 7)
+    _arrow(d, _P(0.12, 0.62), _P(0.12, 0.42), RED, 5, 16)
+    _arrow(d, _P(0.40, 0.62), _P(0.40, 0.42), RED, 5, 16)
+    _arrow(d, _P(0.26, 0.27), _P(0.26, 0.46), GREEN, 5, 16)
+    _arrow(d, _P(0.54, 0.27), _P(0.54, 0.46), GREEN, 5, 16)
+    cap = ("Support & Resistance — support is the 'floor' where price tends to bounce, "
+           "resistance the 'ceiling' where it stalls. Buy nearer support, take profit "
+           "nearer resistance — not the other way around." + _EDU_TAGS)
+    return img, cap
+
+
+def dg_uptrend_channel(index=0):
+    img, d = _base("Uptrend Channel", "The trend is your friend", _EDU_FOOTER)
+    _poly(d, [_P(0.02, 0.12), _P(0.98, 0.68)], BRAND, 4)
+    _poly(d, [_P(0.02, 0.40), _P(0.98, 0.96)], BRAND, 4)
+    path = [(0.02, 0.18), (0.16, 0.44), (0.24, 0.26), (0.40, 0.56),
+            (0.50, 0.38), (0.66, 0.70), (0.76, 0.52), (0.92, 0.86)]
+    _poly(d, [_P(x, y) for x, y in path], INK, 7)
+    _arrow(d, _P(0.80, 0.62), _P(0.94, 0.90), GREEN, 7, 20)
+    _dlbl(d, _P(0.06, 0.86), "Higher highs & higher lows", 24, MUT)
+    cap = ("Uptrend Channel — price climbs between two parallel lines, making higher "
+           "highs and higher lows. Trade WITH the direction: buy the dips toward the "
+           "lower line, don't fight the trend." + _EDU_TAGS)
+    return img, cap
+
+
+def dg_risk_reward(index=0):
+    img, d = _base("Risk / Reward", "Aim for 1:3 or better", _EDU_FOOTER)
+    entry, stop, tgt = 0.50, 0.30, 0.86
+    _shband(d, stop, entry, _LR)
+    _shband(d, entry, tgt, _LG)
+    _dash(d, _P(0.0, entry), _P(1.0, entry), INK, 3)
+    _dash(d, _P(0.0, stop), _P(1.0, stop), RED, 3)
+    _dash(d, _P(0.0, tgt), _P(1.0, tgt), GREEN, 3)
+    _poly(d, [_P(0.02, 0.40), _P(0.12, 0.46), _P(0.22, 0.44), _P(0.30, 0.50)], INK, 6)
+    _dlbl(d, _P(0.34, entry + 0.02), "ENTRY", 24, INK)
+    _dlbl(d, _P(0.34, stop + 0.02), "STOP-LOSS", 24, RED)
+    _dlbl(d, _P(0.34, tgt + 0.02), "TARGET", 24, GREEN)
+    _arrow(d, _P(0.86, entry), _P(0.86, stop), RED, 5, 16)
+    _dlbl(d, _P(0.90, 0.40), "1R", 24, RED)
+    _arrow(d, _P(0.94, entry), _P(0.94, tgt), GREEN, 5, 16)
+    _dlbl(d, _P(0.965, 0.66), "3R", 24, GREEN)
+    cap = ("Risk / Reward — before entering, know where your stop and target are. "
+           "Risking 1 to make 3 (1:3) means you can be right less than half the time "
+           "and still come out ahead. Plan it BEFORE, not after." + _EDU_TAGS)
+    return img, cap
+
+
+def dg_candle_anatomy(index=0):
+    img, d = _base("Read a Candle", "Body, wick, open & close", _EDU_FOOTER)
+    # candela verde (sinistra)
+    gx = 0.30
+    _poly(d, [_P(gx, 0.14), _P(gx, 0.86)], INK, 4)
+    x0, _, x1, _ = _DGA
+    bw = (x1 - x0) * 0.11
+    gcx = _P(gx, 0)[0]
+    d.rounded_rectangle([gcx - bw, _P(0, 0.62)[1], gcx + bw, _P(0, 0.30)[1]], 6,
+                        fill=GREEN, outline=INK, width=3)
+    # candela rossa (destra)
+    rx = 0.66
+    _poly(d, [_P(rx, 0.20), _P(rx, 0.90)], INK, 4)
+    rcx = _P(rx, 0)[0]
+    d.rounded_rectangle([rcx - bw, _P(0, 0.70)[1], rcx + bw, _P(0, 0.38)[1]], 6,
+                        fill=RED, outline=INK, width=3)
+    _dlbl(d, _P(gx + 0.05, 0.86), "High (wick)", 22, MUT)
+    _dlbl(d, _P(gx + 0.05, 0.60), "Close", 22, INK)
+    _dlbl(d, _P(gx + 0.05, 0.30), "Open", 22, INK)
+    _dlbl(d, _P(gx + 0.05, 0.10), "Low (wick)", 22, MUT)
+    _dlbl(d, _P(rx - 0.02, 0.05), "Red = close below open", 22, RED, anchor="ma")
+    _dlbl(d, _P(gx, 0.96), "GREEN = up", 22, GREEN, anchor="ma")
+    cap = ("How to read a candle — the BODY is the distance between open and close "
+           "(green = price went up, red = down). The thin WICKS show the high and low. "
+           "Master this and every chart starts to make sense." + _EDU_TAGS)
+    return img, cap
+
+
+def dg_bull_flag(index=0):
+    img, d = _base("Bull Flag", "Bullish continuation ↑", _EDU_FOOTER)
+    _poly(d, [_P(0.05, 0.12), _P(0.30, 0.82)], INK, 8)
+    _dlbl(d, _P(0.02, 0.42), "POLE", 22, MUT)
+    flag = [(0.30, 0.82), (0.40, 0.66), (0.48, 0.74), (0.56, 0.58), (0.62, 0.64)]
+    _poly(d, [_P(x, y) for x, y in flag], INK, 6)
+    _dash(d, _P(0.30, 0.86), _P(0.64, 0.62), MUT, 3)
+    _dash(d, _P(0.30, 0.70), _P(0.64, 0.46), MUT, 3)
+    _dlbl(d, _P(0.40, 0.86), "FLAG", 22, MUT)
+    _arrow(d, _P(0.62, 0.64), _P(0.92, 0.96), GREEN, 7, 22)
+    _dlbl(d, _P(0.66, 0.98), "BREAKOUT", 23, GREEN)
+    cap = ("Bull Flag — a strong move up (the pole), then a small, calm pullback that "
+           "drifts sideways/down (the flag). When price breaks out of the flag it often "
+           "continues higher. Continuation, not reversal." + _EDU_TAGS)
+    return img, cap
+
+
+_DIAGRAMS = (dg_double_bottom, dg_head_shoulders, dg_asc_triangle,
+             dg_support_resistance, dg_uptrend_channel, dg_risk_reward,
+             dg_candle_anatomy, dg_bull_flag)
+
+# I MODELLI didattici che ruotano: prima gli 8 DIAGRAMMI (forme diverse), poi le
+# due griglie di pattern. Così ogni post educativo ha un disegno diverso.
+_EDU_LAYOUTS = _DIAGRAMS + (_edu_grid4, _edu_signals6)
+
+
 def make_ai_educational(topic_hint: str = ""):
     """Contenuto didattico NUOVO scritto dall'assistente AI (così i contenuti non
     finiscono mai). Ritorna (path, caption) o (None, None) se l'AI non è configurata

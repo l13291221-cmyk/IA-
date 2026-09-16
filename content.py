@@ -108,10 +108,12 @@ def _base(title, subtitle, tag):
         y += 58
     d.line([(48, 30), (48, H - 30)], fill=MARGIN, width=3)
     # --- header: cerchio "logo" disegnato a mano + nome ---
-    _sk_rect(d, (60, 55, 118, 113), outline=INK, width=5, jitter=1.4)
-    _sk_line(d, (74, 84), (104, 84), GREEN, 6, jitter=1.2)
-    d.text((135, 60), "VcriptoV", font=_font(46), fill=INK)
-    d.text((137, 112), "crypto signals", font=_font(26, False), fill=MUT)
+    # Abbassato dal bordo: in alto Instagram (Reels) mette la sua barra e coprirebbe
+    # il logo. Con questo margine il marchio resta SEMPRE visibile, non tagliato.
+    _sk_rect(d, (60, 104, 118, 162), outline=INK, width=5, jitter=1.4)
+    _sk_line(d, (74, 133), (104, 133), GREEN, 6, jitter=1.2)
+    d.text((135, 109), "VcriptoV", font=_font(46), fill=INK)
+    d.text((137, 161), "crypto signals", font=_font(26, False), fill=MUT)
     # --- titolo con EVIDENZIATORE giallo dietro (come gli appunti) ---
     tf = _font(58)
     try:
@@ -1009,7 +1011,9 @@ def _render_tip(title, sub, expl, idx=None):
 #  Ognuno è AUTONOMO: si porta dietro il titolo giusto e la sua didascalia.
 # ==============================================================================
 
-_DGA = (95, 388, W - 95, H - 210)   # area di disegno del diagramma
+_DGA = (128, 402, W - 128, H - 225)   # area di disegno del diagramma (margini ampi
+#   dai bordi: così frecce/etichette non finiscono attaccate al bordo o "tagliate"
+#   quando Instagram ridimensiona il reel).
 
 
 def _P(nx, ny):

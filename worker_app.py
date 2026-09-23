@@ -13,7 +13,7 @@ che stava qui: così i segnali del sito principale non si fermano mai.
 AVVIO su Render:
   • Start command:   gunicorn worker_app:app --timeout 150 --bind 0.0.0.0:$PORT
   • Env (opzionale): REEL_WORKER_SECRET = password (la stessa su VcriptoV)
-  • Env (ping):      MUTUAL_PING_URLS   = https://vcriptov.onrender.com
+  • Env (ping):      MUTUAL_PING_URLS   = https://vcriptov.onrender.com  (ping ogni 5 min)
 
 Endpoint:
   GET  /              → ok (health)
@@ -82,7 +82,8 @@ def home():
 
 @app.get("/health")
 def health():
-    return jsonify({"ok": True, "video": content.video_available()})
+    return jsonify({"ok": True, "video": content.video_available(),
+                    "keepalive_every": KEEPALIVE_EVERY, "keepalive": _KEEPALIVE["targets"]})
 
 
 @app.post("/render-reel")
@@ -128,27 +129,39 @@ def serve_reel(name):
 
 
 # ── Auto-ping: tiene sveglia VcriptoV (e se stesso) sul free tier ──────────────
+KEEPALIVE_EVERY = int(os.environ.get("KEEPALIVE_EVERY", "300"))   # 5 minuti
+_KEEPALIVE = {"targets": {}}
+
+
+def _ping_url(u: str) -> str:
+    """Un indirizzo "nudo" (https://vcriptov.onrender.com) diventa la sua pagina
+    LEGGERA /ping: prima si caricava la home intera di VcriptoV ogni volta."""
+    u = u.strip().rstrip("/")
+    return u + "/ping" if u.count("/") <= 2 else u
+
+
 def _keepalive_loop():
-    """Ogni ~10 min fa un ping agli indirizzi in MUTUAL_PING_URLS (VcriptoV) e a
-    se stesso, così nessuno dei due si addormenta. È la stessa rete di sicurezza
-    che c'era prima su questo servizio."""
+    """Ogni 5 minuti fa un ping agli indirizzi in MUTUAL_PING_URLS (VcriptoV) e a
+    se stesso, così nessuno dei due si addormenta (Render free dorme dopo 15 min).
+    VcriptoV fa lo stesso verso questo servizio: ping reciproco."""
     try:
         import requests as _rq
     except Exception:
         return
-    urls = [u.strip() for u in os.environ.get("MUTUAL_PING_URLS", "").split(",") if u.strip()]
+    urls = [_ping_url(u) for u in os.environ.get(
+        "MUTUAL_PING_URLS", "https://vcriptov.onrender.com").split(",") if u.strip()]
     self_url = (os.environ.get("RENDER_EXTERNAL_URL") or "").strip()
     if self_url:
         urls.append(self_url.rstrip("/") + "/health")
-    if not urls:
-        return
+    time.sleep(20)          # lascia finire l'avvio, poi SUBITO il primo giro
     while True:
-        time.sleep(600)
         for u in urls:
             try:
-                _rq.get(u, timeout=15)
-            except Exception:
-                pass
+                r = _rq.get(u, timeout=20)
+                _KEEPALIVE["targets"][u] = {"ok": r.status_code < 500, "code": r.status_code, "at": time.time()}
+            except Exception as exc:
+                _KEEPALIVE["targets"][u] = {"ok": False, "error": type(exc).__name__, "at": time.time()}
+        time.sleep(KEEPALIVE_EVERY)
 
 
 threading.Thread(target=_keepalive_loop, name="keepalive", daemon=True).start()

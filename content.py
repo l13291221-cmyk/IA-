@@ -1248,7 +1248,6 @@ def make_ai_educational(topic_hint: str = ""):
         return None, None
     try:
         import json as _json
-        import random as _random
         from app import ai_api_key
         import ai_assistant
         key = ai_api_key()
@@ -1316,7 +1315,6 @@ def make_custom(title: str, sub: str, expl: str):
     if Image is None:
         return None, None
     try:
-        import random as _random
         title = (title or "").strip()[:38]
         sub = (sub or "").strip()[:38]
         expl = (expl or "").strip()

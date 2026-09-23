@@ -83,7 +83,9 @@ def home():
 @app.get("/health")
 def health():
     return jsonify({"ok": True, "video": content.video_available(),
-                    "keepalive_every": KEEPALIVE_EVERY, "keepalive": _KEEPALIVE["targets"]})
+                    "keepalive_every": KEEPALIVE_EVERY, "keepalive": _KEEPALIVE["targets"],
+                    "keepalive_urls": _KEEPALIVE["urls"],
+                    "keepalive_alive": bool(_KEEPALIVE["thread"] and _KEEPALIVE["thread"].is_alive())})
 
 
 @app.post("/render-reel")
@@ -129,8 +131,16 @@ def serve_reel(name):
 
 
 # ── Auto-ping: tiene sveglia VcriptoV (e se stesso) sul free tier ──────────────
+# `requests` importato QUI, nel thread principale: importarlo dentro il thread del
+# ping poteva bloccarlo per sempre dopo il fork di gunicorn (lucchetto d'import
+# rimasto chiuso nel processo copiato) → il ping non partiva mai.
+try:
+    import requests as _rq
+except Exception:  # pragma: no cover
+    _rq = None
 KEEPALIVE_EVERY = int(os.environ.get("KEEPALIVE_EVERY", "300"))   # 5 minuti
-_KEEPALIVE = {"targets": {}}
+_KEEPALIVE = {"targets": {}, "thread": None, "urls": [], "pid": None}
+_KEEPALIVE_LOCK = threading.Lock()
 
 
 def _ping_url(u: str) -> str:
@@ -144,15 +154,15 @@ def _keepalive_loop():
     """Ogni 5 minuti fa un ping agli indirizzi in MUTUAL_PING_URLS (VcriptoV) e a
     se stesso, così nessuno dei due si addormenta (Render free dorme dopo 15 min).
     VcriptoV fa lo stesso verso questo servizio: ping reciproco."""
-    try:
-        import requests as _rq
-    except Exception:
+    if _rq is None:
         return
-    urls = [_ping_url(u) for u in os.environ.get(
-        "MUTUAL_PING_URLS", "https://vcriptov.onrender.com").split(",") if u.strip()]
+    # `or`: una variabile impostata ma VUOTA su Render non deve spegnere il ping
+    urls = [_ping_url(u) for u in (os.environ.get("MUTUAL_PING_URLS")
+                                   or "https://vcriptov.onrender.com").split(",") if u.strip()]
     self_url = (os.environ.get("RENDER_EXTERNAL_URL") or "").strip()
     if self_url:
         urls.append(self_url.rstrip("/") + "/health")
+    _KEEPALIVE["urls"] = urls
     time.sleep(20)          # lascia finire l'avvio, poi SUBITO il primo giro
     while True:
         for u in urls:
@@ -164,7 +174,28 @@ def _keepalive_loop():
         time.sleep(KEEPALIVE_EVERY)
 
 
-threading.Thread(target=_keepalive_loop, name="keepalive", daemon=True).start()
+def _ensure_keepalive():
+    """Avvia il thread del ping in QUESTO processo se non gira. Chiamato all'avvio
+    E a ogni richiesta: se gunicorn carica l'app in un processo e poi la "copia"
+    nei worker (fork), il thread partito all'import non esiste nel worker."""
+    t = _KEEPALIVE["thread"]
+    if t is not None and t.is_alive() and _KEEPALIVE["pid"] == os.getpid():
+        return
+    with _KEEPALIVE_LOCK:
+        t = _KEEPALIVE["thread"]
+        if t is not None and t.is_alive() and _KEEPALIVE["pid"] == os.getpid():
+            return
+        _KEEPALIVE["pid"] = os.getpid()
+        _KEEPALIVE["thread"] = threading.Thread(target=_keepalive_loop, name="keepalive", daemon=True)
+        _KEEPALIVE["thread"].start()
+
+
+_ensure_keepalive()
+
+
+@app.before_request
+def _keepalive_guard():
+    _ensure_keepalive()
 
 
 if __name__ == "__main__":

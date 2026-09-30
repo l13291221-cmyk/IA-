@@ -135,6 +135,33 @@ def render_reel():
     return jsonify({"url": f"{base}/reels/{fname}", "caption": caption or ""})
 
 
+@app.post("/render-post")
+def render_post():
+    """Immagine da POST (4:5) negli stessi formati dei reel: {kind, data, caption}."""
+    if not _authorized(request):
+        return jsonify({"error": "unauthorized"}), 401
+    spec = request.get_json(force=True, silent=True) or {}
+    kind = spec.get("kind")
+    try:
+        content.cleanup_old()
+    except Exception:
+        pass
+    try:
+        import reels2
+        if kind not in reels2.RENDERERS and kind != "promo":
+            return jsonify({"error": f"formato sconosciuto: {kind}"}), 400
+        path = reels2.render(kind, spec.get("data") or {}, still=True)
+    except Exception as exc:
+        return jsonify({"error": f"{type(exc).__name__}: {exc}"}), 500
+    base = (os.environ.get("RENDER_EXTERNAL_URL") or request.host_url).rstrip("/")
+    return jsonify({"url": f"{base}/posts/{os.path.basename(path)}", "caption": spec.get("caption") or ""})
+
+
+@app.get("/posts/<path:name>")
+def serve_post(name):
+    return send_from_directory(content.OUT_DIR, name, mimetype="image/png")
+
+
 @app.get("/reels/<path:name>")
 def serve_reel(name):
     # Instagram scarica il video da questo URL pubblico.

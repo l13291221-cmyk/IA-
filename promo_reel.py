@@ -220,6 +220,32 @@ def _beat(path, seconds, sr=22050):
     return path
 
 
+POST_W, POST_H = 1080, 1350
+
+
+class StillWriter:
+    """Al posto del video: salva UN fotogramma come immagine da post (4:5). Il
+    fotogramma 9:16 viene rimpicciolito e i lati si allungano col colore del bordo,
+    così lo sfondo continua senza stacchi."""
+
+    def __init__(self, png_path):
+        self.png_path = png_path
+
+    def append_data(self, arr):
+        img = Image.fromarray(np.asarray(arr)).convert("RGB")
+        nh = POST_H
+        nw = int(img.width * nh / img.height)
+        small = np.asarray(img.resize((nw, nh), Image.LANCZOS))
+        left = (POST_W - nw) // 2
+        right = POST_W - nw - left
+        canvas = np.concatenate([np.repeat(small[:, 3:4], left, axis=1), small,
+                                 np.repeat(small[:, -4:-3], right, axis=1)], axis=1)
+        Image.fromarray(canvas.astype("uint8")).save(self.png_path, "PNG", optimize=True)
+
+    def close(self):
+        pass
+
+
 def caption_for(index: int) -> str:
     l1, l2, bullets, _n = HOOKS[index % len(HOOKS)]
     return (f"{l1.capitalize()} {l2.lower()} 🤖📈\n\n" + "\n".join(f"✅ {b}" for b in bullets) +
@@ -228,7 +254,7 @@ def caption_for(index: int) -> str:
             "#ethereum #vcriptov")
 
 
-def render(index: int, out_path: str | None = None, hook=None) -> tuple[str, str]:
+def render(index: int, out_path: str | None = None, hook=None, still=False) -> tuple[str, str]:
     """Crea il reel numero `index` (titolo, colori e grafico cambiano). `hook` = testi
     scelti dal sito [riga1, riga2, [3 punti], [notifica, sotto]]. Ritorna (mp4, didascalia)."""
     import imageio.v2 as imageio
@@ -252,11 +278,15 @@ def render(index: int, out_path: str | None = None, hook=None) -> tuple[str, str
     fb = _f(56)
     total = int(SECONDS * FPS)
     raw = out_path + ".raw.mp4"
-    w = imageio.get_writer(raw, fps=FPS, codec="libx264", quality=7, macro_block_size=1,
+    frames = range(total)
+    if still:                                   # post: solo l'ultimo fotogramma, come immagine
+        out_path = os.path.splitext(out_path)[0] + ".png"
+        frames = [total - 2]
+    w = StillWriter(out_path) if still else imageio.get_writer(raw, fps=FPS, codec="libx264", quality=7, macro_block_size=1,
                            ffmpeg_params=["-pix_fmt", "yuv420p", "-preset", "ultrafast", "-threads", "1",
                                           "-bf", "0"])
     try:
-        for fi in range(total):
+        for fi in frames:
             t = fi / FPS
             fr = bg.copy()
             ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
@@ -334,6 +364,8 @@ def render(index: int, out_path: str | None = None, hook=None) -> tuple[str, str
                 gc.collect()
     finally:
         w.close()
+    if still:
+        return out_path, caption_for(index)
     music = out_path + ".wav"
     try:
         _beat(music, SECONDS)

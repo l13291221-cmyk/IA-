@@ -83,15 +83,24 @@ def _footer(d, dark=True, text="Informazione, non consulenza finanziaria"):
            fill=((120, 126, 136, 255) if dark else (90, 90, 96, 255)))
 
 
+STILL = {"on": False}      # True = invece del video salva l'immagine finale (post 4:5)
+
+
 def _encode(draw, bg, seconds, out_path, bpm_seed=0):
     """draw(t, ov, d) disegna gli elementi del fotogramma su un livello trasparente."""
     import imageio.v2 as imageio
     from content import _finalize_reel
+    from promo_reel import StillWriter
     raw = out_path + ".raw.mp4"
-    w = imageio.get_writer(raw, fps=FPS, codec="libx264", quality=7, macro_block_size=1,
-                           ffmpeg_params=["-preset", "ultrafast", "-threads", "1", "-bf", "0"])
+    frames = range(int(seconds * FPS))
+    if STILL["on"]:
+        frames = [int(seconds * FPS) - 2]
+        w = StillWriter(out_path)
+    else:
+        w = imageio.get_writer(raw, fps=FPS, codec="libx264", quality=7, macro_block_size=1,
+                               ffmpeg_params=["-preset", "ultrafast", "-threads", "1", "-bf", "0"])
     try:
-        for fi in range(int(seconds * FPS)):
+        for fi in frames:
             ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
             d = ImageDraw.Draw(ov)
             draw(fi / FPS, ov, d)
@@ -102,6 +111,8 @@ def _encode(draw, bg, seconds, out_path, bpm_seed=0):
                 gc.collect()
     finally:
         w.close()
+    if STILL["on"]:
+        return out_path
     music = out_path + ".wav"
     try:
         _beat(music, seconds)
@@ -193,7 +204,7 @@ def _quiz(data, out):
         if t > 0.6:
             n = int(len(q) * min(1, (t - 0.6) / 1.2))       # la domanda si "scrive"
             _text_block(d, q[:n], _f(72), BLACK + (255,), W / 2, 420, W - 120, 86, 4)
-        reveal = t > 6.2
+        reveal = t > 6.2 and not STILL["on"]           # nel post la risposta resta nascosta: si commenta
         for i, o in enumerate(opts):
             e = _ease((t - 2.0 - 0.3 * i) / 0.5)
             if e <= 0.01:
@@ -209,7 +220,7 @@ def _quiz(data, out):
             for k, ln in enumerate(lines):
                 d.text((x + 120, y + (48 if len(lines) == 1 else 26) + k * 52), ln, font=_f(46),
                        fill=BLACK + (120 if bad else 255,))
-        if 3.4 < t <= 6.2:                                  # conto alla rovescia
+        if 3.4 < t <= 6.2 and not STILL["on"]:              # conto alla rovescia
             k = 3 - int((t - 3.4) / 0.93)
             fr = ((t - 3.4) % 0.93) / 0.93
             r = 110 * (1 + 0.15 * (1 - fr))
@@ -219,7 +230,9 @@ def _quiz(data, out):
         if reveal and expl:
             a = int(255 * min(1, (t - 6.4) * 2))
             _text_block(d, expl, _f(44, False), BLACK + (a,), W / 2, 1450, W - 140, 54, 4)
-        if t > 7.8:
+        if STILL["on"]:
+            _text_block(d, "A, B o C? Rispondi nei commenti", _f(62), BLACK + (255,), W / 2, 1500, W - 120, 72)
+        elif t > 7.8:
             _text_block(d, "Ci avevi preso? Scrivilo nei commenti", _f(42), BLACK + (255,), W / 2, 1760, W - 120, 50)
         _footer(d, dark=False)
     return _encode(draw, bg, 10.0, out)
@@ -293,7 +306,7 @@ def _top5(data, out):
                 d.text((x + 190, y + 40 + j * 64 - (20 if len(_lines) > 1 else 0)), ln, font=_f(56), fill=BLACK + (255,))
         if t > 1.0 + step * n:
             a = int(255 * min(1, (t - 1.0 - step * n) * 2))
-            _text_block(d, "Salva il video per non dimenticarlo", _f(44), accent + (a,), W / 2, 1760, W - 120, 52)
+            _text_block(d, ("Salva il post per non dimenticarlo" if STILL["on"] else "Salva il video per non dimenticarlo"), _f(44), accent + (a,), W / 2, 1760, W - 120, 52)
         _footer(d, dark=False)
     return _encode(draw, bg, 1.0 + step * len(items) + 2.0, out)
 
@@ -478,10 +491,16 @@ RENDERERS = {"market": _market, "quiz": _quiz, "myth": _myth, "top5": _top5, "fn
              "candles": _candles, "chat": _chat}
 
 
-def render(kind: str, data: dict, out_path: str | None = None) -> str:
+def render(kind: str, data: dict, out_path: str | None = None, still: bool = False) -> str:
+    """Reel (mp4) o, con still=True, POST (png 4:5) dello stesso formato."""
     os.makedirs(OUT_DIR, exist_ok=True)
-    out_path = out_path or os.path.join(OUT_DIR, f"{kind}_{int(time.time())}.mp4")
+    ext = "png" if still else "mp4"
+    out_path = out_path or os.path.join(OUT_DIR, f"{'post' if still else 'reel'}_{kind}_{int(time.time())}.{ext}")
     if kind == "promo":
         import promo_reel
-        return promo_reel.render(int(data.get("index", 0) or 0), out_path)[0]
-    return RENDERERS[kind](data or {}, out_path)
+        return promo_reel.render(int(data.get("index", 0) or 0), out_path, hook=data.get("hook"), still=still)[0]
+    STILL["on"] = still
+    try:
+        return RENDERERS[kind](data or {}, out_path)
+    finally:
+        STILL["on"] = False

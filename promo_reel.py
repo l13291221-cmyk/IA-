@@ -228,12 +228,18 @@ def caption_for(index: int) -> str:
             "#ethereum #vcriptov")
 
 
-def render(index: int, out_path: str | None = None) -> tuple[str, str]:
-    """Crea il reel numero `index` (titolo, colori e grafico cambiano). Ritorna (mp4, didascalia)."""
+def render(index: int, out_path: str | None = None, hook=None) -> tuple[str, str]:
+    """Crea il reel numero `index` (titolo, colori e grafico cambiano). `hook` = testi
+    scelti dal sito [riga1, riga2, [3 punti], [notifica, sotto]]. Ritorna (mp4, didascalia)."""
     import imageio.v2 as imageio
     from content import _finalize_reel
 
     l1, l2, bullets, notif = HOOKS[index % len(HOOKS)]
+    try:
+        if hook and len(hook) == 4 and len(hook[2]) == 3 and len(hook[3]) == 2:
+            l1, l2, bullets, notif = str(hook[0]), str(hook[1]), [str(b) for b in hook[2]], [str(n) for n in hook[3]]
+    except (TypeError, ValueError):
+        pass
     theme = THEMES[(index // len(HOOKS) + index) % len(THEMES)]
     acc = theme[0]
     os.makedirs(OUT_DIR, exist_ok=True)

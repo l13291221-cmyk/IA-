@@ -116,7 +116,9 @@ def render_reel():
         elif kind == "promo":
             # Reel ANIMATO in stile pubblicità (titolo enorme, spunte, grafico al neon, invito).
             import promo_reel
-            path, caption = promo_reel.render(int(spec.get("index", 0) or 0))
+            data = spec.get("data") or {}
+            path, caption = promo_reel.render(int(spec.get("index", data.get("index", 0)) or 0), hook=data.get("hook"))
+            caption = spec.get("caption") or caption
         elif kind == "custom":
             # Testo GIÀ scritto dal sito (AI lì): reel "sempre diverso" senza AI qui.
             path, _cap = content.make_custom_reel(

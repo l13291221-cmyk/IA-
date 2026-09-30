@@ -108,6 +108,11 @@ def render_reel():
                 spec.get("risk", "medio"),
                 gain_pct=spec.get("gain_pct"),
             )
+        elif kind in ("market", "quiz", "myth", "top5", "fng", "candles", "chat"):
+            # formati diversi: testi e dati li decide il sito (spec["data"])
+            import reels2
+            path = reels2.render(kind, spec.get("data") or {})
+            caption = spec.get("caption") or ""
         elif kind == "promo":
             # Reel ANIMATO in stile pubblicità (titolo enorme, spunte, grafico al neon, invito).
             import promo_reel

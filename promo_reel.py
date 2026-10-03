@@ -35,30 +35,30 @@ OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "au
 
 # Ogni video: titolo (2 righe), 3 punti, notifica del bot. Tutto vero, niente guadagni promessi.
 HOOKS = [
-    ("AUTOMATIZZA", "IL TUO TRADING", ["Meno grafici", "Più tempo per te", "Segnali su Telegram"],
-     ("Bot di segnali attivo", "Lavora 24/7 · tu no")),
-    ("IL BOT LAVORA", "TU VIVI", ["Analizza il mercato 24/7", "Ti avvisa su Telegram", "Decidi sempre tu"],
-     ("Nuovo segnale in arrivo", "Controllato dal bot")),
-    ("SMETTI DI FISSARE", "I GRAFICI", ["Il bot li guarda per te", "Ricevi solo i segnali", "Niente ansia da schermo"],
-     ("Mercato sotto controllo", "24 ore su 24")),
-    ("I TUOI SOLDI", "RESTANO TUOI", ["Fondi sul TUO exchange", "Nessun deposito da noi", "Stop loss sempre attivo"],
-     ("Conto collegato in sicurezza", "Solo chiavi API")),
-    ("SEGNALI CRYPTO", "IN AUTOMATICO", ["Entrata, stop e target", "Spiegati in parole semplici", "Direttamente su Telegram"],
-     ("Segnale pronto", "Tocca per vederlo")),
-    ("NON INSEGUIRE", "I PUMP", ["Regole chiare", "Stop loss su ogni operazione", "Meno emozioni, più metodo"],
-     ("Il bot resta calmo", "Anche quando tu no")),
-    ("IL MERCATO", "NON DORME MAI", ["Il bot neanche", "Ti scrive quando serve", "Tu dormi tranquillo"],
-     ("Bot attivo di notte", "Monitoraggio continuo")),
-    ("TRADING CRYPTO", "SENZA STRESS", ["Segnali già pronti", "Rischio sempre indicato", "Un tocco e hai fatto"],
-     ("Rischio stimato: indicato", "Su ogni segnale")),
-    ("IMPARA MENTRE", "INVESTI", ["Ogni segnale spiegato", "Glossario e guide", "Podcast ogni settimana"],
-     ("Nuova lezione disponibile", "Gratis sul sito")),
-    ("MENO SCHERMO", "PIÙ VITA", ["Il bot fa il lavoro noioso", "Tu ricevi l'avviso", "Scegli tu se entrare"],
-     ("Notifica dal bot", "Adesso su Telegram")),
-    ("64 CRYPTO", "SOTTO CONTROLLO", ["Bitcoin, Ethereum, Solana…", "Analisi ogni giorno", "Avvisi quando conta"],
-     ("Scansione completata", "64 monete analizzate")),
-    ("PROVA GRATIS", "PER 3 GIORNI", ["Nessun vincolo", "Collega il tuo exchange", "Disdici quando vuoi"],
-     ("Prova gratuita attiva", "Tutte le funzioni")),
+    ("AUTOMATE", "YOUR TRADING", ["Fewer charts", "More time for you", "Signals on Telegram"],
+     ("Signal bot active", "Works 24/7 · you don't")),
+    ("THE BOT WORKS", "YOU LIVE", ["Scans the market 24/7", "Alerts you on Telegram", "You always decide"],
+     ("New signal incoming", "Checked by the bot")),
+    ("STOP STARING", "AT CHARTS", ["The bot watches for you", "You only get signals", "No screen anxiety"],
+     ("Market under control", "24 hours a day")),
+    ("YOUR MONEY", "STAYS YOURS", ["Funds on YOUR exchange", "No deposits with us", "Stop-loss always on"],
+     ("Account linked safely", "API keys only")),
+    ("CRYPTO SIGNALS", "ON AUTOPILOT", ["Entry, stop and target", "Explained simply", "Straight to Telegram"],
+     ("Signal ready", "Tap to see it")),
+    ("DON'T CHASE", "THE PUMPS", ["Clear rules", "Stop-loss on every trade", "Less emotion, more method"],
+     ("The bot stays calm", "Even when you don't")),
+    ("THE MARKET", "NEVER SLEEPS", ["Neither does the bot", "Messages you when needed", "You sleep easy"],
+     ("Bot active at night", "Nonstop monitoring")),
+    ("CRYPTO TRADING", "WITHOUT STRESS", ["Signals ready to go", "Risk always shown", "One tap and done"],
+     ("Estimated risk: shown", "On every signal")),
+    ("LEARN WHILE", "YOU INVEST", ["Every signal explained", "Glossary and guides", "Weekly podcast"],
+     ("New lesson available", "Free on the site")),
+    ("LESS SCREEN", "MORE LIFE", ["The bot does the boring part", "You get the alert", "You choose to enter"],
+     ("Bot notification", "Now on Telegram")),
+    ("64 COINS", "UNDER WATCH", ["Bitcoin, Ethereum, Solana…", "Daily analysis", "Alerts when it matters"],
+     ("Scan complete", "64 coins analyzed")),
+    ("TRY IT FREE", "FOR 3 DAYS", ["No commitment", "Link your exchange", "Cancel anytime"],
+     ("Free trial active", "All features")),
 ]
 
 THEMES = [  # (accento neon, sfondo alto, sfondo basso)
@@ -249,8 +249,8 @@ class StillWriter:
 def caption_for(index: int) -> str:
     l1, l2, bullets, _n = HOOKS[index % len(HOOKS)]
     return (f"{l1.capitalize()} {l2.lower()} 🤖📈\n\n" + "\n".join(f"✅ {b}" for b in bullets) +
-            "\n\n👉 Prova VcriptoV: link in bio.\nInformazione, non consulenza finanziaria: il trading crypto "
-            "è rischioso.\n\n#crypto #bitcoin #trading #criptovalute #tradingbot #investire #finanzapersonale "
+            "\n\n👉 Try VcriptoV: link in bio.\nEducational content, not financial advice: crypto trading "
+            "is risky.\n\n#crypto #bitcoin #trading #cryptocurrency #tradingbot #investing #personalfinance "
             "#ethereum #vcriptov")
 
 
@@ -295,7 +295,7 @@ def render(index: int, out_path: str | None = None, hook=None, still=False) -> t
             if logo:
                 ov.alpha_composite(logo, (54, 70))
             d.text((154, 92), "VCRIPTOV", font=_f(40), fill=WHITE)
-            d.text((156, 140), "segnali crypto automatici", font=_f(26, False), fill=GREY)
+            d.text((156, 140), "automatic crypto signals", font=_f(26, False), fill=GREY)
             # grafico al neon che si disegna (dietro al testo)
             frac = _smooth((t - 0.8) / 4.2)
             line = _partial(pts, frac)
@@ -350,13 +350,13 @@ def render(index: int, out_path: str | None = None, hook=None, still=False) -> t
                 cx, cy = W / 2, 1735
                 d.rounded_rectangle([cx - bw / 2, cy - bh / 2, cx + bw / 2, cy + bh / 2], int(bh / 2), fill=acc + (255,))
                 f = _f(max(20, int(50 * sc)))
-                txt = "SCOPRI DI PIÙ  →"
+                txt = "LEARN MORE  →"
                 tw = d.textlength(txt, font=f)
                 d.text((cx - tw / 2, cy - 30 * sc), txt, font=f, fill=(8, 10, 12, 255))
                 d.text((cx - d.textlength("link in bio", font=_f(30, False)) / 2, cy + bh / 2 + 14), "link in bio",
                        font=_f(30, False), fill=GREY + (int(255 * min(1, p)),))
-            d.text((W / 2 - d.textlength("Informazione, non consulenza finanziaria", font=_f(24, False)) / 2, H - 50),
-                   "Informazione, non consulenza finanziaria", font=_f(24, False), fill=(110, 116, 126, 255))
+            d.text((W / 2 - d.textlength("Educational, not financial advice", font=_f(24, False)) / 2, H - 50),
+                   "Educational, not financial advice", font=_f(24, False), fill=(110, 116, 126, 255))
             fr = Image.alpha_composite(fr.convert("RGBA"), ov).convert("RGB")
             w.append_data(np.asarray(fr))
             del fr, ov, d

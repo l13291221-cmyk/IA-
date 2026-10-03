@@ -120,10 +120,13 @@ def _start_cartoon(spec):
         for k in [k for k, j in _JOBS.items() if now - j["ts"] > 6 * 3600]:
             _JOBS.pop(k, None)
         running = [k for k, j in _JOBS.items() if j["status"] == "running"]
-        if running:   # uno alla volta (memoria): il sito riceve quello già in corso
-            return running[0]
+        if running:   # uno alla volta (memoria)
+            if _JOBS[running[0]].get("key") == (spec.get("key") or ""):
+                return running[0]          # è lo stesso video richiesto di nuovo
+            return None                    # un ALTRO video è in corso: riprova dopo
         job_id = f"{int(now * 1000)}"
-        _JOBS[job_id] = {"status": "running", "ts": now, "caption": spec.get("caption") or ""}
+        _JOBS[job_id] = {"status": "running", "ts": now, "caption": spec.get("caption") or "",
+                         "key": spec.get("key") or ""}
     threading.Thread(target=_run_cartoon, args=(job_id, spec.get("data") or {}, _public_base()),
                      daemon=True).start()
     return job_id
@@ -147,6 +150,8 @@ def render_reel():
     kind = spec.get("kind")
     if kind == "cartoon":
         job_id = _start_cartoon(spec)
+        if not job_id:
+            return jsonify({"busy": True, "error": "il motore sta già creando un altro video"}), 409
         return jsonify({"pending": True, "job": job_id, "caption": spec.get("caption") or ""}), 202
     try:
         content.cleanup_old()   # non far crescere il disco all'infinito

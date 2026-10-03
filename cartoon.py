@@ -507,6 +507,49 @@ def _music(seconds):
     return a / max(1e-6, float(np.max(np.abs(a))))
 
 
+def _sting():
+    """Suono d'apertura SEMPRE uguale (riconoscibile come 'sigla' della serie):
+    una salita veloce e due rintocchi."""
+    n = int(0.9 * SR)
+    t = np.arange(n) / SR
+    sweep = np.sin(2 * np.pi * (300 * t + 900 * t * t)) * np.exp(-t * 5) * (t < 0.35)
+    out = sweep * 0.6
+    for start, f in ((0.32, 880.0), (0.5, 1318.5)):
+        i = int(start * SR)
+        tt = np.arange(n - i) / SR
+        out[i:] += (np.sin(2 * np.pi * f * tt) + 0.4 * np.sin(4 * np.pi * f * tt)) * np.exp(-tt * 6) * 0.5
+    return out.astype(np.float32) / max(1e-6, float(np.max(np.abs(out))))
+
+
+def _with_intro(script):
+    """Se lo script è una puntata di una serie ("part"), aggiungo l'apertura fissa:
+    'Crypto money method, number N.' con il numero sulla lavagna."""
+    part = script.get("part")
+    if not part or (script["scenes"] and script["scenes"][0].get("intro")):
+        return script
+    series = str(script.get("series") or "Crypto money method")[:40]
+    intro = {"say": f"{series}, number {int(part)}.", "pose": "point", "face": "happy",
+             "board": f"#{int(part)}", "title": series, "intro": True}
+    return dict(script, scenes=[intro] + list(script["scenes"]))
+
+
+_BADGE = {}
+
+
+def _badge_img(txt):
+    if txt not in _BADGE:
+        f = font(30 * R)
+        w = int(ImageDraw.Draw(Image.new("L", (1, 1))).textlength(txt, font=f)) + int(36 * R)
+        h = int(52 * R)
+        img = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+        d = ImageDraw.Draw(img)
+        d.rounded_rectangle([0, 0, w - 1, h - 1], radius=h // 2, fill=YEL + (255,), outline=(20, 20, 20, 255),
+                            width=max(2, int(3 * R)))
+        d.text((w / 2, h / 2), txt, font=f, fill=(20, 20, 20), anchor="mm")
+        _BADGE[txt] = img
+    return _BADGE[txt]
+
+
 def build_audio(script, workdir):
     parts, words, spans, t = [], [], [], 0.35
     for i, sc in enumerate(script["scenes"]):
@@ -525,6 +568,9 @@ def build_audio(script, workdir):
         seg = pcm[: max(0, len(voice) - a)].astype(np.float32) / 32768
         voice[a:a + len(seg)] = seg
     mix = voice + MUSIC_VOL * _music(total)[: len(voice)]
+    if script.get("part"):
+        st_ = _sting()
+        mix[: len(st_)] += 0.5 * st_[: len(mix)]
     mix = np.clip(mix / max(1.0, float(np.max(np.abs(mix)))), -1, 1)
     wav = os.path.join(workdir, "audio.wav")
     with wave.open(wav, "wb") as wf:
@@ -553,7 +599,8 @@ class Scene:
         self.cx = _char_x(sc)
         cx, gy = self.cx, GROUND
         self.bg = Image.new("RGB", (OUT_W, OUT_H), CREAM)
-        Pen(self.bg, R).text((540, 250), "VcriptoV", 30, (190, 182, 170))
+        if not sc.get("title"):
+            Pen(self.bg, R).text((540, 236), "VcriptoV", 28, (190, 182, 170))
         hand = {}
 
         def back(pen):
@@ -572,6 +619,10 @@ class Scene:
             draw_legs(scaled(pen, cx, gy), cx, gy, self.pose)
 
         self._paste(self.bg, _sprite(back), 0)
+        if sc.get("title"):   # titolo grande della serie (scena d'apertura)
+            tp = Pen(self.bg, R)
+            tt = str(sc["title"]).upper()[:28]
+            tp.text((540, 305), tt, tp.fit(tt, 62, 960), INK)
 
         def torso(pen):
             cp = scaled(pen, cx, gy)
@@ -673,6 +724,9 @@ def render(script, out_mp4, workdir):
     """Crea il video (voce + musica). Ritorna la durata in secondi."""
     import imageio.v2 as iio
     os.makedirs(workdir, exist_ok=True)
+    script = _with_intro(script)
+    badge = (f"{str(script.get('series') or 'Crypto money method').upper()[:24]} #{int(script['part'])}"
+             if script.get("part") else None)
     wav, words, spans, total, mouth = build_audio(script, workdir)
     scenes = [Scene(sc) for sc in script["scenes"]]
     silent = os.path.join(workdir, "video.mp4")
@@ -706,13 +760,18 @@ def render(script, out_mp4, workdir):
                 if wd and w0 - 0.05 <= t <= w1 + 0.25:
                     img = _caption_img(wd, min(3, int((t - w0) / 0.035)))
                     fr.paste(img, (int((OUT_W - img.width) / 2), int(CAPTION_Y * R - img.height / 2)), img)
+            if badge and si > 0:    # numero della puntata sempre visibile (dopo l'apertura)
+                bi = _badge_img(badge)
+                fr.paste(bi, (int((OUT_W - bi.width) / 2), int(285 * R)), bi)
             wr.append_data(np.asarray(fr))
             del fr
             if fi % 96 == 0:
                 gc.collect()
     finally:
         wr.close()
-    subprocess.run([_ffmpeg(), "-v", "error", "-y", "-i", silent, "-i", wav, "-c:v", "copy", "-c:a", "aac",
+    # volume uniforme e alto come i video dei social (-14 LUFS), stereo
+    subprocess.run([_ffmpeg(), "-v", "error", "-y", "-i", silent, "-i", wav, "-c:v", "copy",
+                    "-af", "loudnorm=I=-14:TP=-1.5:LRA=11", "-ac", "2", "-c:a", "aac",
                     "-b:a", "128k", "-ar", "44100", "-shortest", "-movflags", "+faststart", out_mp4], check=True)
     return total
 

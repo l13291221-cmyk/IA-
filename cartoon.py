@@ -23,8 +23,10 @@ Script (lo manda il sito):
 
 import asyncio
 import gc
+import hashlib
 import math
 import os
+import random
 import re
 import subprocess
 import time
@@ -54,7 +56,20 @@ GOLD = (217, 178, 90)
 GOLD_D = (150, 116, 48)
 YEL = (250, 214, 64)
 GREEN = (46, 168, 98)
+GREEN_GLOW = (90, 230, 150)
+BILL = (118, 178, 128)      # verde banconota
+BILL_D = (70, 120, 82)
 RED = (212, 70, 70)
+
+# Varianti di SFONDO (tinta di base, alone). Scelte a caso per episodio: così i
+# video non sembrano tutti uguali, ma restano tutti nello stile VcriptoV.
+BG_THEMES = [
+    {"base": (244, 237, 226), "glow": (255, 250, 236)},   # crema classico
+    {"base": (240, 238, 232), "glow": (250, 250, 246)},   # grigio caldo
+    {"base": (236, 241, 238), "glow": (248, 252, 250)},   # menta chiarissima
+    {"base": (235, 238, 244), "glow": (247, 250, 255)},   # cielo tenue
+    {"base": (245, 235, 232), "glow": (255, 248, 244)},   # pesca chiarissimo
+]
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _FONTS = os.path.join(_HERE, "static", "fonts")
@@ -62,8 +77,8 @@ OUT_DIR = os.path.join(_HERE, "static", "auto")
 _fc = {}
 
 POSES = ("stand", "phone", "sit", "point", "wave")
-FACES = ("neutral", "happy", "sad", "surprised", "worried")
-PROPS = ("clock", "bench", "suitcase", "sign", "coins")
+FACES = ("neutral", "happy", "sad", "surprised", "worried", "hyped")
+PROPS = ("clock", "bench", "suitcase", "sign", "coins", "cash", "laptop", "mic", "rocket", "trophy")
 
 
 def font(size, kind="Inter-ExtraBold"):
@@ -262,6 +277,11 @@ def draw_head(pen, cx, gy, pose, face, mouth_q, blink):
         x = hc[0] + s * 36
         if blink:
             pen.line([(x - 10, ey), (x + 10, ey)], INK, 5)
+        elif face == "hyped":
+            # occhi verdi che "brillano" (stile gasato, come i video virali)
+            pen.circle((x, ey), 19, fill=(14, 40, 24))
+            pen.circle((x, ey), 13, fill=GREEN_GLOW)
+            pen.circle((x, ey), 6, fill=(230, 255, 240))
         elif face == "surprised":
             pen.circle((x, ey), 12, fill=INK)
             pen.circle((x + 3, ey - 4), 3.5, fill=WHITE)
@@ -289,6 +309,8 @@ def draw_head(pen, cx, gy, pose, face, mouth_q, blink):
         pen.ellipse((mx - 12, my - 14, mx + 12, my + 14), fill=(70, 34, 34), outline=INK, w=3)
     elif face == "worried":
         pen.line([(mx - 20, my + 4), (mx - 7, my - 2), (mx + 7, my + 4), (mx + 20, my - 2)], INK, 4)
+    elif face == "hyped":
+        pen.arc((mx - 34, my - 30, mx + 34, my + 16), 10, 170, INK, 6)   # sorrisone
     else:
         pen.arc((mx - 18, my - 12, mx + 18, my + 8), 25, 155, INK, 5)
 
@@ -358,6 +380,97 @@ def prop_coins(pen, x, gy):
         for k in range(n):
             y = gy - 20 - k * 22
             pen.ellipse((x + col - 46, y - 16, x + col + 46, y + 16), fill=GOLD, outline=GOLD_D, w=3)
+
+
+def prop_cash_stacks(pen, x, gy, seed=0):
+    """Mazzette di banconote verdi accanto al personaggio (parte FERMA; le
+    banconote che volano le disegna frame() a parte). Numero/altezza variano."""
+    rnd = random.Random(seed)
+    cols = [(x - 70, 4 + rnd.randint(0, 2)), (x + 30, 3 + rnd.randint(0, 2)), (x + 120, 2 + rnd.randint(0, 2))]
+    for bx, n in cols:
+        for k in range(n):
+            y = gy - 18 - k * 20
+            pen.rrect((bx - 52, y - 15, bx + 52, y + 15), 4, fill=BILL, outline=BILL_D, w=3)
+            pen.circle((bx, y), 8, fill=BILL_D)
+
+
+LAPTOP_C = (838, 760)        # centro dello schermo (lato destro, non copre il personaggio)
+
+
+def prop_laptop(pen):
+    """Portatile aperto sul lato (lo SCHERMO con le views lo anima frame())."""
+    cx, cy = LAPTOP_C
+    by = cy + 108
+    pen.poly([(cx - 150, by), (cx + 150, by), (cx + 180, by + 64), (cx - 180, by + 64)],
+             fill=(40, 42, 48), outline=INK, w=4)               # base/tastiera
+    pen.rrect((cx - 150, cy - 118, cx + 150, by), 10, fill=(26, 28, 32), outline=INK, w=4)   # cornice
+    pen.rrect(laptop_screen_rect(), 6, fill=WHITE)                                           # schermo
+
+
+def laptop_screen_rect():
+    cx, cy = LAPTOP_C
+    return (cx - 134, cy - 104, cx + 134, cy + 98)
+
+
+def prop_mic(pen, x, gy):
+    """Microfono da podcast su braccetto (scena intervista)."""
+    top = gy - 470
+    pen.line([(x, gy - 20), (x, top + 120)], (60, 62, 68), 10)
+    pen.line([(x, top + 120), (x - 70, top + 70)], (60, 62, 68), 8)
+    pen.rrect((x - 110, top, x - 30, top + 120), 34, fill=(34, 36, 40), outline=INK, w=4)
+    for k in range(5):
+        pen.line([(x - 104, top + 16 + k * 20), (x - 36, top + 16 + k * 20)], (70, 72, 78), 3)
+
+
+def prop_rocket(pen, x, gy, t=0.0):
+    """Razzo (per 'alle stelle/virale'): sale e trema un po'."""
+    y = gy - 120 - (t * 220 % 260)
+    pen.poly([(x, y - 90), (x + 34, y + 10), (x - 34, y + 10)], fill=(226, 90, 80), outline=INK, w=4)
+    pen.rrect((x - 34, y + 10, x + 34, y + 120), 12, fill=WHITE, outline=INK, w=4)
+    pen.circle((x, y + 44), 18, fill=(120, 170, 255), outline=INK, w=3)
+    pen.poly([(x - 34, y + 90), (x - 70, y + 140), (x - 34, y + 120)], fill=(226, 90, 80), outline=INK, w=3)
+    pen.poly([(x + 34, y + 90), (x + 70, y + 140), (x + 34, y + 120)], fill=(226, 90, 80), outline=INK, w=3)
+    for k in range(3):
+        fy = y + 125 + k * 26
+        pen.poly([(x - 16 + k, fy), (x + 16 - k, fy), (x, fy + 34 - k * 8)], fill=(250, 190, 60))
+
+
+def prop_trophy(pen, cx, cy, s=1.0):
+    pen.rrect((cx - 70 * s, cy - 60 * s, cx + 70 * s, cy + 50 * s), 16 * s, fill=GOLD, outline=GOLD_D, w=4)
+    pen.arc((cx - 120 * s, cy - 60 * s, cx - 40 * s, cy + 30 * s), 90, 270, GOLD_D, int(10 * s))
+    pen.arc((cx + 40 * s, cy - 60 * s, cx + 120 * s, cy + 30 * s), 270, 90, GOLD_D, int(10 * s))
+    pen.rrect((cx - 26 * s, cy + 50 * s, cx + 26 * s, cy + 95 * s), 6 * s, fill=GOLD_D)
+    pen.rrect((cx - 64 * s, cy + 95 * s, cx + 64 * s, cy + 120 * s), 8 * s, fill=INK)
+    pen.text((cx, cy - 2 * s), "#1", 48 * s, GOLD_D)
+
+
+def _seed(script) -> int:
+    base = str(script.get("title") or "") + str(script.get("part") or "") + str(script.get("lang") or "")
+    return int(hashlib.md5(base.encode("utf-8")).hexdigest()[:8], 16)
+
+
+def make_background(seed=0):
+    """Sfondo dell'episodio: tinta + alone morbido + puntini tenui che fluttuano.
+    Variato per episodio (seed) così i video non sembrano tutti uguali."""
+    rnd = random.Random(seed)
+    th = BG_THEMES[rnd.randrange(len(BG_THEMES))]
+    base, glow = th["base"], th["glow"]
+    yy = np.linspace(0, 1, OUT_H)[:, None]
+    xx = np.linspace(0, 1, OUT_W)[None, :]
+    gx, gy = rnd.uniform(0.3, 0.7), rnd.uniform(0.18, 0.42)       # centro dell'alone
+    d = np.sqrt((xx - gx) ** 2 + ((yy - gy) * (OUT_H / OUT_W)) ** 2)
+    halo = np.clip(1 - d / 0.75, 0, 1) ** 1.6
+    img = np.empty((OUT_H, OUT_W, 3), dtype=np.float32)
+    for c in range(3):
+        img[:, :, c] = base[c] + (glow[c] - base[c]) * halo
+    arr = np.clip(img, 0, 255).astype(np.uint8)
+    bg = Image.fromarray(arr, "RGB")
+    pen = Pen(bg, R)
+    for _ in range(rnd.randint(16, 26)):                           # puntini tenui
+        px, py, r_ = rnd.uniform(40, 1040), rnd.uniform(330, 1200), rnd.uniform(3, 8)
+        shade = tuple(max(0, c - 14) for c in base)
+        pen.circle((px, py), r_, fill=shade)
+    return bg
 
 
 def _wrap(pen, text, size, max_w, kind):
@@ -531,8 +644,17 @@ def _with_intro(script):
     series = str(script.get("series") or "Crypto money method")[:40]
     say = script.get("intro_say") or (f"{series}, numero {int(part)}." if script.get("lang") == "it"
                                       else f"{series}, number {int(part)}.")
-    intro = {"say": str(say)[:120], "pose": "point", "face": "happy",
-             "board": f"#{int(part)}", "title": series, "intro": True}
+    # Apertura FISSA della serie, ma con 4 composizioni diverse a rotazione (seed):
+    # NON è lo "sfogliare i soldi" del video di riferimento. Resta riconoscibile
+    # (titolo + #N) ma cambia aspetto da un episodio all'altro.
+    variants = [
+        {"pose": "point", "face": "happy", "board": f"#{int(part)}"},
+        {"pose": "stand", "face": "hyped", "board": f"#{int(part)}", "props": ["trophy"]},
+        {"pose": "stand", "face": "happy", "props": ["laptop"], "board": f"#{int(part)}"},
+        {"pose": "wave", "face": "hyped", "board": f"#{int(part)}"},
+    ]
+    v = variants[_seed(script) % len(variants)]
+    intro = dict(v, say=str(say)[:120], title=series, intro=True)
     return dict(script, scenes=[intro] + list(script["scenes"]))
 
 
@@ -594,14 +716,15 @@ def build_audio(script, workdir):
 # ==============================================================================
 
 class Scene:
-    def __init__(self, sc):
+    def __init__(self, sc, bg=None, seed=0):
         self.sc = sc
+        self.seed = seed
         self.pose = sc.get("pose") if sc.get("pose") in POSES else "stand"
         self.face = sc.get("face") if sc.get("face") in FACES else "neutral"
         self.props = [p for p in (sc.get("props") or []) if p in PROPS]
         self.cx = _char_x(sc)
         cx, gy = self.cx, GROUND
-        self.bg = Image.new("RGB", (OUT_W, OUT_H), CREAM)
+        self.bg = (bg.copy() if bg is not None else Image.new("RGB", (OUT_W, OUT_H), CREAM))
         if not sc.get("title"):
             Pen(self.bg, R).text((540, 236), "VcriptoV", 28, (190, 182, 170))
         hand = {}
@@ -613,6 +736,14 @@ class Scene:
                 prop_bench(scaled(pen, cx, gy), cx, gy)
             if "suitcase" in self.props:
                 prop_suitcase(scaled(pen, cx, gy), cx + 150, gy)
+            if "cash" in self.props:
+                prop_cash_stacks(scaled(pen, cx, gy), cx + 200, gy, seed)
+            if "laptop" in self.props:
+                prop_laptop(pen)
+            if "mic" in self.props:
+                prop_mic(pen, 250, gy)
+            if "trophy" in self.props:
+                prop_trophy(pen, 850, 560, 1.0)
             if "sign" in self.props:
                 prop_sign(pen, 840, 640, 1.1)
             elif sc.get("board"):
@@ -661,6 +792,35 @@ class Scene:
                 col = tuple(int(c1 + (c2 - c1) * ph) for c1, c2 in zip(GOLD_D, CREAM))
                 d.text(((860 + k * 40) * R, (GROUND - 160 - 380 * ph) * R), "$", font=font(54 * R), fill=col,
                        anchor="mm")
+        if "cash" in self.props:
+            # banconote verdi che cadono, sparse su tutta la larghezza (la nostra
+            # versione dei "soldi che piovono", diversa da quella del riferimento)
+            pen = Pen(fr, R)
+            rnd = random.Random(self.seed ^ 0x9E3779B9)
+            for k in range(9):
+                bx = rnd.uniform(60, 1020)
+                ph = (t * (0.35 + rnd.random() * 0.3) + rnd.random()) % 1
+                by = 300 + ph * 940
+                ang = math.sin(t * 2 + k)
+                pen.poly([(bx - 34, by - 12 + ang * 6), (bx + 34, by - 12 - ang * 6),
+                          (bx + 34, by + 12 - ang * 6), (bx - 34, by + 12 + ang * 6)],
+                         fill=BILL, outline=BILL_D, w=2)
+                pen.circle((bx, by), 5, fill=BILL_D)
+        if "rocket" in self.props:
+            prop_rocket(Pen(fr, R), 880, GROUND, t)
+        if "laptop" in self.props:
+            d = ImageDraw.Draw(fr)
+            x0, y0, x1, y1 = [v * R for v in laptop_screen_rect()]
+            base_v = (self.sc.get("screen") or {}).get("views") if isinstance(self.sc.get("screen"), dict) else None
+            try:
+                target = int(str(base_v).replace(".", "").replace(",", "")) if base_v else 9876543
+            except ValueError:
+                target = 9876543
+            shown = int(target * min(1.0, 0.15 + t * 0.5))
+            cxs = (x0 + x1) / 2
+            d.text((cxs, y0 + (y1 - y0) * 0.36), f"{shown:,}".replace(",", "."), font=font(44 * R), fill=GREEN,
+                   anchor="mm")
+            d.text((cxs, y0 + (y1 - y0) * 0.62), "VIEWS", font=font(30 * R), fill=LINE, anchor="mm")
         bob = int(round(4 * R * math.sin(t * 2 * math.pi * 0.75)))
         self._paste(fr, self.torso, bob)
         if self.pose == "phone" and self.hand:
@@ -731,7 +891,9 @@ def render(script, out_mp4, workdir):
     badge = (f"{str(script.get('series') or 'Crypto money method').upper()[:24]} #{int(script['part'])}"
              if script.get("part") else None)
     wav, words, spans, total, mouth = build_audio(script, workdir)
-    scenes = [Scene(sc) for sc in script["scenes"]]
+    seed = _seed(script)
+    bg = make_background(seed)
+    scenes = [Scene(sc, bg=bg, seed=seed + i) for i, sc in enumerate(script["scenes"])]
     silent = os.path.join(workdir, "video.mp4")
     wr = iio.get_writer(silent, fps=FPS, codec="libx264", quality=7, macro_block_size=1,
                         ffmpeg_params=["-preset", "ultrafast", "-threads", "1", "-bf", "0",

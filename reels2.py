@@ -1,7 +1,7 @@
 """
 FORMATI DI REEL diversi tra loro (il sito sceglie quale fare e manda testi e dati).
 
-  market  → "CRYPTO OGGI": prezzo di Bitcoin che scorre fino al valore vero e barre
+  market  → "CRYPTO TODAY": prezzo di Bitcoin che scorre fino al valore vero e barre
             delle monete che salgono/scendono di più (dati veri)
   quiz    → domanda + 3 risposte + conto alla rovescia + soluzione (fa commentare)
   myth    → MITO (rosso, timbro X) contro REALTÀ (verde, spunta)
@@ -77,7 +77,7 @@ def _brand(ov, d, dark=True):
         d.text((60, 84), "VCRIPTOV", font=_f(38), fill=col + (255,))
 
 
-def _footer(d, dark=True, text="Informazione, non consulenza finanziaria"):
+def _footer(d, dark=True, text="Educational, not financial advice"):
     f = _f(24, False)
     d.text((W / 2 - d.textlength(text, font=f) / 2, H - 52), text, font=f,
            fill=((120, 126, 136, 255) if dark else (90, 90, 96, 255)))
@@ -127,10 +127,10 @@ def _encode(draw, bg, seconds, out_path, bpm_seed=0):
 def _fmt_price(p):
     p = float(p or 0)
     if p >= 1000:
-        return f"{p:,.0f}".replace(",", ".")
+        return f"{p:,.0f}"
     if p >= 1:
-        return f"{p:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
-    return f"{p:.4g}".replace(".", ",")
+        return f"{p:,.2f}"
+    return f"{p:.4g}"
 
 
 # ------------------------------------------------------------------ market
@@ -151,21 +151,21 @@ def _market(data, out):
         if p > 0.01:
             bw = W * min(1, p)
             d.rectangle([0, 190, bw, 300], fill=(234, 57, 67, 255))
-            d.text((60, 205), "CRYPTO OGGI", font=_f(76), fill=WHITE + (255,))
+            d.text((60, 205), "CRYPTO TODAY", font=_f(76), fill=WHITE + (255,))
             d.text((W - 60 - d.textlength(date, font=_f(36, False)), 232), date, font=_f(36, False), fill=WHITE + (230,))
         # prezzo BTC che scorre
         if btc.get("price"):
             q = _smooth((t - 0.5) / 1.6)
             if q > 0:
                 d.text((60, 360), "BITCOIN", font=_f(46), fill=GREY + (255,))
-                val = _fmt_price(btc["price"] * (0.9 + 0.1 * q)) + " $"
+                val = "$" + _fmt_price(btc["price"] * (0.9 + 0.1 * q))
                 d.text((60, 420), val, font=_f(150), fill=WHITE + (255,))
                 ch = btc.get("ch24")
                 if ch is not None and q > 0.95:
                     col = GREEN if ch >= 0 else RED
-                    d.text((64, 590), f"{'▲' if ch >= 0 else '▼'} {abs(ch):.1f}% in 24 ore", font=_f(54), fill=col + (255,))
+                    d.text((64, 590), f"{'▲' if ch >= 0 else '▼'} {abs(ch):.1f}% in 24h", font=_f(54), fill=col + (255,))
         # barre delle monete
-        d.text((60, 720), "CHI SALE E CHI SCENDE", font=_f(44), fill=GREY + (int(255 * min(1, max(0, (t - 2.2) * 3))),))
+        d.text((60, 720), "WHO'S UP, WHO'S DOWN", font=_f(44), fill=GREY + (int(255 * min(1, max(0, (t - 2.2) * 3))),))
         for i, c in enumerate(rows):
             q = _ease((t - 2.5 - 0.35 * i) / 0.6)
             if q <= 0.01:
@@ -179,15 +179,15 @@ def _market(data, out):
             d.text((290 + max(24, bw), y + 26), f"{ch:+.1f}%", font=_f(48), fill=col + (255,))
         if t > 6.5:
             a = int(255 * min(1, (t - 6.5) * 2))
-            _text_block(d, "Analisi di tutte le crypto: link in bio", _f(46), WHITE + (a,), W / 2, 1760, W - 120, 56)
+            _text_block(d, "Analysis of every coin: link in bio", _f(46), WHITE + (a,), W / 2, 1760, W - 120, 56)
         _footer(d)
     return _encode(draw, bg, 9.0, out)
 
 
 # ------------------------------------------------------------------ quiz
 def _quiz(data, out):
-    q = data.get("q") or "Cosa fa uno stop loss?"
-    opts = (data.get("options") or ["Vende se il prezzo scende troppo", "Compra di più", "Blocca il conto"])[:3]
+    q = data.get("q") or "What does a stop-loss do?"
+    opts = (data.get("options") or ["Sells if the price drops too far", "Buys more", "Locks your account"])[:3]
     ans = int(data.get("answer") or 0) % len(opts)
     expl = data.get("expl") or ""
     bg = _solid((255, 214, 10))
@@ -197,7 +197,7 @@ def _quiz(data, out):
         p = _ease(t / 0.45)
         if p > 0.01:
             s = int(120 * (0.6 + 0.4 * p))
-            tag = "QUIZ CRYPTO"
+            tag = "CRYPTO QUIZ"
             d.rounded_rectangle([W / 2 - 300, 200, W / 2 + 300, 200 + s + 20], 30, fill=BLACK + (255,))
             d.text((W / 2 - d.textlength(tag, font=_f(int(s * .6))) / 2, 214 + s * .12), tag, font=_f(int(s * .6)),
                    fill=(255, 214, 10, 255))
@@ -231,16 +231,16 @@ def _quiz(data, out):
             a = int(255 * min(1, (t - 6.4) * 2))
             _text_block(d, expl, _f(44, False), BLACK + (a,), W / 2, 1450, W - 140, 54, 4)
         if STILL["on"]:
-            _text_block(d, "A, B o C? Rispondi nei commenti", _f(62), BLACK + (255,), W / 2, 1500, W - 120, 72)
+            _text_block(d, "A, B or C? Answer in the comments", _f(62), BLACK + (255,), W / 2, 1500, W - 120, 72)
         elif t > 7.8:
-            _text_block(d, "Ci avevi preso? Scrivilo nei commenti", _f(42), BLACK + (255,), W / 2, 1760, W - 120, 50)
+            _text_block(d, "Did you get it? Tell me in the comments", _f(42), BLACK + (255,), W / 2, 1760, W - 120, 50)
         _footer(d, dark=False)
     return _encode(draw, bg, 10.0, out)
 
 
 # ------------------------------------------------------------------ mito / realtà
 def _myth(data, out):
-    items = (data.get("items") or [["Le crypto sono solo una truffa", "Esistono truffe, ma Bitcoin è una rete aperta e verificabile"]])[:2]
+    items = (data.get("items") or [["Crypto is just a scam", "Scams exist, but Bitcoin is an open, verifiable network"]])[:2]
     bg = _solid((15, 15, 18))
     slot = 4.6
 
@@ -255,7 +255,7 @@ def _myth(data, out):
         if pb > 0.01:
             d.rectangle([0, H - int(H / 2 * pb), W, H], fill=(8, 92, 60, 255))
         if pa > 0.5:
-            d.text((60, 160), "MITO", font=_f(110), fill=WHITE + (255,))
+            d.text((60, 160), "MYTH", font=_f(110), fill=WHITE + (255,))
             _text_block(d, f"“{myth}”", _f(64), WHITE + (255,), W / 2, 360, W - 140, 78, 5)
             s = _ease((lt - 0.8) / 0.3)                      # timbro X
             if s > 0.01:
@@ -264,7 +264,7 @@ def _myth(data, out):
                 d.line([(cx - r, cy - r), (cx + r, cy + r)], fill=(255, 255, 255, 255), width=22)
                 d.line([(cx - r, cy + r), (cx + r, cy - r)], fill=(255, 255, 255, 255), width=22)
         if pb > 0.5:
-            d.text((60, H / 2 + 70), "REALTÀ", font=_f(110), fill=WHITE + (255,))
+            d.text((60, H / 2 + 70), "REALITY", font=_f(110), fill=WHITE + (255,))
             _text_block(d, real, _f(58), WHITE + (255,), W / 2, H / 2 + 270, W - 140, 72, 6)
             s = _ease((lt - 2.2) / 0.3)
             if s > 0.01:
@@ -279,9 +279,9 @@ def _myth(data, out):
 
 # ------------------------------------------------------------------ top 5
 def _top5(data, out):
-    title = data.get("title") or "5 errori di chi inizia con le crypto"
-    items = (data.get("items") or ["Investire soldi che servono", "Niente stop loss", "Inseguire i pump",
-                                   "Seguire i consigli a caso", "Tenere tutto su un exchange"])[:5]
+    title = data.get("title") or "5 mistakes crypto beginners make"
+    items = (data.get("items") or ["Investing money you need", "No stop-loss", "Chasing pumps",
+                                   "Following random tips", "Keeping it all on an exchange"])[:5]
     accent = random.Random(title).choice([(255, 90, 54), (36, 99, 235), (22, 163, 74), (147, 51, 234)])
     bg = _solid((250, 249, 246))
     step = 1.35
@@ -306,7 +306,7 @@ def _top5(data, out):
                 d.text((x + 190, y + 40 + j * 64 - (20 if len(_lines) > 1 else 0)), ln, font=_f(56), fill=BLACK + (255,))
         if t > 1.0 + step * n:
             a = int(255 * min(1, (t - 1.0 - step * n) * 2))
-            _text_block(d, ("Salva il post per non dimenticarlo" if STILL["on"] else "Salva il video per non dimenticarlo"), _f(44), accent + (a,), W / 2, 1760, W - 120, 52)
+            _text_block(d, ("Save this post so you don't forget" if STILL["on"] else "Save this video so you don't forget"), _f(44), accent + (a,), W / 2, 1760, W - 120, 52)
         _footer(d, dark=False)
     return _encode(draw, bg, 1.0 + step * len(items) + 2.0, out)
 
@@ -332,8 +332,8 @@ def _fng(data, out):
 
     def draw(t, ov, d):
         _brand(ov, d)
-        _text_block(d, "PAURA O AVIDITÀ?", _f(88), WHITE + (255,), W / 2, 220, W - 100, 100)
-        _text_block(d, "L'umore del mercato crypto oggi", _f(44, False), GREY + (255,), W / 2, 340, W - 100, 52)
+        _text_block(d, "FEAR OR GREED?", _f(88), WHITE + (255,), W / 2, 220, W - 100, 100)
+        _text_block(d, "The crypto market mood today", _f(44, False), GREY + (255,), W / 2, 340, W - 100, 52)
         for k in range(0, 100):                               # arco colorato
             a0 = math.pi + math.pi * k / 100
             a1 = math.pi + math.pi * (k + 1.2) / 100
@@ -352,11 +352,11 @@ def _fng(data, out):
             a = int(255 * min(1, (t - 3.2) * 2))
             _text_block(d, label.upper(), _f(80), col_at(v) + (a,), W / 2, cy + 300, W - 100, 90)
             if prev is not None:
-                _text_block(d, f"Ieri: {prev}", _f(44, False), GREY + (a,), W / 2, cy + 410, W - 100, 52)
+                _text_block(d, f"Yesterday: {prev}", _f(44, False), GREY + (a,), W / 2, cy + 410, W - 100, 52)
         if t > 5.0:
             a = int(255 * min(1, (t - 5.0) * 2))
-            msg = ("Quando tutti hanno paura… tu cosa fai?" if v < 45 else
-                   "Quando tutti sono avidi… occhio al rischio" if v > 55 else "Mercato indeciso: pazienza")
+            msg = ("When everyone is scared… what do you do?" if v < 45 else
+                   "When everyone is greedy… watch the risk" if v > 55 else "Undecided market: patience")
             _text_block(d, msg, _f(46), WHITE + (a,), W / 2, 1730, W - 120, 56)
         _footer(d)
     return _encode(draw, bg, 8.0, out)
@@ -373,9 +373,15 @@ _PATTERNS = {
 }
 
 
+# nomi inglesi (dal sito) → disegno del pattern
+_PATTERN_EN = {"hammer": "martello", "bullish engulfing": "engulfing rialzista", "shooting star": "stella cadente",
+               "bearish engulfing": "engulfing ribassista", "double bottom": "doppio minimo",
+               "double top": "doppio massimo"}
+
+
 def _candles(data, out):
-    name = (data.get("pattern") or "martello").lower()
-    candles, hi_idx, bull = _PATTERNS.get(name, _PATTERNS["martello"])
+    name = (data.get("pattern") or "hammer").lower()
+    candles, hi_idx, bull = _PATTERNS.get(_PATTERN_EN.get(name, name), _PATTERNS["martello"])
     desc = data.get("desc") or ("Spesso segnala un possibile rimbalzo." if bull else "Spesso segnala un possibile calo.")
     bg = _grad((12, 16, 20), (6, 10, 14))
     x0, x1, y0, y1 = 110, W - 110, 1350, 650
@@ -386,7 +392,7 @@ def _candles(data, out):
 
     def draw(t, ov, d):
         _brand(ov, d)
-        _text_block(d, "LEGGI IL GRAFICO", _f(56), GREY + (255,), W / 2, 200, W - 100, 64)
+        _text_block(d, "READ THE CHART", _f(56), GREY + (255,), W / 2, 200, W - 100, 64)
         p = _ease((t - 0.2) / 0.5)
         if p > 0.01:
             _text_block(d, name.upper(), _f(int(100 * (0.6 + 0.4 * p))), WHITE + (255,), W / 2, 280, W - 80, 110)
@@ -409,13 +415,13 @@ def _candles(data, out):
             xa = x0 + cw * min(hi_idx) + 6
             xb = x0 + cw * (max(hi_idx) + 1) - 6
             d.rounded_rectangle([xa, y1 - 30, xb, y0 + 30], 24, outline=(255, 214, 10, a), width=8)
-            arrow = "▲ possibile rialzo" if bull else "▼ possibile ribasso"
+            arrow = "▲ possible move up" if bull else "▼ possible move down"
             d.text((W / 2 - d.textlength(arrow, font=_f(60)) / 2, y0 + 70), arrow, font=_f(60),
                    fill=(GREEN if bull else RED) + (a,))
         if t > ht + 0.8:
             a = int(255 * min(1, (t - ht - 0.8) * 2))
             _text_block(d, desc, _f(46, False), WHITE + (a,), W / 2, 1580, W - 140, 56, 3)
-            _text_block(d, "Segui per altre lezioni", _f(42), (255, 214, 10, a), W / 2, 1790, W - 120, 50)
+            _text_block(d, "Follow for more lessons", _f(42), (255, 214, 10, a), W / 2, 1790, W - 120, 50)
         _footer(d)
     return _encode(draw, bg, 1.0 + 0.45 * len(candles) + 4.5, out)
 
@@ -431,7 +437,7 @@ def _chat(data, out):
     px0, py0, px1, py1 = 150, 250, W - 150, 1650          # telefono
 
     def draw(t, ov, d):
-        _text_block(d, "COME TI ARRIVA UN SEGNALE", _f(56), WHITE + (255,), W / 2, 110, W - 80, 64)
+        _text_block(d, "HOW A SIGNAL REACHES YOU", _f(56), WHITE + (255,), W / 2, 110, W - 80, 64)
         d.rounded_rectangle([px0, py0, px1, py1], 70, fill=(10, 14, 20, 255), outline=(70, 80, 95, 255), width=10)
         d.rounded_rectangle([px0 + 24, py0 + 24, px1 - 24, py1 - 24], 52, fill=(22, 30, 42, 255))
         d.rectangle([px0 + 24, py0 + 90, px1 - 24, py0 + 200], fill=(33, 44, 60, 255))
@@ -452,20 +458,20 @@ def _chat(data, out):
             d.rounded_rectangle([mx0, by, mx1, by + (my1 - by) * min(1, e)], 30, fill=(43, 82, 120, 255))
             if e > 0.8:
                 col = GREEN if buy else RED
-                d.text((mx0 + 30, by + 26), "NUOVO SEGNALE", font=_f(34), fill=(255, 214, 10, 255))
+                d.text((mx0 + 30, by + 26), "NEW SIGNAL", font=_f(34), fill=(255, 214, 10, 255))
                 d.text((mx0 + 30, by + 80), f"{coin} — {'LONG' if buy else 'SHORT'}", font=_f(64), fill=col + (255,))
                 y = by + 180
-                for k, v in (("Entrata", entry), ("Stop loss", f"-{sl}%"), ("Target", f"+{tp}%")):
+                for k, v in (("Entry", entry), ("Stop-loss", f"-{sl}%"), ("Target", f"+{tp}%")):
                     if not v:
                         continue
                     d.text((mx0 + 30, y), k, font=_f(40, False), fill=(210, 220, 230, 255))
                     d.text((mx1 - 30 - d.textlength(str(v), font=_f(42)), y), str(v), font=_f(42), fill=WHITE + (255,))
                     y += 70
-                d.text((mx0 + 30, y + 10), "Rischio indicato · decidi tu", font=_f(32, False), fill=(190, 200, 210, 255))
+                d.text((mx0 + 30, y + 10), "Risk shown · you decide", font=_f(32, False), fill=(190, 200, 210, 255))
             if e > 0.9:
                 bw = (mx1 - mx0 - 20) / 2
                 press = 3.6 < t < 4.4
-                for k, (lab, col) in enumerate((("Investi", GREEN), ("Non investire", (90, 100, 115)))):
+                for k, (lab, col) in enumerate((("Invest", GREEN), ("Don't invest", (90, 100, 115)))):
                     xa = mx0 + k * (bw + 20)
                     sc = 0.94 if (press and k == 0) else 1
                     ya = my1 + 24
@@ -478,11 +484,11 @@ def _chat(data, out):
                 if t > 4.4:
                     a = int(255 * min(1, (t - 4.4) * 2))
                     d.rounded_rectangle([mx0, my1 + 160, mx1, my1 + 250], 30, fill=(22, 199, 132, a))
-                    txt = "Ordine inviato al TUO exchange"
+                    txt = "Order sent to YOUR exchange"
                     d.text((W / 2 - d.textlength(txt, font=_f(34)) / 2, my1 + 186), txt, font=_f(34), fill=WHITE + (a,))
         if t > 5.4:
             a = int(255 * min(1, (t - 5.4) * 2))
-            _text_block(d, "Esempio dimostrativo · prova VcriptoV, link in bio", _f(40), WHITE + (a,), W / 2, 1700, W - 100, 50)
+            _text_block(d, "Demo example · try VcriptoV, link in bio", _f(40), WHITE + (a,), W / 2, 1700, W - 100, 50)
         _footer(d)
     return _encode(draw, bg, 8.5, out)
 

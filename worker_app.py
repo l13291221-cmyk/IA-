@@ -19,6 +19,7 @@ Endpoint:
   GET  /              → ok (health)
   GET  /health        → stato del motore
   POST /render-reel   → { kind, ... } ⇒ { url, caption }   (header X-Worker-Secret)
+                        kind "cartoon" ⇒ 202 { pending, job } — poi GET /job/<job>
   GET  /reels/<file>  → serve il video creato (Instagram lo scarica da qui)
 """
 import os
@@ -36,6 +37,7 @@ def _ensure_deps():
         import PIL  # noqa: F401
         import numpy  # noqa: F401
         import imageio  # noqa: F401
+        import edge_tts  # noqa: F401
         return  # già tutto presente
     except Exception:
         pass
@@ -43,7 +45,7 @@ def _ensure_deps():
     for cmd in (
         [sys.executable, "-m", "pip", "install", "--no-cache-dir", "-r", req],
         [sys.executable, "-m", "pip", "install", "--no-cache-dir",
-         "Flask", "gunicorn", "Pillow", "numpy", "imageio", "imageio-ffmpeg", "requests"],
+         "Flask", "gunicorn", "Pillow", "numpy", "imageio", "imageio-ffmpeg", "requests", "edge-tts"],
     ):
         try:
             print("Installo le librerie del motore video…", flush=True)
@@ -88,12 +90,64 @@ def health():
                     "keepalive_alive": bool(_KEEPALIVE["thread"] and _KEEPALIVE["thread"].is_alive())})
 
 
+# ── Reel CARTOON (omino che parla): li creo in BACKGROUND, uno alla volta ─────
+# Con la CPU minima di Render un video può superare il timeout di una richiesta:
+# il sito riceve subito un "job" e ripassa dopo qualche minuto a prendere il video.
+_JOBS = {}
+_JOBS_LOCK = threading.Lock()
+
+
+def _public_base():
+    return (os.environ.get("RENDER_EXTERNAL_URL") or request.host_url).rstrip("/")
+
+
+def _run_cartoon(job_id, script, base):
+    try:
+        import cartoon
+        path = cartoon.make_cartoon_reel(script)
+        _JOBS[job_id].update(status="done", url=f"{base}/reels/{os.path.basename(path)}")
+    except Exception as exc:
+        _JOBS[job_id].update(status="error", error=f"{type(exc).__name__}: {exc}"[:300])
+
+
+def _start_cartoon(spec):
+    try:
+        content.cleanup_old()
+    except Exception:
+        pass
+    with _JOBS_LOCK:
+        now = time.time()
+        for k in [k for k, j in _JOBS.items() if now - j["ts"] > 6 * 3600]:
+            _JOBS.pop(k, None)
+        running = [k for k, j in _JOBS.items() if j["status"] == "running"]
+        if running:   # uno alla volta (memoria): il sito riceve quello già in corso
+            return running[0]
+        job_id = f"{int(now * 1000)}"
+        _JOBS[job_id] = {"status": "running", "ts": now, "caption": spec.get("caption") or ""}
+    threading.Thread(target=_run_cartoon, args=(job_id, spec.get("data") or {}, _public_base()),
+                     daemon=True).start()
+    return job_id
+
+
+@app.get("/job/<job_id>")
+def job_status(job_id):
+    if not _authorized(request):
+        return jsonify({"error": "unauthorized"}), 401
+    j = _JOBS.get(job_id)
+    if not j:
+        return jsonify({"error": "job sconosciuto (motore riavviato?)"}), 404
+    return jsonify({k: v for k, v in j.items() if k != "ts"})
+
+
 @app.post("/render-reel")
 def render_reel():
     if not _authorized(request):
         return jsonify({"error": "unauthorized"}), 401
     spec = request.get_json(force=True, silent=True) or {}
     kind = spec.get("kind")
+    if kind == "cartoon":
+        job_id = _start_cartoon(spec)
+        return jsonify({"pending": True, "job": job_id, "caption": spec.get("caption") or ""}), 202
     try:
         content.cleanup_old()   # non far crescere il disco all'infinito
     except Exception:

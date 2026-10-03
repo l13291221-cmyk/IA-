@@ -605,7 +605,7 @@ class Scene:
             for k in range(3):
                 ph = (t * 0.6 + k / 3) % 1
                 col = tuple(int(c1 + (c2 - c1) * ph) for c1, c2 in zip(GOLD_D, CREAM))
-                d.text(((860 + k * 40) * R, (GROUND - 160 - 380 * ph) * R), "€", font=font(54 * R), fill=col,
+                d.text(((860 + k * 40) * R, (GROUND - 160 - 380 * ph) * R), "$", font=font(54 * R), fill=col,
                        anchor="mm")
         bob = int(round(4 * R * math.sin(t * 2 * math.pi * 0.75)))
         self._paste(fr, self.torso, bob)

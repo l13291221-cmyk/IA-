@@ -39,6 +39,7 @@ FPS = 24
 SR = 24000
 GAP = 0.22
 VOICE = os.environ.get("CARTOON_VOICE", "en-US-AndrewNeural")
+VOICES = {"en": VOICE, "it": os.environ.get("CARTOON_VOICE_IT", "it-IT-DiegoNeural")}
 VOICE_RATE = os.environ.get("CARTOON_VOICE_RATE", "+6%")
 MUSIC_VOL = float(os.environ.get("CARTOON_MUSIC_VOL", "0.10"))
 
@@ -456,12 +457,12 @@ def _ffmpeg():
     return imageio_ffmpeg.get_ffmpeg_exe()
 
 
-def _tts(text, out_mp3):
+def _tts(text, out_mp3, voice=None):
     import edge_tts
     words = []
 
     async def run():
-        comm = edge_tts.Communicate(text, VOICE, rate=VOICE_RATE, boundary="WordBoundary")
+        comm = edge_tts.Communicate(text, voice or VOICE, rate=VOICE_RATE, boundary="WordBoundary")
         with open(out_mp3, "wb") as f:
             async for ch in comm.stream():
                 if ch["type"] == "audio":
@@ -528,7 +529,9 @@ def _with_intro(script):
     if not part or (script["scenes"] and script["scenes"][0].get("intro")):
         return script
     series = str(script.get("series") or "Crypto money method")[:40]
-    intro = {"say": f"{series}, number {int(part)}.", "pose": "point", "face": "happy",
+    say = script.get("intro_say") or (f"{series}, numero {int(part)}." if script.get("lang") == "it"
+                                      else f"{series}, number {int(part)}.")
+    intro = {"say": str(say)[:120], "pose": "point", "face": "happy",
              "board": f"#{int(part)}", "title": series, "intro": True}
     return dict(script, scenes=[intro] + list(script["scenes"]))
 
@@ -554,7 +557,7 @@ def build_audio(script, workdir):
     parts, words, spans, t = [], [], [], 0.35
     for i, sc in enumerate(script["scenes"]):
         mp3 = os.path.join(workdir, f"s{i}.mp3")
-        seg = _tts(sc["say"].strip(), mp3)
+        seg = _tts(sc["say"].strip(), mp3, VOICES.get(script.get("lang") or "en", VOICE))
         pcm = _decode(mp3)
         dur = len(pcm) / SR
         words += [(t + a, t + b, w) for a, b, w in seg]

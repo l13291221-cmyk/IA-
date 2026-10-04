@@ -21,7 +21,7 @@ import imageio.v2 as iio
 from PIL import Image, ImageDraw, ImageFont
 
 W, H, FPS = 1080, 1920, 24          # verticale pieno (il montaggio e' leggero)
-YEL = (255, 214, 10)
+CAP = (255, 255, 255)               # scritte BIANCHE (niente giallo): leggibili su ogni sfondo
 BILL_G = (55, 201, 138)             # verde brand #37c98a
 SHOTS = ("front", "tq", "top", "low", "side", "close")
 
@@ -35,8 +35,8 @@ def _font(sz):
     return ImageFont.load_default()
 
 
-def _caption(draw, word, y, size, col=YEL):
-    """Scritta gialla con bordo nero, rimpicciolita per stare nel frame."""
+def _caption(draw, word, y, size, col=CAP):
+    """Scritta bianca con bordo nero, rimpicciolita per stare nel frame."""
     sw = max(3, size // 9)
     sz = size
     while sz > 20:

@@ -254,6 +254,26 @@ def render_post():
     return jsonify({"url": f"{base}/posts/{os.path.basename(path)}", "caption": spec.get("caption") or ""})
 
 
+@app.post("/gen-test")
+def gen_test():
+    """Diagnostica: prova a generare UNA immagine col personaggio e torna l'esito
+    (ok + url, oppure l'errore esatto di Gemini). Serve a capire se la chiave fa
+    davvero immagini. spec = { gemini_key }."""
+    if not _authorized(request):
+        return jsonify({"error": "unauthorized"}), 401
+    spec = request.get_json(force=True, silent=True) or {}
+    try:
+        import genscene
+        out = os.path.join(content.OUT_DIR, f"gentest_{int(time.time())}.png")
+        ch = os.path.join(os.path.dirname(os.path.abspath(__file__)), "reel3d_assets", "character.jpg")
+        res = genscene.diagnose(spec.get("gemini_key") or "", ch, out)
+        if res.get("ok"):
+            res["url"] = f"{_public_base()}/posts/{os.path.basename(out)}"
+        return jsonify(res)
+    except Exception as exc:
+        return jsonify({"ok": False, "detail": f"{type(exc).__name__}: {exc}"[:300]}), 500
+
+
 @app.get("/posts/<path:name>")
 def serve_post(name):
     return send_from_directory(content.OUT_DIR, name, mimetype="image/png")

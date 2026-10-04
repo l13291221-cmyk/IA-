@@ -15,9 +15,60 @@ script = {
 Se la generazione IA non e' disponibile (niente chiave / errore rete), ogni scena
 ripiega sull'immagine del personaggio: il reel esce comunque (versione ridotta).
 """
-import os, tempfile
+import os, time, tempfile, subprocess, shutil
 import genscene
 import reel3d
+
+
+def make_ai_reel(script, out_dir, api_key, character_path=None):
+    """Pipeline COMPLETA per il worker: genera le scene con l'IA, monta il reel
+    e aggiunge la VOCE (edge-tts). Ritorna il percorso dell'mp4 finale (con audio).
+    Ogni scena puo' avere: prompt (per generare l'immagine), caption (scritta),
+    narration (testo letto dalla voce), character (bool), bills/title (intro)."""
+    import cartoon   # per _tts (edge-tts), _decode, _ffmpeg
+    os.makedirs(out_dir, exist_ok=True)
+    wd = tempfile.mkdtemp(prefix="aireel_")
+    character_path = character_path or os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "reel3d_assets", "character.jpg")
+    scenes = script.get("scenes", [])
+    # 1) immagini (IA, con ripiego sul personaggio)
+    imgs = []
+    for i, sc in enumerate(scenes):
+        img = os.path.join(wd, f"s{i}.png"); got = None
+        if sc.get("prompt"):
+            got = (genscene.generate_scene(sc["prompt"], character_path, api_key, img)
+                   if sc.get("character", True)
+                   else genscene.generate_object(sc["prompt"], api_key, img))
+        imgs.append(got or character_path)
+    # 2) voce unica (tutta la narrazione) + durata
+    narr = " ".join((sc.get("narration") or sc.get("caption") or "").strip()
+                    for sc in scenes).strip()
+    mp3 = os.path.join(wd, "voice.mp3"); total = None
+    if narr:
+        try:
+            cartoon._tts(narr, mp3)
+            total = len(cartoon._decode(mp3)) / cartoon.SR
+        except Exception:
+            total = None
+    # 3) durate scene proporzionali al testo (cosi' la voce copre il video)
+    weights = [max(1, len((sc.get("narration") or sc.get("caption") or ""))) for sc in scenes]
+    if total and sum(weights) > 0:
+        durs = [max(1.0, total * w / sum(weights)) for w in weights]
+    else:
+        durs = [float(sc.get("dur", 1.8)) for sc in scenes]
+    scenes_out = [{"image": imgs[i], "caption": sc.get("caption"), "dur": durs[i],
+                   "bills": sc.get("bills", False), "title": sc.get("title", False)}
+                  for i, sc in enumerate(scenes)]
+    silent = os.path.join(wd, "silent.mp4")
+    reel3d.build_from_images(scenes_out, silent)
+    out = os.path.join(out_dir, f"aireel_{int(time.time())}.mp4")
+    if total:
+        subprocess.run([cartoon._ffmpeg(), "-v", "error", "-y", "-i", silent, "-i", mp3,
+                        "-c:v", "copy", "-af", "loudnorm=I=-14:TP=-1.5:LRA=11",
+                        "-ac", "2", "-c:a", "aac", "-shortest", out], check=True)
+    else:
+        shutil.copy(silent, out)
+    return out
 
 
 def build_ai_reel(script, out_mp4, character_path, api_key, workdir=None, log=None):

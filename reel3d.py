@@ -133,6 +133,45 @@ def build_reel(spec, assets_dir, out_mp4, fps=FPS):
     return total
 
 
+def build_from_images(scenes, out_mp4, fps=FPS):
+    """Monta un reel da scene con immagini ESPLICITE (quelle generate dall'IA).
+    scenes = [{"image": path, "caption": "...", "dur": 1.8, "bills": False}].
+    La prima scena puo' avere "bills": True per l'intro coi soldi. Muto."""
+    bill = _bill_img()
+    wr = iio.get_writer(out_mp4, fps=fps, codec="libx264", quality=7,
+                        macro_block_size=1, ffmpeg_params=["-pix_fmt", "yuv420p"])
+    total = 0.0
+    money = None
+    for idx, sc in enumerate(scenes):
+        p = sc.get("image")
+        if not p or not os.path.exists(p):
+            continue
+        base = Image.open(p).convert("RGB").resize((W, H))
+        dur = float(sc.get("dur", 1.8))
+        n = int(dur * fps)
+        rnd = random.Random(idx + 1)
+        if sc.get("bills"):
+            money = [(rnd.uniform(0, W), rnd.uniform(-H, 0), rnd.uniform(0.25, 0.6),
+                      rnd.uniform(0, 6.28)) for _ in range(18)]
+        for i in range(n):
+            u = i / max(1, n)
+            fr = _kenburns(base, u, idx).copy()
+            if sc.get("bills") and money:
+                for (bx, by, sp, ph) in money:
+                    y = (by + u * sp * H * 3) % (H + 120) - 60
+                    b2 = bill.rotate(math.sin(u * 6 + ph) * 25, expand=True)
+                    fr.paste(b2, (int(bx + math.sin(u * 4 + ph) * 44), int(y)), b2)
+            d = ImageDraw.Draw(fr)
+            if sc.get("caption"):
+                size = int(W * (0.15 if sc.get("title") else 0.12))
+                y = int(H * (0.16 if sc.get("title") else 0.76))
+                _caption(d, sc["caption"], y, size)
+            wr.append_data(np.asarray(fr))
+        total += dur
+    wr.close()
+    return total
+
+
 if __name__ == "__main__":
     import sys
     here = os.path.dirname(os.path.abspath(__file__))

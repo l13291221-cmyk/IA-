@@ -122,7 +122,7 @@ def _mistral_image(prompt, key, out_path, timeout=150, retry429=True):
 
 
 def _pollinations_r(prompt: str, out_path: str, seed: int = WOLF_SEED,
-                    w: int = 720, h: int = 1280, timeout: int = 120, tries: int = 3):
+                    w: int = 832, h: int = 1216, timeout: int = 120, tries: int = 4):
     """Ritorna (out_path, None) o (None, errore). Gratis, nessuna chiave.
     Pollinations genera su richiesta e puo' essere lento/instabile: piu' tentativi."""
     u = _POLLI + urllib.parse.quote(prompt[:900], safe="")

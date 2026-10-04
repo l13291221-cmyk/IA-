@@ -18,7 +18,7 @@ La voce la aggiunge il motore come gia' fa per gli altri reel.
 import os, math, random
 import numpy as np
 import imageio.v2 as iio
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 W, H, FPS = 720, 1280, 24           # STESSA risoluzione dei reel cartoon che IG pubblica senza problemi
                                      # (e stessa misura delle immagini Pollinations: niente upscale)
@@ -76,7 +76,7 @@ def _load(assets_dir, name):
     p = os.path.join(assets_dir, f"shot_{name}.png")
     if not os.path.exists(p):
         p = os.path.join(assets_dir, "shot_front.png")
-    return Image.open(p).convert("RGB").resize((W, H))
+    return ImageOps.fit(Image.open(p).convert("RGB"), (W, H), method=Image.LANCZOS)
 
 
 def build_reel(spec, assets_dir, out_mp4, fps=FPS):
@@ -147,7 +147,7 @@ def build_from_images(scenes, out_mp4, fps=FPS):
         p = sc.get("image")
         if not p or not os.path.exists(p):
             continue
-        base = Image.open(p).convert("RGB").resize((W, H))
+        base = ImageOps.fit(Image.open(p).convert("RGB"), (W, H), method=Image.LANCZOS)
         dur = float(sc.get("dur", 1.8))
         n = int(dur * fps)
         rnd = random.Random(idx + 1)

@@ -1,22 +1,18 @@
-# Motore VIDEO di VcriptoV 🎬
+# IA- — Magazzino reel VcriptoV
 
-Micro-servizio che crea **solo i reel (video)** per VcriptoV.
+Questo repository è il **magazzino dei video** per VcriptoV.
 
-Esiste perché su Render free tier (512MB) montare un video con ffmpeg SUL sito
-principale fa sforare la memoria. Qui gira su un'istanza dedicata: tutti i 512MB
-liberi per il video, e il sito principale non tocca mai ffmpeg.
+Il vecchio motore video (generazione reel con l'IA) è stato rimosso: i reel ora
+si creano fuori (es. con Vadoo) e si **caricano qui**. Il bot di VcriptoV li
+pubblica a goccia su Instagram, YouTube e TikTok (uno per ogni slot).
 
-## Avvio su Render
-- **Start command:** `gunicorn worker_app:app --timeout 150` (già nel `Procfile`)
-- **Environment (opzionale ma consigliato):** `REEL_WORKER_SECRET` = una password
-  (la stessa va incollata su VcriptoV). Se non la metti, il servizio funziona
-  comunque ma senza protezione.
+## Come usarlo
 
-## Endpoint
-- `GET /health` — stato del motore
-- `POST /render-reel` — `{kind, ...}` ⇒ `{url, caption}` (header `X-Worker-Secret`)
-- `GET /reels/<file>` — serve il video (Instagram lo scarica da qui)
+1. Carica i video (.mp4) nella cartella **`reels/`**
+   (es. `reels/01.mp4`, `reels/02.mp4`, … — vengono pubblicati in ordine di nome).
+2. Nell'Area creatore di VcriptoV → **Magazzino reel**:
+   - Repository: `l13291221-cmyk/IA-`
+   - Cartella: `reels`
+3. Il repository deve restare **pubblico** (così Instagram può scaricare i video).
 
-## Come si collega
-Su VcriptoV → Area creatore → 🎨 Contenuti automatici → incolla l'indirizzo di
-questo servizio e la stessa password nei campi "🎬 Motore VIDEO".
+> Il servizio Render del vecchio motore non serve più e può essere spento.

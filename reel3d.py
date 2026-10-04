@@ -20,7 +20,8 @@ import numpy as np
 import imageio.v2 as iio
 from PIL import Image, ImageDraw, ImageFont
 
-W, H, FPS = 1080, 1920, 24          # verticale pieno (il montaggio e' leggero)
+W, H, FPS = 720, 1280, 24           # STESSA risoluzione dei reel cartoon che IG pubblica senza problemi
+                                     # (e stessa misura delle immagini Pollinations: niente upscale)
 CAP = (255, 255, 255)               # scritte BIANCHE (niente giallo): leggibili su ogni sfondo
 BILL_G = (55, 201, 138)             # verde brand #37c98a
 SHOTS = ("front", "tq", "top", "low", "side", "close")

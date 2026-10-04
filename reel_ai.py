@@ -80,6 +80,11 @@ def make_ai_reel(script, out_dir, api_key, character_path=None):
         durs = [max(1.0, total * w / sum(weights)) for w in weights]
     else:
         durs = [float(sc.get("dur", 1.8)) for sc in kept_scenes]
+    # durata MINIMA 9s: un reel troppo corto (e piu' corto della copertina a 5.8s)
+    # fa fallire Instagram. Se e' corto, allungo le scene in proporzione.
+    if sum(durs) < 9.0:
+        f = 9.0 / max(0.1, sum(durs))
+        durs = [d * f for d in durs]
     scenes_out = [{"image": imgs[i], "caption": sc.get("caption"), "dur": durs[i],
                    "bills": sc.get("bills", False), "title": sc.get("title", False)}
                   for i, sc in enumerate(kept_scenes)]
@@ -88,20 +93,18 @@ def make_ai_reel(script, out_dir, api_key, character_path=None):
     out = os.path.join(out_dir, f"aireel_{int(time.time())}.mp4")
     ff = cartoon._ffmpeg()
     if total:
-        # voce presente: re-encode video (H.264 yuv420p + faststart = indice all'inizio,
-        # che Instagram pretende) + audio AAC con loudnorm.
-        subprocess.run([ff, "-v", "error", "-y", "-i", silent, "-i", mp3,
-                        "-c:v", "libx264", "-profile:v", "high", "-pix_fmt", "yuv420p",
+        # STESSO mux dei reel cartoon che IG pubblica: copio il video (niente re-encode)
+        # + audio AAC con loudnorm + faststart (indice all'inizio).
+        subprocess.run([ff, "-v", "error", "-y", "-i", silent, "-i", mp3, "-c:v", "copy",
                         "-af", "loudnorm=I=-14:TP=-1.5:LRA=11", "-ac", "2", "-c:a", "aac",
-                        "-b:a", "128k", "-movflags", "+faststart", "-shortest", out], check=True)
+                        "-b:a", "128k", "-ar", "44100", "-shortest", "-movflags", "+faststart", out], check=True)
     else:
         # niente voce: aggiungo comunque una traccia audio SILENZIOSA (un reel senza
         # audio Instagram lo rifiuta) + faststart.
         subprocess.run([ff, "-v", "error", "-y", "-i", silent,
                         "-f", "lavfi", "-i", "anullsrc=channel_layout=stereo:sample_rate=44100",
-                        "-c:v", "libx264", "-profile:v", "high", "-pix_fmt", "yuv420p",
-                        "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart",
-                        "-shortest", out], check=True)
+                        "-c:v", "copy", "-c:a", "aac", "-b:a", "128k", "-ar", "44100",
+                        "-movflags", "+faststart", "-shortest", out], check=True)
     return out
 
 

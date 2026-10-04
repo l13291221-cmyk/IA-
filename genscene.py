@@ -12,13 +12,39 @@ La chiave e' quella che il creatore ha gia' (podcast/Gemini), passata come
 NB: la coerenza del personaggio e' buona ma non perfetta, specie con un
 personaggio fotorealistico. Uno stile piu' "cartoon" resta piu' coerente.
 """
-import os, base64, json
+import os, base64, json, urllib.parse
 import requests
 
 _URL = "https://generativelanguage.googleapis.com/v1beta/models/"
 # modelli immagine, in ordine: il primo che risponde vince (come per il testo)
 _MODELS = ["gemini-2.5-flash-image", "gemini-2.5-flash-image-preview",
            "gemini-2.0-flash-preview-image-generation"]
+
+# ---- POLLINATIONS: generatore immagini GRATIS e senza chiave (FLUX) ----
+# Non blocca il personaggio da una foto (e' testo->immagine), ma con una
+# descrizione fissa del lupo + lo STESSO seme teniamo il personaggio coerente
+# tra le scene. Illimitato e gratis: la scelta di default.
+_POLLI = "https://image.pollinations.ai/prompt/"
+WOLF_DESC = ("a fierce grey wolf with piercing yellow eyes, wearing an elegant black business suit, "
+             "white shirt, black tie, thick gold chain necklace with a golden Bitcoin pendant, gold watch, "
+             "confident serious expression, anthropomorphic, same consistent character")
+WOLF_SEED = 777   # seme fisso per la coerenza del personaggio tra le scene
+
+
+def _pollinations(prompt: str, out_path: str, seed: int = WOLF_SEED,
+                  w: int = 720, h: int = 1280, timeout: int = 120) -> str | None:
+    try:
+        u = _POLLI + urllib.parse.quote(prompt[:900], safe="")
+        r = requests.get(u, params={"width": w, "height": h, "nologo": "true",
+                                    "model": "flux", "seed": int(seed)}, timeout=timeout)
+        ct = r.headers.get("content-type", "")
+        if r.status_code == 200 and r.content and len(r.content) > 2000 and ct.startswith("image"):
+            with open(out_path, "wb") as f:
+                f.write(r.content)
+            return out_path
+    except Exception:
+        return None
+    return None
 
 
 def _b64(path):
@@ -37,9 +63,15 @@ def _extract_image(data: dict):
 
 
 def generate_scene(prompt: str, character_path: str, api_key: str, out_path: str,
-                   aspect: str = "9:16", timeout: int = 90) -> str | None:
-    """Genera UNA scena col personaggio di riferimento. Ritorna out_path o None.
-    Best-effort: ogni errore -> None (chi chiama ripiega sul ritaglio dell'immagine)."""
+                   aspect: str = "9:16", timeout: int = 90,
+                   provider: str = "pollinations", seed: int = WOLF_SEED) -> str | None:
+    """Genera UNA scena COL personaggio. Ritorna out_path o None.
+    provider: 'pollinations' (gratis, testo->immagine con descrizione+seme fissi)
+    o 'gemini' (coerenza da foto di riferimento, ma serve chiave con fatturazione)."""
+    if provider == "pollinations":
+        full = (f"{WOLF_DESC}. {prompt}. cinematic dramatic lighting, highly detailed, "
+                f"comic illustration style, vertical")
+        return _pollinations(full, out_path, seed=seed, timeout=timeout)
     key = (api_key or "").strip()
     if not key or not os.path.exists(character_path):
         return None
@@ -79,8 +111,12 @@ def generate_scene(prompt: str, character_path: str, api_key: str, out_path: str
 
 
 def generate_object(prompt: str, api_key: str, out_path: str,
-                    aspect: str = "9:16", timeout: int = 90) -> str | None:
+                    aspect: str = "9:16", timeout: int = 90,
+                    provider: str = "pollinations", seed: int = 0) -> str | None:
     """Scena SENZA personaggio (oggetto/luogo: caveau, documenti, grafico...)."""
+    if provider == "pollinations":
+        full = f"{prompt}. cinematic dramatic lighting, highly detailed, comic illustration style, vertical, no text"
+        return _pollinations(full, out_path, seed=(seed or 101), timeout=timeout)
     key = (api_key or "").strip()
     if not key:
         return None
@@ -110,9 +146,18 @@ def generate_object(prompt: str, api_key: str, out_path: str,
     return None
 
 
-def diagnose(api_key: str, character_path: str, out_path: str, timeout: int = 90) -> dict:
+def diagnose(api_key: str, character_path: str, out_path: str, timeout: int = 90,
+             provider: str = "pollinations") -> dict:
     """Prova UNA generazione e torna il dettaglio per capire cosa non va.
     {ok, model, status, detail, saved}. Usato dal tasto diagnostico in Admin."""
+    if provider == "pollinations":
+        full = f"{WOLF_DESC}. standing in a modern trading office with green charts. cinematic, comic illustration, vertical"
+        got = _pollinations(full, out_path, seed=WOLF_SEED, timeout=timeout)
+        if got:
+            return {"ok": True, "status": 200, "detail": "immagine generata (Pollinations, gratis)",
+                    "model": "pollinations/flux", "saved": os.path.basename(out_path)}
+        return {"ok": False, "status": -1, "detail": "Pollinations non raggiungibile dal motore",
+                "model": "pollinations/flux"}
     key = (api_key or "").strip()
     if not key:
         return {"ok": False, "status": 0, "detail": "nessuna chiave Gemini configurata", "model": None}

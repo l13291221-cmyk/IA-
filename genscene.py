@@ -25,9 +25,13 @@ _MODELS = ["gemini-2.5-flash-image", "gemini-2.5-flash-image-preview",
 # descrizione fissa del lupo + lo STESSO seme teniamo il personaggio coerente
 # tra le scene. Illimitato e gratis: la scelta di default.
 _POLLI = "https://image.pollinations.ai/prompt/"
-WOLF_DESC = ("an anthropomorphic grey wolf with yellow eyes wearing an elegant suit and tie, "
-             "with gold chain necklaces and gold bracelets, a confident crypto trader, "
-             "same consistent character")
+# STILE FISSO: cartone 2D (come "MaialeDiWallStreet") applicato a TUTTE le immagini
+# (personaggio E scene-oggetto) cosi' il reel e' coerente dall'inizio alla fine.
+STYLE = ("2D cartoon illustration, bold thick black outlines, flat vibrant colors, "
+         "cel-shaded comic caricature style, clean vector look, mascot style")
+WOLF_DESC = ("a cartoon anthropomorphic grey wolf mascot with a confident smug face, "
+             "wearing an elegant black suit with tie, big gold chain necklaces and a gold "
+             "watch, the same recognizable character every time")
 WOLF_SEED = 777   # seme fisso per la coerenza del personaggio tra le scene (Pollinations)
 
 
@@ -139,12 +143,11 @@ def generate_scene(prompt: str, character_path: str, api_key: str, out_path: str
     provider: 'mistral' (FLUX, genera il lupo dalla descrizione), 'pollinations'
     (gratis, testo->immagine) o 'gemini' (coerenza da foto, serve fatturazione)."""
     if provider == "mistral":
-        full = f"{WOLF_DESC}. {prompt}. cinematic dramatic lighting, highly detailed, vertical 9:16."
+        full = f"{WOLF_DESC}. {prompt}. {STYLE}. vertical 9:16, no text, no watermark."
         out, _err = _mistral_image(full, api_key, out_path, timeout=timeout)
         return out
     if provider == "pollinations":
-        full = (f"{WOLF_DESC}. {prompt}. cinematic dramatic lighting, highly detailed, "
-                f"comic illustration style, vertical")
+        full = f"{WOLF_DESC}. {prompt}. {STYLE}. vertical, no text"
         return _pollinations(full, out_path, seed=seed, timeout=timeout)
     key = (api_key or "").strip()
     if not key or not os.path.exists(character_path):
@@ -190,11 +193,11 @@ def generate_object(prompt: str, api_key: str, out_path: str,
                     provider: str = "mistral", seed: int = 0) -> str | None:
     """Scena SENZA personaggio (oggetto/luogo: caveau, documenti, grafico...)."""
     if provider == "mistral":
-        out, _err = _mistral_image(f"{prompt}. cinematic dramatic lighting, highly detailed, vertical 9:16, no text",
+        out, _err = _mistral_image(f"{prompt}. {STYLE}. vertical 9:16, no text, no watermark",
                                    api_key, out_path, timeout=timeout)
         return out
     if provider == "pollinations":
-        full = f"{prompt}. cinematic dramatic lighting, highly detailed, comic illustration style, vertical, no text"
+        full = f"{prompt}. {STYLE}. vertical, no text"
         return _pollinations(full, out_path, seed=(seed or 101), timeout=timeout)
     key = (api_key or "").strip()
     if not key:
@@ -231,7 +234,7 @@ def diagnose(api_key: str, character_path: str, out_path: str, timeout: int = 15
     """Prova UNA generazione e torna il dettaglio per capire cosa non va.
     {ok, model, status, detail, saved}. Usato dal tasto diagnostico in Admin."""
     if provider == "mistral":
-        full = f"{WOLF_DESC}. standing in a modern trading office with green charts. cinematic, vertical 9:16."
+        full = f"{WOLF_DESC}. counting a thick stack of cash in his hands, city skyline behind. {STYLE}. vertical 9:16, no text."
         got, err = _mistral_image(full, api_key, out_path, timeout=timeout)
         if got:
             return {"ok": True, "status": 200, "detail": "immagine generata (Mistral/FLUX)",

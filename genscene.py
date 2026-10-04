@@ -75,8 +75,10 @@ def _find_file_id(obj):
     return None
 
 
-def _mistral_image(prompt, key, out_path, timeout=150):
-    """Ritorna (out_path, None) o (None, errore)."""
+def _mistral_image(prompt, key, out_path, timeout=150, retry429=True):
+    """Ritorna (out_path, None) o (None, errore).
+    retry429: se True (reel in background) aspetta e riprova sul limite 429;
+    se False (diagnostico sincrono) UN colpo solo, cosi' non va in timeout."""
     key = (key or "").strip()
     if not key:
         return None, "nessuna chiave Mistral"
@@ -84,10 +86,11 @@ def _mistral_image(prompt, key, out_path, timeout=150):
     if not aid:
         return None, "creazione agente Mistral fallita (chiave?)"
     try:
-        # Il limite immagini di Mistral (429) e' quasi sempre per-minuto: aspetto e
-        # riprovo qualche volta con attese crescenti invece di arrendermi subito.
+        # Il limite immagini di Mistral (429) e' quasi sempre per-minuto: nel reel
+        # (background) aspetto e riprovo; nel diagnostico no (resteresti appeso).
+        waits = (0, 20, 30, 45, 60) if retry429 else (0,)
         r = None
-        for wait in (0, 20, 30, 45, 60):
+        for wait in waits:
             if wait:
                 time.sleep(wait)
             r = requests.post("https://api.mistral.ai/v1/conversations",
@@ -96,7 +99,7 @@ def _mistral_image(prompt, key, out_path, timeout=150):
             if r.status_code != 429:
                 break   # 200 o errore vero: esco; 429: aspetto e riprovo
         if r.status_code == 429:
-            return None, "Mistral: limite immagini raggiunto (riprova tra qualche minuto)"
+            return None, "Mistral: limite immagini raggiunto (429). Aspetta qualche minuto e riprova."
         if r.status_code != 200:
             return None, f"http {r.status_code}: {r.text[:200]}"
         fid = _find_file_id(r.json())
@@ -245,7 +248,7 @@ def diagnose(api_key: str, character_path: str, out_path: str, timeout: int = 15
     {ok, model, status, detail, saved}. Usato dal tasto diagnostico in Admin."""
     if provider == "mistral":
         full = f"{WOLF_DESC}. counting a thick stack of cash in his hands, city skyline behind. {STYLE}. vertical 9:16, no text."
-        got, err = _mistral_image(full, api_key, out_path, timeout=timeout)
+        got, err = _mistral_image(full, api_key, out_path, timeout=min(timeout, 90), retry429=False)
         if got:
             return {"ok": True, "status": 200, "detail": "immagine generata (Mistral/FLUX)",
                     "model": "mistral/flux", "saved": os.path.basename(out_path)}

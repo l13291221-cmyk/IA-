@@ -158,8 +158,9 @@ def _start_ai(spec):
         job_id = f"{int(now * 1000)}"
         _JOBS[job_id] = {"status": "running", "ts": now, "caption": spec.get("caption") or "",
                          "key": spec.get("key") or ""}
+    img_key = spec.get("img_key") or spec.get("gemini_key") or ""
     threading.Thread(target=_run_ai, args=(job_id, spec.get("data") or {},
-                     spec.get("gemini_key") or "", _public_base()), daemon=True).start()
+                     img_key, _public_base()), daemon=True).start()
     return job_id
 
 
@@ -266,7 +267,9 @@ def gen_test():
         import genscene
         out = os.path.join(content.OUT_DIR, f"gentest_{int(time.time())}.png")
         ch = os.path.join(os.path.dirname(os.path.abspath(__file__)), "reel3d_assets", "character.jpg")
-        res = genscene.diagnose(spec.get("gemini_key") or "", ch, out)
+        provider = spec.get("provider") or "mistral"
+        key = spec.get("img_key") or spec.get("gemini_key") or ""
+        res = genscene.diagnose(key, ch, out, provider=provider)
         if res.get("ok"):
             res["url"] = f"{_public_base()}/posts/{os.path.basename(out)}"
         return jsonify(res)

@@ -67,12 +67,22 @@ def make_ai_reel(script, out_dir, api_key, character_path=None):
     silent = os.path.join(wd, "silent.mp4")
     reel3d.build_from_images(scenes_out, silent)
     out = os.path.join(out_dir, f"aireel_{int(time.time())}.mp4")
+    ff = cartoon._ffmpeg()
     if total:
-        subprocess.run([cartoon._ffmpeg(), "-v", "error", "-y", "-i", silent, "-i", mp3,
-                        "-c:v", "copy", "-af", "loudnorm=I=-14:TP=-1.5:LRA=11",
-                        "-ac", "2", "-c:a", "aac", "-shortest", out], check=True)
+        # voce presente: re-encode video (H.264 yuv420p + faststart = indice all'inizio,
+        # che Instagram pretende) + audio AAC con loudnorm.
+        subprocess.run([ff, "-v", "error", "-y", "-i", silent, "-i", mp3,
+                        "-c:v", "libx264", "-profile:v", "high", "-pix_fmt", "yuv420p",
+                        "-af", "loudnorm=I=-14:TP=-1.5:LRA=11", "-ac", "2", "-c:a", "aac",
+                        "-b:a", "128k", "-movflags", "+faststart", "-shortest", out], check=True)
     else:
-        shutil.copy(silent, out)
+        # niente voce: aggiungo comunque una traccia audio SILENZIOSA (un reel senza
+        # audio Instagram lo rifiuta) + faststart.
+        subprocess.run([ff, "-v", "error", "-y", "-i", silent,
+                        "-f", "lavfi", "-i", "anullsrc=channel_layout=stereo:sample_rate=44100",
+                        "-c:v", "libx264", "-profile:v", "high", "-pix_fmt", "yuv420p",
+                        "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart",
+                        "-shortest", out], check=True)
     return out
 
 

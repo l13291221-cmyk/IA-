@@ -267,7 +267,7 @@ def gen_test():
         import genscene
         out = os.path.join(content.OUT_DIR, f"gentest_{int(time.time())}.png")
         ch = os.path.join(os.path.dirname(os.path.abspath(__file__)), "reel3d_assets", "character.jpg")
-        provider = spec.get("provider") or "mistral"
+        provider = spec.get("provider") or "auto"
         key = spec.get("img_key") or spec.get("gemini_key") or ""
         res = genscene.diagnose(key, ch, out, provider=provider)
         if res.get("ok"):

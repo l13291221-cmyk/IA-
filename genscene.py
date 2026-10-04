@@ -34,6 +34,11 @@ WOLF_DESC = ("a cartoon anthropomorphic grey wolf mascot with a confident smug f
              "watch, the same recognizable character every time")
 WOLF_SEED = 777   # seme fisso per la coerenza del personaggio tra le scene (Pollinations)
 
+# CATENA di riserva: si prova il primo; se non genera, si passa al successivo.
+# Pollinations = gratis e senza chiave (prima scelta); Mistral = riserva (ha un
+# limite giornaliero); Gemini lo lascio fuori dall'auto (serve fatturazione).
+PROVIDER_CHAIN = ["pollinations", "mistral"]
+
 
 # ---- MISTRAL: generazione immagini via Agents API (FLUX 1.1 Pro) ----
 _MISTRAL_AGENTS = {}   # cache: chiave -> agent_id (non ricreo l'agente ogni volta)
@@ -117,21 +122,29 @@ def _mistral_image(prompt, key, out_path, timeout=150, retry429=True):
         return None, f"{type(exc).__name__}: {exc}"[:150]
 
 
-def _pollinations(prompt: str, out_path: str, seed: int = WOLF_SEED,
-                  w: int = 720, h: int = 1280, timeout: int = 120) -> str | None:
+def _pollinations_r(prompt: str, out_path: str, seed: int = WOLF_SEED,
+                    w: int = 720, h: int = 1280, timeout: int = 120):
+    """Ritorna (out_path, None) o (None, errore). Gratis, nessuna chiave."""
     try:
         u = _POLLI + urllib.parse.quote(prompt[:900], safe="")
         r = requests.get(u, params={"width": w, "height": h, "nologo": "true",
-                                    "model": "flux", "seed": int(seed)}, timeout=timeout)
+                                    "model": "flux", "seed": int(seed)},
+                         headers={"User-Agent": "Mozilla/5.0 VcriptoV"},
+                         timeout=timeout, allow_redirects=True)
         ct = r.headers.get("content-type", "")
         if r.status_code == 200 and r.content and len(r.content) > 2000 and ct.startswith("image"):
             os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
             with open(out_path, "wb") as f:
                 f.write(r.content)
-            return out_path
-    except Exception:
-        return None
-    return None
+            return out_path, None
+        return None, f"http {r.status_code} ({ct or 'no-type'}, {len(r.content or b'')}b)"
+    except Exception as exc:
+        return None, f"{type(exc).__name__}: {exc}"[:150]
+
+
+def _pollinations(prompt: str, out_path: str, seed: int = WOLF_SEED,
+                  w: int = 720, h: int = 1280, timeout: int = 120):
+    return _pollinations_r(prompt, out_path, seed, w, h, timeout)[0]
 
 
 def _b64(path):
@@ -153,8 +166,14 @@ def generate_scene(prompt: str, character_path: str, api_key: str, out_path: str
                    aspect: str = "9:16", timeout: int = 150,
                    provider: str = "mistral", seed: int = WOLF_SEED) -> str | None:
     """Genera UNA scena COL personaggio. Ritorna out_path o None.
-    provider: 'mistral' (FLUX, genera il lupo dalla descrizione), 'pollinations'
-    (gratis, testo->immagine) o 'gemini' (coerenza da foto, serve fatturazione)."""
+    provider: 'auto' (prova la catena di riserva), 'mistral', 'pollinations' o 'gemini'."""
+    if provider in ("auto", "chain", "", None):
+        for p in PROVIDER_CHAIN:
+            got = generate_scene(prompt, character_path, api_key, out_path,
+                                 aspect=aspect, timeout=timeout, provider=p, seed=seed)
+            if got:
+                return got
+        return None
     if provider == "mistral":
         full = f"{WOLF_DESC}. {prompt}. {STYLE}. vertical 9:16, no text, no watermark."
         out, _err = _mistral_image(full, api_key, out_path, timeout=timeout)
@@ -205,6 +224,13 @@ def generate_object(prompt: str, api_key: str, out_path: str,
                     aspect: str = "9:16", timeout: int = 150,
                     provider: str = "mistral", seed: int = 0) -> str | None:
     """Scena SENZA personaggio (oggetto/luogo: caveau, documenti, grafico...)."""
+    if provider in ("auto", "chain", "", None):
+        for p in PROVIDER_CHAIN:
+            got = generate_object(prompt, api_key, out_path, aspect=aspect,
+                                  timeout=timeout, provider=p, seed=seed)
+            if got:
+                return got
+        return None
     if provider == "mistral":
         out, _err = _mistral_image(f"{prompt}. {STYLE}. vertical 9:16, no text, no watermark",
                                    api_key, out_path, timeout=timeout)
@@ -245,21 +271,41 @@ def generate_object(prompt: str, api_key: str, out_path: str,
 def diagnose(api_key: str, character_path: str, out_path: str, timeout: int = 150,
              provider: str = "mistral") -> dict:
     """Prova UNA generazione e torna il dettaglio per capire cosa non va.
-    {ok, model, status, detail, saved}. Usato dal tasto diagnostico in Admin."""
+    {ok, model, status, detail, saved}. Usato dal tasto diagnostico in Admin.
+    provider='auto' prova TUTTE le AI della catena e dice quali funzionano."""
+    cash = f"{WOLF_DESC}. counting a thick stack of cash in his hands, city skyline behind. {STYLE}. vertical 9:16, no text."
+    if provider in ("auto", "all", "chain", "", None):
+        results = {}
+        winner = None
+        # Pollinations (gratis, no chiave)
+        gotp, errp = _pollinations_r(cash, out_path, seed=WOLF_SEED, timeout=min(timeout, 90))
+        results["Pollinations (gratis)"] = "OK ✅" if gotp else f"NO — {errp}"
+        if gotp:
+            winner = "pollinations"
+        # Mistral (riserva, limite giornaliero)
+        if not winner:
+            gotm, errm = _mistral_image(cash, api_key, out_path, timeout=min(timeout, 90), retry429=False)
+            results["Mistral (riserva)"] = "OK ✅" if gotm else f"NO — {errm}"
+            if gotm:
+                winner = "mistral"
+        else:
+            results["Mistral (riserva)"] = "non provata (Pollinations ha già funzionato)"
+        detail = " | ".join(f"{k}: {v}" for k, v in results.items())
+        return {"ok": bool(winner), "status": 200 if winner else -1,
+                "detail": detail, "model": winner or "nessuna",
+                "saved": os.path.basename(out_path) if winner else None}
     if provider == "mistral":
-        full = f"{WOLF_DESC}. counting a thick stack of cash in his hands, city skyline behind. {STYLE}. vertical 9:16, no text."
-        got, err = _mistral_image(full, api_key, out_path, timeout=min(timeout, 90), retry429=False)
+        got, err = _mistral_image(cash, api_key, out_path, timeout=min(timeout, 90), retry429=False)
         if got:
             return {"ok": True, "status": 200, "detail": "immagine generata (Mistral/FLUX)",
                     "model": "mistral/flux", "saved": os.path.basename(out_path)}
         return {"ok": False, "status": -1, "detail": err or "Mistral non ha generato", "model": "mistral/flux"}
     if provider == "pollinations":
-        full = f"{WOLF_DESC}. standing in a modern trading office with green charts. cinematic, comic illustration, vertical"
-        got = _pollinations(full, out_path, seed=WOLF_SEED, timeout=timeout)
+        got, errp = _pollinations_r(cash, out_path, seed=WOLF_SEED, timeout=min(timeout, 90))
         if got:
             return {"ok": True, "status": 200, "detail": "immagine generata (Pollinations, gratis)",
                     "model": "pollinations/flux", "saved": os.path.basename(out_path)}
-        return {"ok": False, "status": -1, "detail": "Pollinations non raggiungibile dal motore",
+        return {"ok": False, "status": -1, "detail": f"Pollinations: {errp}",
                 "model": "pollinations/flux"}
     key = (api_key or "").strip()
     if not key:

@@ -12,7 +12,7 @@ La chiave e' quella che il creatore ha gia' (podcast/Gemini), passata come
 NB: la coerenza del personaggio e' buona ma non perfetta, specie con un
 personaggio fotorealistico. Uno stile piu' "cartoon" resta piu' coerente.
 """
-import os, base64, json, urllib.parse
+import os, base64, json, urllib.parse, time
 import requests
 
 _URL = "https://generativelanguage.googleapis.com/v1beta/models/"
@@ -84,9 +84,19 @@ def _mistral_image(prompt, key, out_path, timeout=150):
     if not aid:
         return None, "creazione agente Mistral fallita (chiave?)"
     try:
-        r = requests.post("https://api.mistral.ai/v1/conversations",
-                          headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
-                          json={"agent_id": aid, "inputs": prompt}, timeout=timeout)
+        # Il limite immagini di Mistral (429) e' quasi sempre per-minuto: aspetto e
+        # riprovo qualche volta con attese crescenti invece di arrendermi subito.
+        r = None
+        for wait in (0, 20, 30, 45, 60):
+            if wait:
+                time.sleep(wait)
+            r = requests.post("https://api.mistral.ai/v1/conversations",
+                              headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+                              json={"agent_id": aid, "inputs": prompt}, timeout=timeout)
+            if r.status_code != 429:
+                break   # 200 o errore vero: esco; 429: aspetto e riprovo
+        if r.status_code == 429:
+            return None, "Mistral: limite immagini raggiunto (riprova tra qualche minuto)"
         if r.status_code != 200:
             return None, f"http {r.status_code}: {r.text[:200]}"
         fid = _find_file_id(r.json())

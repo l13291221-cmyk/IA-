@@ -35,15 +35,27 @@ def make_ai_reel(script, out_dir, api_key, character_path=None):
     # 1) immagini (IA, con ripiego sul personaggio). Per il lupo uso lo STESSO seme
     #    in tutte le scene-personaggio: cosi' resta coerente tra una scena e l'altra.
     imgs = []
+    wolf_img = None   # il lupo lo genero UNA volta e lo riuso in tutte le scene-personaggio:
+                      # molte meno immagini (limite Mistral) + lupo identico tra le scene
+    first = True
     for i, sc in enumerate(scenes):
         img = os.path.join(wd, f"s{i}.png"); got = None
         if sc.get("prompt"):
-            if sc.get("character", True):
-                got = genscene.generate_scene(sc["prompt"], character_path, api_key, img,
-                                              provider=provider, seed=genscene.WOLF_SEED)
+            is_char = sc.get("character", True)
+            if is_char and wolf_img:
+                got = wolf_img                       # riuso il lupo gia' generato
             else:
-                got = genscene.generate_object(sc["prompt"], api_key, img,
-                                               provider=provider, seed=100 + i)
+                if not first:
+                    time.sleep(4)                    # distanzio le chiamate (anti rate-limit)
+                if is_char:
+                    got = genscene.generate_scene(sc["prompt"], character_path, api_key, img,
+                                                  provider=provider, seed=genscene.WOLF_SEED)
+                    if got:
+                        wolf_img = got
+                else:
+                    got = genscene.generate_object(sc["prompt"], api_key, img,
+                                                   provider=provider, seed=100 + i)
+                first = False
         imgs.append(got or character_path)
     # 2) voce unica (tutta la narrazione) + durata
     narr = " ".join((sc.get("narration") or sc.get("caption") or "").strip()

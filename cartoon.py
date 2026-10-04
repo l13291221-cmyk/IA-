@@ -42,7 +42,7 @@ SR = 24000
 GAP = 0.22
 VOICE = os.environ.get("CARTOON_VOICE", "en-US-AndrewNeural")
 VOICES = {"en": VOICE, "it": os.environ.get("CARTOON_VOICE_IT", "it-IT-DiegoNeural")}
-VOICE_RATE = os.environ.get("CARTOON_VOICE_RATE", "+6%")
+VOICE_RATE = os.environ.get("CARTOON_VOICE_RATE", "+0%")   # ritmo naturale (meno "robot")
 MUSIC_VOL = float(os.environ.get("CARTOON_MUSIC_VOL", "0.10"))
 
 CREAM = (244, 237, 226)
@@ -769,10 +769,10 @@ class Scene:
         self._cache = {}
 
     @staticmethod
-    def _paste(frame, spr, dy):
+    def _paste(frame, spr, dy, dx=0):
         if spr:
             img, (x, y) = spr
-            frame.paste(img, (x, y + dy), img)
+            frame.paste(img, (x + dx, y + dy), img)
 
     def _get(self, key, fn):
         if key not in self._cache:
@@ -821,16 +821,21 @@ class Scene:
             d.text((cxs, y0 + (y1 - y0) * 0.36), f"{shown:,}".replace(",", "."), font=font(44 * R), fill=GREEN,
                    anchor="mm")
             d.text((cxs, y0 + (y1 - y0) * 0.62), "VIEWS", font=font(30 * R), fill=LINE, anchor="mm")
+        # Movimento più vivo: oltre al "respiro" su e giù (bob), un leggero
+        # dondolio laterale di tutto il corpo (sway) e un cenno in più della testa.
+        # Così non sembra un robot fermo che muove solo la bocca. Tutte le parti
+        # condividono lo stesso sway, così niente si stacca dal corpo.
         bob = int(round(4 * R * math.sin(t * 2 * math.pi * 0.75)))
-        self._paste(fr, self.torso, bob)
+        sway = int(round(3 * R * math.sin(t * 2 * math.pi * 0.33 + self.seed * 0.7)))
+        self._paste(fr, self.torso, bob, sway)
         if self.pose == "phone" and self.hand:
             ps = round(min(1.0, p) * 20) / 20
             scr = self.sc.get("screen") or {}
             self._paste(fr, self._get(("screen", ps), lambda pen: phone_screen(
-                scaled(pen, cx, gy), _phone_box(self.hand), scr, ps)), bob)
+                scaled(pen, cx, gy), _phone_box(self.hand), scr, ps)), bob, sway)
             hx, hy = self.hand
             self._paste(fr, self._get("thumb", lambda pen: scaled(pen, cx, gy).circle(
-                (hx - 22, hy + 10), 26, fill=WHITE, outline=INK, w=4)), bob)
+                (hx - 22, hy + 10), 26, fill=WHITE, outline=INK, w=4)), bob, sway)
         if self.pose == "wave":
             g = (math.sin(t * 6.5) + 1) / 2
         elif self.pose == "point":
@@ -841,11 +846,13 @@ class Scene:
             g = 0.0
         gq = round(g * 3) / 3
         self._paste(fr, self._get(("arm", gq), lambda pen: draw_right_arm(scaled(pen, cx, gy), cx, gy, self.pose, gq)),
-                    bob)
+                    bob, sway)
         mq = int(round(min(1.0, mouth * 1.15) * 4)) if talking and mouth > 0.08 else 0
         blink = (t % 3.4) < 0.11
+        # la testa accenna un po' di più del corpo (cenno naturale mentre parla)
+        head_dy = bob + int(round(2 * R * math.sin(t * 2 * math.pi * 0.9 + 0.6)))
         self._paste(fr, self._get(("head", mq, blink), lambda pen: draw_head(
-            scaled(pen, cx, gy), cx, gy, self.pose, self.face, mq, blink)), bob)
+            scaled(pen, cx, gy), cx, gy, self.pose, self.face, mq, blink)), head_dy, sway)
         return fr
 
 

@@ -919,11 +919,20 @@ def render(script, out_mp4, workdir):
             lvl = float(mouth[min(fi, len(mouth) - 1)])
             talking = a - 0.05 <= t <= b + 0.05
             fr = scenes[si].frame(t, p, lvl, talking)
-            z = 1 + 0.06 * (1 - ease((t - a + GAP / 2) / 0.28))
-            if z > 1.002:
-                big = fr.resize((int(OUT_W * z), int(OUT_H * z)), Image.BILINEAR)
-                l, tp = (big.width - OUT_W) // 2, (big.height - OUT_H) // 2
-                fr = big.crop((l, tp, l + OUT_W, tp + OUT_H))
+            # CAMERA VIVA: non più una schermata ferma. Oltre al "punch-in" a inizio
+            # scena, una lenta carrellata continua (zoom + pan) per tutta la scena,
+            # con direzione decisa dal numero di scena. È quello che trasforma
+            # l'immagine statica in qualcosa di cinematografico.
+            u = max(0.0, min(1.0, (t - a) / max(0.1, b - a)))
+            punch = 0.06 * (1 - ease((t - a + GAP / 2) / 0.28))
+            z = 1.05 + 0.05 * u + punch
+            _rc = random.Random((si + 1) * 2654435761 & 0xFFFFFFFF)
+            dirx, diry = _rc.random() - 0.5, _rc.random() - 0.5
+            big = fr.resize((int(OUT_W * z), int(OUT_H * z)), Image.BILINEAR)
+            maxl, maxt = big.width - OUT_W, big.height - OUT_H
+            l = int(max(0, min(maxl, maxl * (0.5 + dirx * 0.7 * (u - 0.5)))))
+            tp = int(max(0, min(maxt, maxt * (0.5 + diry * 0.7 * (u - 0.5)))))
+            fr = big.crop((l, tp, l + OUT_W, tp + OUT_H))
             while wi + 1 < len(words) and t >= words[wi + 1][0]:
                 wi += 1
             if words:

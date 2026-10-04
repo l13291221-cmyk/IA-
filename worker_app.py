@@ -132,6 +132,37 @@ def _start_cartoon(spec):
     return job_id
 
 
+def _run_ai(job_id, script, key, base):
+    try:
+        import reel_ai
+        path = reel_ai.make_ai_reel(script, content.OUT_DIR, key)
+        _JOBS[job_id].update(status="done", url=f"{base}/reels/{os.path.basename(path)}")
+    except Exception as exc:
+        _JOBS[job_id].update(status="error", error=f"{type(exc).__name__}: {exc}"[:300])
+
+
+def _start_ai(spec):
+    try:
+        content.cleanup_old()
+    except Exception:
+        pass
+    with _JOBS_LOCK:
+        now = time.time()
+        for k in [k for k, j in _JOBS.items() if now - j["ts"] > 6 * 3600]:
+            _JOBS.pop(k, None)
+        running = [k for k, j in _JOBS.items() if j["status"] == "running"]
+        if running:
+            if _JOBS[running[0]].get("key") == (spec.get("key") or ""):
+                return running[0]
+            return None
+        job_id = f"{int(now * 1000)}"
+        _JOBS[job_id] = {"status": "running", "ts": now, "caption": spec.get("caption") or "",
+                         "key": spec.get("key") or ""}
+    threading.Thread(target=_run_ai, args=(job_id, spec.get("data") or {},
+                     spec.get("gemini_key") or "", _public_base()), daemon=True).start()
+    return job_id
+
+
 @app.get("/job/<job_id>")
 def job_status(job_id):
     if not _authorized(request):
@@ -150,6 +181,13 @@ def render_reel():
     kind = spec.get("kind")
     if kind == "cartoon":
         job_id = _start_cartoon(spec)
+        if not job_id:
+            return jsonify({"busy": True, "error": "il motore sta già creando un altro video"}), 409
+        return jsonify({"pending": True, "job": job_id, "caption": spec.get("caption") or ""}), 202
+    if kind == "ai":
+        # reel stile "MaialeDiWallStreet": scene generate dall'IA (Gemini) + voce.
+        # spec["data"] = copione (title/scenes), spec["gemini_key"] = chiave immagini.
+        job_id = _start_ai(spec)
         if not job_id:
             return jsonify({"busy": True, "error": "il motore sta già creando un altro video"}), 409
         return jsonify({"pending": True, "job": job_id, "caption": spec.get("caption") or ""}), 202

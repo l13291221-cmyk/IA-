@@ -31,12 +31,12 @@ def make_ai_reel(script, out_dir, api_key, character_path=None):
     character_path = character_path or os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "reel3d_assets", "character.jpg")
     scenes = script.get("scenes", [])
-    provider = script.get("provider") or "pollinations"
-    # 1) immagini (IA, con ripiego sul personaggio). Per il lupo uso lo STESSO seme
-    #    in tutte le scene-personaggio: cosi' resta coerente tra una scena e l'altra.
-    imgs = []
-    wolf_img = None   # il lupo lo genero UNA volta e lo riuso in tutte le scene-personaggio:
-                      # molte meno immagini (limite Mistral) + lupo identico tra le scene
+    provider = script.get("provider") or "auto"
+    # 1) immagini generate dall'IA. NIENTE immagine fissa di ripiego: se una scena
+    #    non viene generata, la SALTO (scena intera: immagine+scritta+voce). Il lupo
+    #    lo genero UNA volta e lo riuso in tutte le scene-personaggio (coerenza).
+    kept = []          # scene effettivamente generate (sc, img)
+    wolf_img = None
     first = True
     for i, sc in enumerate(scenes):
         img = os.path.join(wd, f"s{i}.png"); got = None
@@ -46,7 +46,7 @@ def make_ai_reel(script, out_dir, api_key, character_path=None):
                 got = wolf_img                       # riuso il lupo gia' generato
             else:
                 if not first:
-                    time.sleep(4)                    # distanzio le chiamate (anti rate-limit)
+                    time.sleep(3)                    # distanzio le chiamate
                 if is_char:
                     got = genscene.generate_scene(sc["prompt"], character_path, api_key, img,
                                                   provider=provider, seed=genscene.WOLF_SEED)
@@ -56,10 +56,17 @@ def make_ai_reel(script, out_dir, api_key, character_path=None):
                     got = genscene.generate_object(sc["prompt"], api_key, img,
                                                    provider=provider, seed=100 + i)
                 first = False
-        imgs.append(got or character_path)
-    # 2) voce unica (tutta la narrazione) + durata
+        if got:
+            kept.append((sc, got))                   # tengo solo le scene con immagine VERA
+    if len(kept) < 2:
+        # l'IA non ha generato abbastanza immagini: NON pubblico un video con
+        # immagini fisse. Meglio niente che una schifezza.
+        raise RuntimeError("immagini IA non generate (nessuna fonte disponibile): reel annullato")
+    kept_scenes = [sc for sc, _ in kept]
+    imgs = [im for _, im in kept]
+    # 2) voce unica (solo le scene tenute) + durata
     narr = " ".join((sc.get("narration") or sc.get("caption") or "").strip()
-                    for sc in scenes).strip()
+                    for sc in kept_scenes).strip()
     mp3 = os.path.join(wd, "voice.mp3"); total = None
     if narr:
         try:
@@ -68,14 +75,14 @@ def make_ai_reel(script, out_dir, api_key, character_path=None):
         except Exception:
             total = None
     # 3) durate scene proporzionali al testo (cosi' la voce copre il video)
-    weights = [max(1, len((sc.get("narration") or sc.get("caption") or ""))) for sc in scenes]
+    weights = [max(1, len((sc.get("narration") or sc.get("caption") or ""))) for sc in kept_scenes]
     if total and sum(weights) > 0:
         durs = [max(1.0, total * w / sum(weights)) for w in weights]
     else:
-        durs = [float(sc.get("dur", 1.8)) for sc in scenes]
+        durs = [float(sc.get("dur", 1.8)) for sc in kept_scenes]
     scenes_out = [{"image": imgs[i], "caption": sc.get("caption"), "dur": durs[i],
                    "bills": sc.get("bills", False), "title": sc.get("title", False)}
-                  for i, sc in enumerate(scenes)]
+                  for i, sc in enumerate(kept_scenes)]
     silent = os.path.join(wd, "silent.mp4")
     reel3d.build_from_images(scenes_out, silent)
     out = os.path.join(out_dir, f"aireel_{int(time.time())}.mp4")

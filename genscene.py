@@ -34,10 +34,9 @@ WOLF_DESC = ("a cartoon anthropomorphic grey wolf mascot with a confident smug f
              "watch, the same recognizable character every time")
 WOLF_SEED = 777   # seme fisso per la coerenza del personaggio tra le scene (Pollinations)
 
-# CATENA di riserva: si prova il primo; se non genera, si passa al successivo.
-# Pollinations = gratis e senza chiave (prima scelta); Mistral = riserva (ha un
-# limite giornaliero); Gemini lo lascio fuori dall'auto (serve fatturazione).
-PROVIDER_CHAIN = ["pollinations", "mistral"]
+# Fonte immagini: SOLO Pollinations (gratis, nessuna chiave, nessun limite).
+# Niente Mistral (limite giornaliero) e niente immagine fissa di ripiego.
+PROVIDER_CHAIN = ["pollinations"]
 
 
 # ---- MISTRAL: generazione immagini via Agents API (FLUX 1.1 Pro) ----
@@ -123,23 +122,29 @@ def _mistral_image(prompt, key, out_path, timeout=150, retry429=True):
 
 
 def _pollinations_r(prompt: str, out_path: str, seed: int = WOLF_SEED,
-                    w: int = 720, h: int = 1280, timeout: int = 120):
-    """Ritorna (out_path, None) o (None, errore). Gratis, nessuna chiave."""
-    try:
-        u = _POLLI + urllib.parse.quote(prompt[:900], safe="")
-        r = requests.get(u, params={"width": w, "height": h, "nologo": "true",
-                                    "model": "flux", "seed": int(seed)},
-                         headers={"User-Agent": "Mozilla/5.0 VcriptoV"},
-                         timeout=timeout, allow_redirects=True)
-        ct = r.headers.get("content-type", "")
-        if r.status_code == 200 and r.content and len(r.content) > 2000 and ct.startswith("image"):
-            os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
-            with open(out_path, "wb") as f:
-                f.write(r.content)
-            return out_path, None
-        return None, f"http {r.status_code} ({ct or 'no-type'}, {len(r.content or b'')}b)"
-    except Exception as exc:
-        return None, f"{type(exc).__name__}: {exc}"[:150]
+                    w: int = 720, h: int = 1280, timeout: int = 120, tries: int = 3):
+    """Ritorna (out_path, None) o (None, errore). Gratis, nessuna chiave.
+    Pollinations genera su richiesta e puo' essere lento/instabile: piu' tentativi."""
+    u = _POLLI + urllib.parse.quote(prompt[:900], safe="")
+    last = "nessun tentativo"
+    for k in range(max(1, tries)):
+        if k:
+            time.sleep(5 * k)
+        try:
+            r = requests.get(u, params={"width": w, "height": h, "nologo": "true",
+                                        "model": "flux", "seed": int(seed) + k},
+                             headers={"User-Agent": "Mozilla/5.0 VcriptoV"},
+                             timeout=timeout, allow_redirects=True)
+            ct = r.headers.get("content-type", "")
+            if r.status_code == 200 and r.content and len(r.content) > 2000 and ct.startswith("image"):
+                os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
+                with open(out_path, "wb") as f:
+                    f.write(r.content)
+                return out_path, None
+            last = f"http {r.status_code} ({ct or 'no-type'}, {len(r.content or b'')}b)"
+        except Exception as exc:
+            last = f"{type(exc).__name__}: {exc}"[:150]
+    return None, last
 
 
 def _pollinations(prompt: str, out_path: str, seed: int = WOLF_SEED,
@@ -278,7 +283,7 @@ def diagnose(api_key: str, character_path: str, out_path: str, timeout: int = 15
         results = {}
         winner = None
         # Pollinations (gratis, no chiave)
-        gotp, errp = _pollinations_r(cash, out_path, seed=WOLF_SEED, timeout=min(timeout, 90))
+        gotp, errp = _pollinations_r(cash, out_path, seed=WOLF_SEED, timeout=min(timeout, 90), tries=1)
         results["Pollinations (gratis)"] = "OK ✅" if gotp else f"NO — {errp}"
         if gotp:
             winner = "pollinations"
@@ -301,7 +306,7 @@ def diagnose(api_key: str, character_path: str, out_path: str, timeout: int = 15
                     "model": "mistral/flux", "saved": os.path.basename(out_path)}
         return {"ok": False, "status": -1, "detail": err or "Mistral non ha generato", "model": "mistral/flux"}
     if provider == "pollinations":
-        got, errp = _pollinations_r(cash, out_path, seed=WOLF_SEED, timeout=min(timeout, 90))
+        got, errp = _pollinations_r(cash, out_path, seed=WOLF_SEED, timeout=min(timeout, 90), tries=1)
         if got:
             return {"ok": True, "status": 200, "detail": "immagine generata (Pollinations, gratis)",
                     "model": "pollinations/flux", "saved": os.path.basename(out_path)}

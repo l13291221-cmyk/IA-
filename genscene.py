@@ -51,7 +51,7 @@ def generate_scene(prompt: str, character_path: str, api_key: str, out_path: str
             {"text": full},
             {"inline_data": {"mime_type": "image/jpeg", "data": _b64(character_path)}},
         ]}],
-        "generationConfig": {"responseModalities": ["IMAGE"],
+        "generationConfig": {"responseModalities": ["TEXT", "IMAGE"],
                              "imageConfig": {"aspectRatio": aspect}},
     }
     for m in _MODELS:
@@ -86,7 +86,7 @@ def generate_object(prompt: str, api_key: str, out_path: str,
         return None
     full = f"{prompt}. Cinematic dramatic lighting, highly detailed, vertical 9:16 format, no text."
     body = {"contents": [{"parts": [{"text": full}]}],
-            "generationConfig": {"responseModalities": ["IMAGE"],
+            "generationConfig": {"responseModalities": ["TEXT", "IMAGE"],
                                  "imageConfig": {"aspectRatio": aspect}}}
     for m in _MODELS:
         try:
@@ -108,3 +108,41 @@ def generate_object(prompt: str, api_key: str, out_path: str,
         except Exception:
             continue
     return None
+
+
+def diagnose(api_key: str, character_path: str, out_path: str, timeout: int = 90) -> dict:
+    """Prova UNA generazione e torna il dettaglio per capire cosa non va.
+    {ok, model, status, detail, saved}. Usato dal tasto diagnostico in Admin."""
+    key = (api_key or "").strip()
+    if not key:
+        return {"ok": False, "status": 0, "detail": "nessuna chiave Gemini configurata", "model": None}
+    have_char = bool(character_path and os.path.exists(character_path))
+    parts = [{"text": "A fierce wolf in a black suit with a gold Bitcoin chain, standing in a bank "
+                      "vault full of gold, cinematic, vertical 9:16."}]
+    if have_char:
+        parts.append({"inline_data": {"mime_type": "image/jpeg", "data": _b64(character_path)}})
+    body = {"contents": [{"parts": parts}],
+            "generationConfig": {"responseModalities": ["TEXT", "IMAGE"],
+                                 "imageConfig": {"aspectRatio": "9:16"}}}
+    last = {"ok": False, "status": 0, "detail": "nessun modello ha risposto", "model": None}
+    for m in _MODELS:
+        try:
+            r = requests.post(f"{_URL}{m}:generateContent", params={"key": key}, json=body, timeout=timeout)
+            if r.status_code == 400:
+                b2 = json.loads(json.dumps(body)); b2["generationConfig"].pop("imageConfig", None)
+                r = requests.post(f"{_URL}{m}:generateContent", params={"key": key}, json=b2, timeout=timeout)
+            if r.status_code == 404:
+                last = {"ok": False, "status": 404, "detail": f"modello {m} non trovato", "model": m}
+                continue
+            if r.status_code != 200:
+                return {"ok": False, "status": r.status_code, "detail": r.text[:300], "model": m}
+            img = _extract_image(r.json())
+            if img:
+                with open(out_path, "wb") as f:
+                    f.write(base64.b64decode(img))
+                return {"ok": True, "status": 200, "detail": "immagine generata", "model": m,
+                        "saved": os.path.basename(out_path)}
+            return {"ok": False, "status": 200, "detail": "risposta senza immagine (solo testo)", "model": m}
+        except Exception as exc:
+            last = {"ok": False, "status": -1, "detail": f"{type(exc).__name__}: {exc}"[:200], "model": m}
+    return last

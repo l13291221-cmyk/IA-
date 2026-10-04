@@ -91,6 +91,7 @@ def _mistral_image(prompt, key, out_path, timeout=150):
         rf = requests.get(f"https://api.mistral.ai/v1/files/{fid}/content",
                           headers={"Authorization": f"Bearer {key}"}, timeout=timeout)
         if rf.status_code == 200 and rf.content and len(rf.content) > 2000:
+            os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
             with open(out_path, "wb") as f:
                 f.write(rf.content)
             return out_path, None
@@ -107,6 +108,7 @@ def _pollinations(prompt: str, out_path: str, seed: int = WOLF_SEED,
                                     "model": "flux", "seed": int(seed)}, timeout=timeout)
         ct = r.headers.get("content-type", "")
         if r.status_code == 200 and r.content and len(r.content) > 2000 and ct.startswith("image"):
+            os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
             with open(out_path, "wb") as f:
                 f.write(r.content)
             return out_path
@@ -173,6 +175,7 @@ def generate_scene(prompt: str, character_path: str, api_key: str, out_path: str
                 continue
             img_b64 = _extract_image(r.json())
             if img_b64:
+                os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
                 with open(out_path, "wb") as f:
                     f.write(base64.b64decode(img_b64))
                 if os.path.getsize(out_path) > 2000:
@@ -213,6 +216,7 @@ def generate_object(prompt: str, api_key: str, out_path: str,
                 continue
             img_b64 = _extract_image(r.json())
             if img_b64:
+                os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
                 with open(out_path, "wb") as f:
                     f.write(base64.b64decode(img_b64))
                 if os.path.getsize(out_path) > 2000:
@@ -266,6 +270,7 @@ def diagnose(api_key: str, character_path: str, out_path: str, timeout: int = 15
                 return {"ok": False, "status": r.status_code, "detail": r.text[:300], "model": m}
             img = _extract_image(r.json())
             if img:
+                os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
                 with open(out_path, "wb") as f:
                     f.write(base64.b64decode(img))
                 return {"ok": True, "status": 200, "detail": "immagine generata", "model": m,

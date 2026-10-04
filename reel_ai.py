@@ -31,14 +31,19 @@ def make_ai_reel(script, out_dir, api_key, character_path=None):
     character_path = character_path or os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "reel3d_assets", "character.jpg")
     scenes = script.get("scenes", [])
-    # 1) immagini (IA, con ripiego sul personaggio)
+    provider = script.get("provider") or "pollinations"
+    # 1) immagini (IA, con ripiego sul personaggio). Per il lupo uso lo STESSO seme
+    #    in tutte le scene-personaggio: cosi' resta coerente tra una scena e l'altra.
     imgs = []
     for i, sc in enumerate(scenes):
         img = os.path.join(wd, f"s{i}.png"); got = None
         if sc.get("prompt"):
-            got = (genscene.generate_scene(sc["prompt"], character_path, api_key, img)
-                   if sc.get("character", True)
-                   else genscene.generate_object(sc["prompt"], api_key, img))
+            if sc.get("character", True):
+                got = genscene.generate_scene(sc["prompt"], character_path, api_key, img,
+                                              provider=provider, seed=genscene.WOLF_SEED)
+            else:
+                got = genscene.generate_object(sc["prompt"], api_key, img,
+                                               provider=provider, seed=100 + i)
         imgs.append(got or character_path)
     # 2) voce unica (tutta la narrazione) + durata
     narr = " ".join((sc.get("narration") or sc.get("caption") or "").strip()

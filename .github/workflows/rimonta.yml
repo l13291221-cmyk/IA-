@@ -1,0 +1,100 @@
+# Monta TANTI reel insieme: ogni gruppo di parti va su un computer di GitHub diverso (fino a 20
+# in parallelo), poi l'ultimo passaggio mette tutti i video in reels/ (a blocchi di 50).
+# Si lancia a mano (o da Claude) con l'elenco dei gruppi, es. ["65,66,p070", "71,72"].
+name: Rimonta reel (in parallelo)
+
+on:
+  workflow_dispatch:
+    inputs:
+      chunks:
+        description: 'Gruppi di parti da montare (JSON), es. ["65,66,p070", "71,72"]'
+        required: true
+      maxsec:
+        description: "Durata massima in secondi (vuoto = nessuna): la voce va un po' più veloce se serve"
+        required: false
+        default: "35"
+      hook:
+        description: "1 = inizio col gancio (il lupo dice subito la prima frase, titolo scritto in alto); 0 = vecchio inizio"
+        required: false
+        default: "1"
+
+permissions:
+  contents: write
+
+jobs:
+  monta:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        keys: ${{ fromJSON(inputs.chunks) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            studio
+          filter: blob:none
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Strumenti
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg > /dev/null
+          pip install -q edge-tts numpy pillow requests
+
+      - name: Monta il gruppo
+        env:
+          KEYS: ${{ matrix.keys }}
+          MAXSEC: ${{ inputs.maxsec }}
+          HOOK: ${{ inputs.hook }}
+        run: python studio/batch_render.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reel-${{ strategy.job-index }}
+          path: studio/work/out/*.mp4
+          retention-days: 3
+          if-no-files-found: warn
+
+  carica:
+    needs: monta
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            studio/bot
+          filter: blob:none
+          fetch-depth: 1
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: nuovi
+          pattern: reel-*
+          merge-multiple: true
+
+      - name: Metti i video nel magazzino (a blocchi di 50)
+        run: |
+          git config user.name "vcriptov-reel-bot"
+          git config user.email "vcriptov-reel-bot@users.noreply.github.com"
+          mkdir -p reels
+          ls nuovi | grep -E '\.mp4$' | sort > lista.txt
+          echo "video montati: $(wc -l < lista.txt)"
+          split -l 50 lista.txt blocco_
+          for b in blocco_*; do
+            mkdir -p reels        # dopo il pull la cartella può sparire (checkout parziale)
+            while read f; do cp "nuovi/$f" "reels/$f"; git add --sparse "reels/$f"; done < "$b"
+            git commit -q -m "Reel montati su GitHub: $(head -1 $b) ... $(tail -1 $b) ($(wc -l < $b) video)"
+            ok=0
+            for i in 1 2 3 4 5; do
+              if git pull -q --rebase origin main && git push -q origin HEAD:main; then ok=1; break; fi
+              sleep $((i * 10))
+            done
+            [ "$ok" = 1 ] || { echo "caricamento non riuscito"; exit 1; }
+          done

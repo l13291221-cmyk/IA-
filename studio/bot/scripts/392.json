@@ -1,0 +1,38 @@
+{
+ "en": [
+  {
+   "say": "There will only ever be 21 million bitcoin. So what happens when the last one is mined?",
+   "img": "intro",
+   "caption": true,
+   "after": "243_s0.jpg"
+  },
+  {
+   "say": "Miners earn new coins for securing the network, but that reward is cut in half about every four years.",
+   "img": "10_s1.jpg"
+  },
+  {
+   "say": "Around the year 2140, new coins will stop completely.",
+   "img": "L336.jpg"
+  },
+  {
+   "say": "From then on, miners will be paid only by the fees people attach to their transactions.",
+   "img": "L326.jpg:flip"
+  },
+  {
+   "say": "Whether those fees will be enough to keep the network safe is one of Bitcoin's big open questions.",
+   "img": "p320_s0.jpg"
+  },
+  {
+   "say": "Follow for part 393: how central banks buy gold. Not financial advice.",
+   "img": "L258.jpg"
+  }
+ ],
+ "it": [
+  "Esisteranno solo 21 milioni di bitcoin. Quindi cosa succede quando viene estratto l'ultimo?",
+  "I miner guadagnano nuove monete per proteggere la rete, ma questa ricompensa si dimezza circa ogni 4 anni.",
+  "Verso l'anno 2140, le nuove monete finiranno del tutto.",
+  "Da lì in poi, i miner saranno pagati solo con le commissioni che le persone aggiungono alle loro transazioni.",
+  "Se quelle commissioni basteranno a tenere sicura la rete è una delle grandi domande aperte di Bitcoin.",
+  "Segui per la parte 393: come le banche centrali comprano l'oro. Non è un consiglio finanziario."
+ ]
+}

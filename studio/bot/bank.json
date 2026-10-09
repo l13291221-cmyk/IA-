@@ -1,0 +1,93 @@
+{
+ "series": {
+  "why gold has been money for thousands of years": {
+   "topic_it": "perché l'oro è denaro da migliaia di anni",
+   "scenes": [
+    {
+     "say": "Empires rose and fell, currencies came and went, but gold stayed money for thousands of years. Why?",
+     "visual": "ancient gold coins empire ruins",
+     "it": "Imperi sono nati e caduti, le valute sono arrivate e sparite, ma l'oro è rimasto denaro per migliaia di anni. Perché?"
+    },
+    {
+     "say": "Gold doesn't rust or rot, so a coin minted centuries ago still shines today.",
+     "visual": "old gold coin treasure chest shine",
+     "it": "L'oro non arrugginisce e non marcisce: una moneta coniata secoli fa brilla ancora oggi."
+    },
+    {
+     "say": "It's rare, hard to dig up, and nobody can print more of it overnight.",
+     "visual": "gold mine workers digging",
+     "it": "È raro, difficile da estrarre, e nessuno può stamparne di più da un giorno all'altro."
+    },
+    {
+     "say": "It's easy to split into small pieces, and its value is recognized almost everywhere in the world.",
+     "visual": "gold bars world map trade",
+     "it": "Si divide facilmente in piccoli pezzi, e il suo valore è riconosciuto quasi ovunque nel mondo."
+    },
+    {
+     "say": "That's why central banks still keep tons of it today, as a store of value when trust in paper money falls.",
+     "visual": "central bank vault gold bars",
+     "it": "Per questo le banche centrali ne tengono ancora tonnellate, come riserva di valore quando cala la fiducia nella carta moneta."
+    }
+   ]
+  },
+  "what happens to bitcoin when the last coin is mined": {
+   "topic_it": "cosa succede a Bitcoin quando viene estratta l'ultima moneta",
+   "scenes": [
+    {
+     "say": "There will only ever be 21 million bitcoin. So what happens when the last one is mined?",
+     "visual": "last bitcoin coin mining",
+     "it": "Esisteranno solo 21 milioni di bitcoin. Quindi cosa succede quando viene estratto l'ultimo?"
+    },
+    {
+     "say": "Miners earn new coins for securing the network, but that reward is cut in half about every four years.",
+     "visual": "bitcoin miners computers reward halving",
+     "it": "I miner guadagnano nuove monete per proteggere la rete, ma questa ricompensa si dimezza circa ogni 4 anni."
+    },
+    {
+     "say": "Around the year 2140, new coins will stop completely.",
+     "visual": "calendar future bitcoin clock",
+     "it": "Verso l'anno 2140, le nuove monete finiranno del tutto."
+    },
+    {
+     "say": "From then on, miners will be paid only by the fees people attach to their transactions.",
+     "visual": "transaction fees coins miners paid",
+     "it": "Da lì in poi, i miner saranno pagati solo con le commissioni che le persone aggiungono alle loro transazioni."
+    },
+    {
+     "say": "Whether those fees will be enough to keep the network safe is one of Bitcoin's big open questions.",
+     "visual": "question mark bitcoin network shield",
+     "it": "Se quelle commissioni basteranno a tenere sicura la rete è una delle grandi domande aperte di Bitcoin."
+    }
+   ]
+  },
+  "how central banks buy gold": {
+   "topic_it": "come le banche centrali comprano l'oro"
+  }
+ },
+ "promo": {
+  "what a vcriptov signal looks like": {
+   "scenes": [
+    {
+     "say": "Ever wondered what a VcriptoV signal actually looks like?",
+     "visual": "phone notification signal wolf curious",
+     "it": "Ti sei mai chiesto com'è fatto davvero un segnale di VcriptoV?"
+    },
+    {
+     "say": "Each signal shows the coin, the entry price, a stop loss and a take profit.",
+     "visual": "trading chart entry stop loss take profit",
+     "it": "Ogni segnale mostra la moneta, il prezzo di entrata, uno stop loss e un take profit."
+    },
+    {
+     "say": "It arrives on Telegram and on your dashboard, with two buttons: invest, or don't invest.",
+     "visual": "phone telegram two buttons choice",
+     "it": "Arriva su Telegram e nella tua dashboard, con due pulsanti: investi, o non investire."
+    },
+    {
+     "say": "VcriptoV analyzes the market, but you always decide. Signals are analyses, not certainties.",
+     "visual": "wolf thinking decision calm",
+     "it": "VcriptoV analizza il mercato, ma decidi sempre tu. I segnali sono analisi, non certezze."
+    }
+   ]
+  }
+ }
+}

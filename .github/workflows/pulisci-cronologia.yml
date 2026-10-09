@@ -1,0 +1,40 @@
+# Pulisce la CRONOLOGIA del repository: crea un unico salvataggio con i file attuali (tutti i
+# reel, lo studio, il bot) e lo mette al posto della storia vecchia, così le vecchie versioni
+# dei video sostituiti non occupano più spazio. I FILE NON CAMBIANO. Le release (video del bot)
+# restano. Si lancia solo a mano: Actions -> Pulisci cronologia -> Run workflow.
+name: Pulisci cronologia
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: autoreel          # mai mentre il bot dei reel sta salvando
+  cancel-in-progress: false
+
+jobs:
+  pulisci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .github
+          filter: blob:none
+          fetch-depth: 1
+
+      - name: Un solo salvataggio con i file di oggi
+        run: |
+          git config user.name "vcriptov-reel-bot"
+          git config user.email "vcriptov-reel-bot@users.noreply.github.com"
+          OLD=$(git rev-parse HEAD)
+          TREE=$(git rev-parse "HEAD^{tree}")
+          NEW=$(git commit-tree "$TREE" -m "Magazzino VcriptoV (cronologia ripulita il $(date -u +%Y-%m-%d))" -m "Stessi file del salvataggio $OLD; tolte le vecchie versioni dei video sostituiti.")
+          echo "vecchio $OLD -> nuovo $NEW (stesso contenuto $TREE)"
+          git push --force origin "$NEW:refs/heads/main"
+          for t in $(git ls-remote --tags origin | awk '{print $2}' | grep -v '\^{}'); do
+            git push --force origin "$NEW:$t" && echo "tag $t spostato"
+          done
+          git push origin --delete push-test || true

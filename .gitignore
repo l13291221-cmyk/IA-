@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+static/auto/
+studio/.vadoo_profile/
+studio/work/
+studio/.venv/
+reels/*_work/
+studio/__pycache__/

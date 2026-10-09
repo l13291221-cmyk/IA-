@@ -1,0 +1,228 @@
+G|why gold has been money for thousands of years
+C|what happens to Bitcoin when the last coin is mined
+G|how central banks buy gold
+C|why crypto never sleeps
+G|the difference between saving and investing
+C|why most traders lose money
+G|how inflation quietly steals your savings
+C|why you should never chase green candles
+G|what makes a company worth investing in
+C|how to stay calm in a crypto crash
+G|silver versus gold for beginners
+C|the questions to ask before buying any coin
+G|why oil prices affect everything you buy
+C|what a crypto bull run feels like from the inside
+G|how a recession affects your investments
+C|why a hardware wallet is worth the money
+G|how dividends can pay your bills one day
+C|the most common mistakes after a big crypto win
+G|why real estate is not always a safe bet
+C|why your seed phrase is more important than your password
+G|what the stock market teaches about patience
+C|how to read crypto news without panicking
+G|why copper prices tell you about the economy
+C|what makes Bitcoin different from every other coin
+G|the hidden cost of keeping cash at home
+C|why small caps can go to zero
+G|how to start investing with very little money
+C|what to do when your coin drops fifty percent
+G|why diversification works over the long run
+C|how scammers use fake celebrity videos
+G|the difference between price and value
+C|why stablecoins matter for traders
+G|how to think like a long-term investor
+C|why liquidity matters more than hype
+G|what happens when a bank fails
+C|how to build a simple crypto routine
+G|why lithium became so important
+C|what on-chain data can tell you
+G|the power of starting early
+C|why you should test small before sending big
+G|how wars and crises move markets
+C|what makes a strong crypto community
+G|why boring investments often win
+C|how to avoid fake crypto apps
+G|how interest rates change house prices
+C|why patience pays in crypto
+G|what a stock market correction is
+C|how to set a stop loss you won't regret
+G|why gold miners move more than gold
+C|why the first rule of crypto is security
+G|how to read a company's balance sheet simply
+C|what a market cycle top looks like
+G|why emerging markets are so volatile
+C|what to check before joining a crypto project
+G|how to protect your money from inflation
+C|why hype coins crash so hard
+G|what happens when the dollar gets stronger
+C|how to keep emotions out of trading
+G|why platinum is rarer than gold
+C|why you should write down your trades
+G|how index funds changed investing forever
+C|what makes a good crypto exchange
+G|why the stock market goes up over time
+C|why leverage is the fastest way to zero
+G|how to build an investing habit
+C|what crypto taught investors about risk
+G|why commodities move in supercycles
+C|how to handle a crypto bear market
+G|the difference between bonds and stocks
+C|why you should never share your screen with strangers
+G|how to set money goals that work
+C|what to do if you sent crypto to the wrong address
+G|why natural gas prices swing so much
+C|how Bitcoin treasury companies work
+G|what a stock buyback really means for you
+C|why airdrops can be traps
+G|how compound interest builds wealth slowly
+C|why the crowd is usually late
+G|what happens to markets during elections
+C|how to secure your crypto for your family
+G|why gold shines when trust falls
+C|how to spot a pump and dump early
+G|how much of your income you should invest
+C|why most altcoins lose against Bitcoin over time
+G|the investor mindset in a crisis
+C|what makes crypto valuable at all
+G|why you should know your risk before you invest
+C|how to read a token's distribution
+G|why water may be the next big commodity
+C|what a crypto winter teaches you
+G|why big companies split their stock
+C|how to avoid revenge trading
+G|why investing is a marathon, not a sprint
+C|why you should keep some cash ready for dips
+G|how silver is used in everyday technology
+C|how to spot fake trading volume
+G|what the yield curve tells us
+C|why your exchange is not your bank
+G|why market timing rarely works
+C|how to manage FOMO in a bull market
+G|how the price of coffee and cocoa can explode
+C|why the next big coin is probably not on social media
+G|the difference between speculation and investing
+C|why the best trade is sometimes no trade
+G|how pensions invest your money
+C|what happens during a halving year
+G|why insurance companies are great investors
+C|why you should never invest what you need next month
+G|how a strong economy can still hurt stocks
+C|why crypto prices move together
+G|how to choose your first ETF
+C|what makes a crypto project survive bear markets
+G|why the price of eggs and bread rises
+C|how to keep your crypto private
+G|what makes a currency strong or weak
+C|why small profits add up
+G|why gold and the dollar often move in opposite directions
+C|how to recover from your first big crypto loss
+G|the habits of patient investors
+C|why trust matters so much in crypto
+G|how technology changes which companies win
+C|why simple strategies beat complicated ones
+G|what an investment portfolio really is
+C|why you should verify every link
+G|how to invest during high inflation
+C|what the history of Bitcoin crashes teaches
+G|why people panic sell at the bottom
+C|how to tell a project from a pump
+G|why you should rebalance once a year
+C|what makes a coin truly decentralized
+G|why patience beats intelligence in investing
+C|why crypto security is a habit, not a tool
+G|how the biggest fortunes were built slowly
+G|the story of the first stock exchange in Amsterdam
+G|the Dutch East India Company, the first public company
+G|how the Medici family invented modern banking
+G|the invention of paper money in ancient China
+G|how ancient Rome destroyed its own currency
+G|the story of the gold standard
+G|Bretton Woods, the meeting that shaped modern money
+G|the Nixon shock of 1971
+G|the Mississippi bubble and John Law
+G|the Hunt brothers and the silver market
+G|the fall of Long-Term Capital Management
+G|the Asian financial crisis of 1997
+G|the Enron scandal
+G|the story of the first credit card
+G|the invention of the ATM
+G|how the S&P 500 index was born
+G|the story of Warren Buffett's first investment
+G|how Jesse Livermore made and lost fortunes
+G|the Panic of 1907 and J.P. Morgan
+G|the birth of the Federal Reserve
+G|the story of the euro
+G|the Swiss franc shock of 2015
+G|the oil crisis of the 1970s
+G|the Klondike gold rush
+G|the California gold rush
+G|the Plaza Accord of 1985
+G|the Weimar Republic hyperinflation
+G|Zimbabwe's hundred trillion dollar note
+G|the Barings Bank collapse
+G|how Amazon survived the dot-com crash
+G|the story of Apple's first investors
+G|how index funds were invented by John Bogle
+G|the history of the bull and bear symbols
+G|the story of Wall Street's name
+G|the first IPO in history
+G|the great salad oil swindle of 1963
+G|the Lehman Brothers weekend
+G|the Greek debt crisis
+G|the 2010 flash crash
+G|the 2022 bond market crash
+C|the cypherpunks who dreamed of digital cash
+C|DigiCash and the first attempts at internet money
+C|the Bitcoin whitepaper of 2008
+C|the first Bitcoin transaction to Hal Finney
+C|the first Bitcoin exchange rate
+C|the 2010 bug that created billions of bitcoin
+C|the Silk Road and Bitcoin's dark early days
+C|the first Bitcoin bubble of 2011
+C|Bitcoin reaches one thousand dollars in 2013
+C|the launch of Ethereum in 2015
+C|the block size war
+C|the 2017 Bitcoin bull run
+C|the crypto winter of 2018
+C|Black Thursday in March 2020
+C|the first Bitcoin ETF attempts
+C|the Bitcoin halving of 2012
+C|the Bitcoin halving of 2016
+C|the Bitcoin halving of 2020
+C|the Bitcoin halving of 2024
+C|China's crypto mining ban
+C|the rise and fall of BitConnect
+C|the QuadrigaCX mystery
+C|the Poly Network hack and the returned money
+C|the Ronin bridge hack
+C|the Celsius bankruptcy
+C|the Three Arrows Capital collapse
+C|the story of Dogecoin's creators
+C|the Ethereum Merge
+C|the story of Tether
+C|the first NFT ever made
+C|the Beeple sale that shocked the art world
+C|the CryptoKitties craze
+C|the story of the Bitcoin pizza buyer
+C|the man who threw away a hard drive full of bitcoin
+C|the lost passwords and forgotten bitcoin
+C|the story of Satoshi's last message
+C|how Bitcoin survived its first hacks
+C|the Bitcoin Cash split
+C|the Ethereum Classic split
+C|the Binance founder's story
+C|the story of Coinbase's IPO
+C|the first country to ban Bitcoin
+C|the history of crypto ATMs
+C|how Bitcoin got its first price
+C|the Bitcoin dominance story
+C|the 2021 crypto bull run
+C|the Luna founder's story
+C|the history of stablecoins
+C|the first DeFi summer protocols
+C|the story of Uniswap
+C|the Wall Street giants that changed their mind on Bitcoin
+C|the history of Bitcoin's biggest crashes
+C|the history of the four-year cycle
+C|the story of the first crypto millionaires
+C|lessons from ten years of crypto scams

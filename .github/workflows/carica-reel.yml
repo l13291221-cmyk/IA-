@@ -1,0 +1,54 @@
+# Mette nel magazzino (reels/) i video già montati da un giro di "Rimonta reel", senza
+# rimontarli: li prende dagli artifact di quel giro (restano 3 giorni). Serve se il
+# caricamento finale di quel giro si è fermato.
+name: Carica reel già montati
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: "Numero del giro di 'Rimonta reel' da cui prendere i video"
+        required: true
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  carica:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            studio/bot
+          filter: blob:none
+          fetch-depth: 1
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: nuovi
+          pattern: reel-*
+          merge-multiple: true
+          run-id: ${{ inputs.run_id }}
+          github-token: ${{ github.token }}
+
+      - name: Metti i video nel magazzino (a blocchi di 50)
+        run: |
+          git config user.name "vcriptov-reel-bot"
+          git config user.email "vcriptov-reel-bot@users.noreply.github.com"
+          ls nuovi | grep -E '\.mp4$' | sort > lista.txt
+          echo "video montati: $(wc -l < lista.txt)"
+          split -l 50 lista.txt blocco_
+          for b in blocco_*; do
+            mkdir -p reels
+            while read f; do cp "nuovi/$f" "reels/$f"; git add --sparse "reels/$f"; done < "$b"
+            if git diff --cached --quiet; then echo "$(head -1 $b): già nel magazzino"; continue; fi
+            git commit -q -m "Reel montati su GitHub: $(head -1 $b) ... $(tail -1 $b) ($(wc -l < $b) video)"
+            ok=0
+            for i in 1 2 3 4 5; do
+              if git pull -q --rebase origin main && git push -q origin HEAD:main; then ok=1; break; fi
+              sleep $((i * 10))
+            done
+            [ "$ok" = 1 ] || { echo "caricamento non riuscito"; exit 1; }
+          done

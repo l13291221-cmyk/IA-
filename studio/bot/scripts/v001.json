@@ -1,0 +1,33 @@
+{
+ "en": [
+  {
+   "say": "Ever wondered what a VcriptoV signal actually looks like?",
+   "img": "intro",
+   "caption": true,
+   "after": "p060_s0.jpg"
+  },
+  {
+   "say": "Each signal shows the coin, the entry price, a stop loss and a take profit.",
+   "img": "p330_s0.jpg"
+  },
+  {
+   "say": "It arrives on Telegram and on your dashboard, with two buttons: invest, or don't invest.",
+   "img": "p020_s0.jpg"
+  },
+  {
+   "say": "VcriptoV analyzes the market, but you always decide. Signals are analyses, not certainties.",
+   "img": "61_s2.jpg:flip"
+  },
+  {
+   "say": "Start free at VcriptoV dot com. Link in bio. Not financial advice.",
+   "img": "L260.jpg:flip"
+  }
+ ],
+ "it": [
+  "Ti sei mai chiesto com'è fatto davvero un segnale di VcriptoV?",
+  "Ogni segnale mostra la moneta, il prezzo di entrata, uno stop loss e un take profit.",
+  "Arriva su Telegram e nella tua dashboard, con due pulsanti: investi, o non investire.",
+  "VcriptoV analizza il mercato, ma decidi sempre tu. I segnali sono analisi, non certezze.",
+  "Inizia gratis su VcriptoV punto com. Link in bio. Non è un consiglio finanziario."
+ ]
+}

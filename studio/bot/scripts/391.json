@@ -1,0 +1,38 @@
+{
+ "en": [
+  {
+   "say": "Empires rose and fell, currencies came and went, but gold stayed money for thousands of years. Why?",
+   "img": "intro",
+   "caption": true,
+   "after": "L321.jpg"
+  },
+  {
+   "say": "Gold doesn't rust or rot, so a coin minted centuries ago still shines today.",
+   "img": "70_s2.jpg"
+  },
+  {
+   "say": "It's rare, hard to dig up, and nobody can print more of it overnight.",
+   "img": "L058.jpg"
+  },
+  {
+   "say": "It's easy to split into small pieces, and its value is recognized almost everywhere in the world.",
+   "img": "L335.jpg"
+  },
+  {
+   "say": "That's why central banks still keep tons of it today, as a store of value when trust in paper money falls.",
+   "img": "L057.jpg"
+  },
+  {
+   "say": "Follow for part 392: what happens to Bitcoin when the last coin is mined. Not financial advice.",
+   "img": "L247.jpg"
+  }
+ ],
+ "it": [
+  "Imperi sono nati e caduti, le valute sono arrivate e sparite, ma l'oro è rimasto denaro per migliaia di anni. Perché?",
+  "L'oro non arrugginisce e non marcisce: una moneta coniata secoli fa brilla ancora oggi.",
+  "È raro, difficile da estrarre, e nessuno può stamparne di più da un giorno all'altro.",
+  "Si divide facilmente in piccoli pezzi, e il suo valore è riconosciuto quasi ovunque nel mondo.",
+  "Per questo le banche centrali ne tengono ancora tonnellate, come riserva di valore quando cala la fiducia nella carta moneta.",
+  "Segui per la parte 392: cosa succede a Bitcoin quando viene estratta l'ultima moneta. Non è un consiglio finanziario."
+ ]
+}

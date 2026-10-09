@@ -1,0 +1,1082 @@
+{
+ "L001": {
+  "theme": "emotions",
+  "p": "The wolf jumps for joy with both fists in the air, confetti falling, big smile."
+ },
+ "L002": {
+  "theme": "emotions",
+  "p": "The wolf sits on a bench looking sad, rain falling, shoulders down."
+ },
+ "L003": {
+  "theme": "emotions",
+  "p": "The wolf is furious, red face with steam coming out of his ears, fists clenched."
+ },
+ "L004": {
+  "theme": "emotions",
+  "p": "The wolf with jaw dropped in total shock, eyes wide open, hands on cheeks."
+ },
+ "L005": {
+  "theme": "emotions",
+  "p": "The wolf thinking deeply with a paw on his chin, thought bubbles with question marks floating."
+ },
+ "L006": {
+  "theme": "emotions",
+  "p": "The wolf confused, scratching his head, surrounded by tangled arrows."
+ },
+ "L007": {
+  "theme": "emotions",
+  "p": "The wolf laughing out loud holding his belly, tears of joy."
+ },
+ "L008": {
+  "theme": "emotions",
+  "p": "The wolf worried, biting his nails, looking at his phone."
+ },
+ "L009": {
+  "theme": "emotions",
+  "p": "The wolf sleeping peacefully in a hammock between two palm trees."
+ },
+ "L010": {
+  "theme": "emotions",
+  "p": "The wolf meditating cross-legged on a mountain top at sunrise, calm."
+ },
+ "L011": {
+  "theme": "emotions",
+  "p": "The wolf does a facepalm, shaking his head in disbelief."
+ },
+ "L012": {
+  "theme": "emotions",
+  "p": "The wolf gives a big confident thumbs up, winking."
+ },
+ "L013": {
+  "theme": "emotions",
+  "p": "The wolf shrugs with both palms up, uncertain smile."
+ },
+ "L014": {
+  "theme": "emotions",
+  "p": "The wolf counting a thick stack of banknotes at a desk, focused."
+ },
+ "L015": {
+  "theme": "emotions",
+  "p": "The wolf sweating nervously, loosening his tie, hot red background."
+ },
+ "L016": {
+  "theme": "emotions",
+  "p": "The wolf standing proudly with hands on hips, cape fluttering behind him like a hero."
+ },
+ "L017": {
+  "theme": "emotions",
+  "p": "The wolf surprised by a gift box popping open with sparkles."
+ },
+ "L018": {
+  "theme": "emotions",
+  "p": "The wolf yawning, bored, chin on his hand at a desk."
+ },
+ "L019": {
+  "theme": "emotions",
+  "p": "The wolf determined, rolling up his sleeves, ready to work."
+ },
+ "L020": {
+  "theme": "emotions",
+  "p": "The wolf relieved, wiping his forehead and exhaling, sunny sky."
+ },
+ "L021": {
+  "theme": "office",
+  "p": "The wolf works on a laptop at a modern glass desk, plants and big windows."
+ },
+ "L022": {
+  "theme": "office",
+  "p": "The wolf teaches in front of a big whiteboard full of arrows and simple drawings."
+ },
+ "L023": {
+  "theme": "office",
+  "p": "The wolf presents to a meeting room full of colleagues with a projector screen."
+ },
+ "L024": {
+  "theme": "office",
+  "p": "The wolf on a phone call, standing by a big window overlooking the city."
+ },
+ "L025": {
+  "theme": "office",
+  "p": "The wolf reads a big newspaper in a leather armchair with a coffee."
+ },
+ "L026": {
+  "theme": "office",
+  "p": "The wolf writes notes in a notebook with a fountain pen, focused."
+ },
+ "L027": {
+  "theme": "office",
+  "p": "The wolf takes a coffee break in a cozy office kitchen."
+ },
+ "L028": {
+  "theme": "office",
+  "p": "The wolf looks out of a skyscraper window at the city at night, thoughtful."
+ },
+ "L029": {
+  "theme": "office",
+  "p": "The wolf works late at night under a desk lamp, empty office around him."
+ },
+ "L030": {
+  "theme": "office",
+  "p": "The wolf on a video call on a big monitor with several small faces."
+ },
+ "L031": {
+  "theme": "office",
+  "p": "The wolf uses a big desk calculator, paper roll coming out."
+ },
+ "L032": {
+  "theme": "office",
+  "p": "The wolf types very fast on a keyboard, motion lines, glowing screen."
+ },
+ "L033": {
+  "theme": "office",
+  "p": "The wolf organizes colorful folders on a big shelf."
+ },
+ "L034": {
+  "theme": "office",
+  "p": "The wolf at a standing desk with three monitors, morning light."
+ },
+ "L035": {
+  "theme": "office",
+  "p": "The wolf studies in a quiet library between tall bookshelves."
+ },
+ "L036": {
+  "theme": "stocks",
+  "p": "A busy stock exchange trading floor with traders and giant screens, the wolf in the middle."
+ },
+ "L037": {
+  "theme": "stocks",
+  "p": "The wolf watches a long glowing ticker tape of prices running across a building facade."
+ },
+ "L038": {
+  "theme": "stocks",
+  "p": "A big bronze bull statue on a city street, the wolf leaning on it confidently."
+ },
+ "L039": {
+  "theme": "stocks",
+  "p": "A big bronze bear statue in a gloomy street, the wolf looking at it cautiously."
+ },
+ "L040": {
+  "theme": "stocks",
+  "p": "A classic financial district street with tall old buildings and flags, the wolf walking with a briefcase."
+ },
+ "L041": {
+  "theme": "stocks",
+  "p": "The wolf in front of a wall of trading screens all showing green rising charts, celebrating."
+ },
+ "L042": {
+  "theme": "stocks",
+  "p": "The wolf in front of a wall of trading screens all showing red falling charts, worried."
+ },
+ "L043": {
+  "theme": "stocks",
+  "p": "The wolf rings a big brass opening bell on a balcony above a trading floor."
+ },
+ "L044": {
+  "theme": "stocks",
+  "p": "A shiny modern company headquarters tower with a glass facade, the wolf in front holding a stock certificate."
+ },
+ "L045": {
+  "theme": "stocks",
+  "p": "The wolf visits a modern factory with robotic arms building products."
+ },
+ "L046": {
+  "theme": "stocks",
+  "p": "The wolf at a shareholders meeting in a big auditorium raising his hand to ask a question."
+ },
+ "L047": {
+  "theme": "stocks",
+  "p": "The wolf reads a thick annual report with charts and a highlighter."
+ },
+ "L048": {
+  "theme": "stocks",
+  "p": "The wolf opens an envelope and gold coins pour out like a dividend payment."
+ },
+ "L049": {
+  "theme": "stocks",
+  "p": "The wolf holds an elegant old stock certificate with a ribbon, vintage style."
+ },
+ "L050": {
+  "theme": "stocks",
+  "p": "The wolf buys shares on a smartphone trading app, glowing green button."
+ },
+ "L051": {
+  "theme": "stocks",
+  "p": "A huge green arrow chart climbing up a skyscraper, the wolf riding on top of it."
+ },
+ "L052": {
+  "theme": "stocks",
+  "p": "A huge red arrow chart crashing down through the floor, the wolf holding on to it."
+ },
+ "L053": {
+  "theme": "stocks",
+  "p": "A giant scoreboard of colorful tiles going up and down, the wolf watching with binoculars."
+ },
+ "L054": {
+  "theme": "stocks",
+  "p": "A rocket shaped like a company building launching on its first day, confetti, the wolf watching."
+ },
+ "L055": {
+  "theme": "stocks",
+  "p": "A crowd of panicking traders throwing papers in the air on a trading floor, the wolf calm in the middle."
+ },
+ "L056": {
+  "theme": "gold",
+  "p": "The wolf stands next to a huge neat stack of shiny gold bars in a vault."
+ },
+ "L057": {
+  "theme": "gold",
+  "p": "A massive underground gold vault with rows of gold bars on shelves, the wolf walking with a flashlight."
+ },
+ "L058": {
+  "theme": "gold",
+  "p": "The wolf in a helmet with a headlamp inside a gold mine, gold veins in the rock."
+ },
+ "L059": {
+  "theme": "gold",
+  "p": "The wolf pans for gold in a river, a gold nugget sparkling in the pan."
+ },
+ "L060": {
+  "theme": "gold",
+  "p": "The wolf opens a treasure chest overflowing with gold coins and jewels."
+ },
+ "L061": {
+  "theme": "gold",
+  "p": "A jeweler weighs a small gold bar on a precise scale, the wolf watching closely."
+ },
+ "L062": {
+  "theme": "gold",
+  "p": "A golden chart arrow climbing over a pile of gold bars, the wolf smiling."
+ },
+ "L063": {
+  "theme": "gold",
+  "p": "Close-up of the wolf holding a heavy shiny gold bar in both paws, admiring it."
+ },
+ "L064": {
+  "theme": "gold",
+  "p": "A balance scale with a gold bar on one side and a tall pile of paper money on the other, the wolf comparing."
+ },
+ "L065": {
+  "theme": "gold",
+  "p": "The wolf holds a big gold nugget up to the light with tweezers, amazed."
+ },
+ "L066": {
+  "theme": "gold",
+  "p": "Molten gold being poured into a mold in a glowing refinery, the wolf in a protective apron."
+ },
+ "L067": {
+  "theme": "gold",
+  "p": "Gold dust sparkling in the wolf's open paws, magical light."
+ },
+ "L068": {
+  "theme": "metals",
+  "p": "The wolf stands next to a neat stack of shiny silver bars."
+ },
+ "L069": {
+  "theme": "metals",
+  "p": "A pile of shiny silver coins on a velvet cloth, the wolf picking one up."
+ },
+ "L070": {
+  "theme": "metals",
+  "p": "Solar panels and electronics with glowing silver threads, the wolf explaining with a pointer."
+ },
+ "L071": {
+  "theme": "metals",
+  "p": "Big spools of copper wire and copper pipes in a warehouse, the wolf inspecting them."
+ },
+ "L072": {
+  "theme": "metals",
+  "p": "A huge open-pit copper mine with giant trucks, the wolf on a lookout platform."
+ },
+ "L073": {
+  "theme": "metals",
+  "p": "A battery factory with rows of glowing lithium cells, the wolf in a lab coat."
+ },
+ "L074": {
+  "theme": "metals",
+  "p": "The wolf charges an electric car at a modern charging station, city at night."
+ },
+ "L075": {
+  "theme": "metals",
+  "p": "The wolf holds a handful of strange colorful rare earth minerals in a mine."
+ },
+ "L076": {
+  "theme": "metals",
+  "p": "The wolf looks at a car's shiny catalytic converter in a garage, holding a platinum coin."
+ },
+ "L077": {
+  "theme": "metals",
+  "p": "A glowing steel mill with sparks and molten metal, the wolf in a hard hat."
+ },
+ "L078": {
+  "theme": "metals",
+  "p": "A mountain of aluminum cans at a recycling plant, the wolf on top."
+ },
+ "L079": {
+  "theme": "metals",
+  "p": "A metals trading board with different shiny metal bars displayed, the wolf choosing one."
+ },
+ "L080": {
+  "theme": "energy",
+  "p": "A big oil rig in the middle of a stormy sea, the wolf on the helicopter pad."
+ },
+ "L081": {
+  "theme": "energy",
+  "p": "Rows of black oil barrels in a depot, the wolf counting them with a clipboard."
+ },
+ "L082": {
+  "theme": "energy",
+  "p": "The wolf at a gas station shocked by a huge glowing price sign without readable numbers."
+ },
+ "L083": {
+  "theme": "energy",
+  "p": "An oil refinery glowing at night with towers and flames, the wolf watching from a hill."
+ },
+ "L084": {
+  "theme": "energy",
+  "p": "A long oil pipeline crossing a desert at sunset, the wolf walking beside it."
+ },
+ "L085": {
+  "theme": "energy",
+  "p": "A huge solar farm in the sun, the wolf walking between the panels."
+ },
+ "L086": {
+  "theme": "energy",
+  "p": "Giant wind turbines on green hills, the wolf holding his hat in the wind."
+ },
+ "L087": {
+  "theme": "energy",
+  "p": "A nuclear power plant with cooling towers, the wolf in a safety helmet."
+ },
+ "L088": {
+  "theme": "energy",
+  "p": "A city at night full of lights connected by power lines, the wolf on a rooftop."
+ },
+ "L089": {
+  "theme": "energy",
+  "p": "The wolf at home wrapped in a blanket next to a radiator, looking at an energy bill."
+ },
+ "L090": {
+  "theme": "energy",
+  "p": "A control room of an electric grid with many screens, the wolf operating it."
+ },
+ "L091": {
+  "theme": "energy",
+  "p": "A giant oil tanker ship on the ocean, the wolf on the bow."
+ },
+ "L092": {
+  "theme": "realestate",
+  "p": "The wolf proudly stands in front of a nice house with a garden, holding a sign without text."
+ },
+ "L093": {
+  "theme": "realestate",
+  "p": "A modern apartment building with balconies, the wolf waving from one balcony."
+ },
+ "L094": {
+  "theme": "realestate",
+  "p": "A real estate agent hands house keys to the wolf, both smiling."
+ },
+ "L095": {
+  "theme": "realestate",
+  "p": "The wolf at a desk signing a thick pile of mortgage papers, worried face."
+ },
+ "L096": {
+  "theme": "realestate",
+  "p": "A construction site with cranes and a building rising, the wolf in a hard hat."
+ },
+ "L097": {
+  "theme": "realestate",
+  "p": "The wolf as a landlord receiving rent coins from a smiling tenant at a door."
+ },
+ "L098": {
+  "theme": "realestate",
+  "p": "A small house on a rising green arrow, the wolf holding onto the roof."
+ },
+ "L099": {
+  "theme": "realestate",
+  "p": "An empty office building with dark windows, the wolf looking at it from the street."
+ },
+ "L100": {
+  "theme": "realestate",
+  "p": "The wolf looks at houses through a big shop window with glowing house pictures."
+ },
+ "L101": {
+  "theme": "realestate",
+  "p": "A miniature model house on a desk next to a calculator and coins, the wolf planning."
+ },
+ "L102": {
+  "theme": "banking",
+  "p": "A huge round bank vault door slowly opening, golden light inside, the wolf amazed."
+ },
+ "L103": {
+  "theme": "banking",
+  "p": "The wolf withdraws money from a modern ATM at night."
+ },
+ "L104": {
+  "theme": "banking",
+  "p": "The wolf drops a coin into a cute pink piggy bank on a table."
+ },
+ "L105": {
+  "theme": "banking",
+  "p": "Big stacks of banknotes on a table, the wolf sitting behind them."
+ },
+ "L106": {
+  "theme": "banking",
+  "p": "A glass jar slowly filling with coins on a windowsill, the wolf watching."
+ },
+ "L107": {
+  "theme": "banking",
+  "p": "The wolf juggles several credit cards, looking stressed."
+ },
+ "L108": {
+  "theme": "banking",
+  "p": "The wolf reads a long loan contract with a magnifying glass, frowning."
+ },
+ "L109": {
+  "theme": "banking",
+  "p": "A small tree with coins as leaves growing in a pot, the wolf watering it."
+ },
+ "L110": {
+  "theme": "banking",
+  "p": "A big printing press spitting out piles of paper money, the wolf shocked."
+ },
+ "L111": {
+  "theme": "banking",
+  "p": "A grand central bank building with columns and a giant clock, the wolf on the steps."
+ },
+ "L112": {
+  "theme": "banking",
+  "p": "A paper banknote shrinking in the wolf's hands while prices rise around him."
+ },
+ "L113": {
+  "theme": "banking",
+  "p": "The wolf opens an empty wallet, a moth flies out, funny."
+ },
+ "L114": {
+  "theme": "banking",
+  "p": "The wolf receives a paycheck envelope from his boss, happy."
+ },
+ "L115": {
+  "theme": "banking",
+  "p": "The wolf at a bank counter opening a savings account, a smiling banker."
+ },
+ "L116": {
+  "theme": "banking",
+  "p": "The wolf writes a monthly budget in a notebook with categories and coins."
+ },
+ "L117": {
+  "theme": "economy",
+  "p": "A growing city skyline with cranes and new towers at sunrise, the wolf on a hill."
+ },
+ "L118": {
+  "theme": "economy",
+  "p": "Empty city streets with closed shops and grey sky, the wolf walking alone."
+ },
+ "L119": {
+  "theme": "economy",
+  "p": "A long line of people waiting outside an office building, the wolf in the line."
+ },
+ "L120": {
+  "theme": "economy",
+  "p": "The wolf pushes a shopping cart in a supermarket, shocked by tall price tags without numbers."
+ },
+ "L121": {
+  "theme": "economy",
+  "p": "Busy supermarket aisles full of products, the wolf choosing items carefully."
+ },
+ "L122": {
+  "theme": "economy",
+  "p": "Factory workers on an assembly line, the wolf as a manager with a clipboard."
+ },
+ "L123": {
+  "theme": "economy",
+  "p": "A huge port full of colorful shipping containers and cranes, the wolf on a container."
+ },
+ "L124": {
+  "theme": "economy",
+  "p": "A giant cargo ship sailing across the ocean loaded with containers."
+ },
+ "L125": {
+  "theme": "economy",
+  "p": "A world map with glowing lines of money flowing between continents, the wolf pointing."
+ },
+ "L126": {
+  "theme": "economy",
+  "p": "A government parliament building with flags, the wolf on the square in front."
+ },
+ "L127": {
+  "theme": "economy",
+  "p": "Politicians at podiums in a debate, the wolf in the audience taking notes."
+ },
+ "L128": {
+  "theme": "economy",
+  "p": "A stack of newspapers with dramatic front pages without readable text, the wolf reading one."
+ },
+ "L129": {
+  "theme": "economy",
+  "p": "A giant balloon labeled with a price tag inflating over a city, the wolf holding the string."
+ },
+ "L130": {
+  "theme": "economy",
+  "p": "A big control dial like an interest rate knob being turned by a giant hand, the wolf watching."
+ },
+ "L131": {
+  "theme": "economy",
+  "p": "Bars of a growing bar chart made of buildings, the wolf climbing to the top."
+ },
+ "L132": {
+  "theme": "crypto",
+  "p": "Close-up of a shiny golden Bitcoin coin spinning in the air, sparkles."
+ },
+ "L133": {
+  "theme": "crypto",
+  "p": "A glowing silver-blue Ethereum diamond floating above the wolf's open paw."
+ },
+ "L134": {
+  "theme": "crypto",
+  "p": "A colorful pile of many different crypto coins on a table, the wolf sorting them."
+ },
+ "L135": {
+  "theme": "crypto",
+  "p": "The wolf holds a phone with a glowing crypto wallet app, coins hovering above the screen."
+ },
+ "L136": {
+  "theme": "crypto",
+  "p": "The wolf plugs a small hardware wallet into a laptop, careful."
+ },
+ "L137": {
+  "theme": "crypto",
+  "p": "A chain of glowing transparent cubes floating through a digital space."
+ },
+ "L138": {
+  "theme": "crypto",
+  "p": "A room full of crypto mining rigs with blinking lights and fans."
+ },
+ "L139": {
+  "theme": "crypto",
+  "p": "The wolf uses a crypto exchange app with green and red buttons, focused."
+ },
+ "L140": {
+  "theme": "crypto",
+  "p": "A crypto chart climbing to the moon, the wolf flying beside it with a jetpack."
+ },
+ "L141": {
+  "theme": "crypto",
+  "p": "A crypto chart diving underwater, the wolf in a diving suit following it."
+ },
+ "L142": {
+  "theme": "crypto",
+  "p": "A futuristic digital vault made of light protecting golden coins, the wolf as guard."
+ },
+ "L143": {
+  "theme": "crypto",
+  "p": "Glowing keys and padlocks floating around a crypto coin."
+ },
+ "L144": {
+  "theme": "crypto",
+  "p": "The wolf in a futuristic digital art gallery with glowing frames."
+ },
+ "L145": {
+  "theme": "crypto",
+  "p": "Transparent glowing machines exchanging coins automatically, no humans, the wolf observing."
+ },
+ "L146": {
+  "theme": "crypto",
+  "p": "A green coin with a dollar sign standing perfectly still on a pedestal while other coins bounce."
+ },
+ "L147": {
+  "theme": "crypto",
+  "p": "A new glowing token being launched from a small rocket pad, a crowd watching."
+ },
+ "L148": {
+  "theme": "crypto",
+  "p": "The wolf at a crowded crypto conference with a big stage and lights."
+ },
+ "L149": {
+  "theme": "crypto",
+  "p": "The wolf uses a crypto ATM machine on a city street at night."
+ },
+ "L150": {
+  "theme": "crypto",
+  "p": "The wolf pays at a shop by scanning a QR code with his phone."
+ },
+ "L151": {
+  "theme": "crypto",
+  "p": "A laptop showing a glowing coin floating above the keyboard, the wolf typing."
+ },
+ "L152": {
+  "theme": "crypto",
+  "p": "Gold coins raining from the sky over a neon city, the wolf with an umbrella upside down catching them."
+ },
+ "L153": {
+  "theme": "crypto",
+  "p": "A rocket with a coin on top launching toward the moon, the wolf saluting."
+ },
+ "L154": {
+  "theme": "crypto",
+  "p": "A network of glowing satellites connecting the globe with lines of light."
+ },
+ "L155": {
+  "theme": "crypto",
+  "p": "A futuristic cyberpunk city with neon coin symbols on the buildings, the wolf on a rooftop."
+ },
+ "L156": {
+  "theme": "crypto",
+  "p": "A golden Bitcoin coin resting next to gold bars in a vault, digital and physical gold together."
+ },
+ "L157": {
+  "theme": "security",
+  "p": "A big glowing blue shield with a padlock protecting the wolf's phone."
+ },
+ "L158": {
+  "theme": "security",
+  "p": "A shadowy hooded hacker in front of many screens in a dark room."
+ },
+ "L159": {
+  "theme": "security",
+  "p": "A fishing hook coming out of an email envelope on a laptop screen, the wolf pulling back."
+ },
+ "L160": {
+  "theme": "security",
+  "p": "A digital safe with a combination lock, the wolf entering a code."
+ },
+ "L161": {
+  "theme": "security",
+  "p": "The wolf confirms a login with a code on his phone, a green check mark glowing."
+ },
+ "L162": {
+  "theme": "security",
+  "p": "A red siren light flashing on the wolf's desk, alarm, danger."
+ },
+ "L163": {
+  "theme": "security",
+  "p": "The wolf as a detective with a trench coat and magnifying glass examining a suspicious coin."
+ },
+ "L164": {
+  "theme": "security",
+  "p": "A fake website on a laptop screen wrapped in yellow police tape, the wolf pointing at it."
+ },
+ "L165": {
+  "theme": "security",
+  "p": "A suspicious envelope with a skull sticker in the wolf's mailbox."
+ },
+ "L166": {
+  "theme": "security",
+  "p": "A wall of fire protecting a glowing server from small attacking bugs."
+ },
+ "L167": {
+  "theme": "security",
+  "p": "A broken padlock lying on the floor, the wolf looking worried."
+ },
+ "L168": {
+  "theme": "security",
+  "p": "The wolf opens a safe deposit box in a bank vault."
+ },
+ "L169": {
+  "theme": "security",
+  "p": "The wolf scans his fingerprint on a glowing scanner to open a door."
+ },
+ "L170": {
+  "theme": "security",
+  "p": "Security cameras watching a vault, the wolf giving a thumbs up to the camera."
+ },
+ "L171": {
+  "theme": "security",
+  "p": "The wolf saves a backup to a glowing cloud above his laptop."
+ },
+ "L172": {
+  "theme": "psychology",
+  "p": "A tiny angel and a tiny devil on the wolf's shoulders whispering to him."
+ },
+ "L173": {
+  "theme": "psychology",
+  "p": "The wolf on a roller coaster going up and down, faces of joy and fear."
+ },
+ "L174": {
+  "theme": "psychology",
+  "p": "A herd of sheep running in the same direction, the wolf walking the opposite way."
+ },
+ "L175": {
+  "theme": "psychology",
+  "p": "A crowd of people running toward a shiny coin, the wolf watching from the side."
+ },
+ "L176": {
+  "theme": "psychology",
+  "p": "The wolf looks at himself in a mirror, his reflection looks wiser."
+ },
+ "L177": {
+  "theme": "psychology",
+  "p": "A glowing brain floating above the wolf's head with lightning sparks."
+ },
+ "L178": {
+  "theme": "psychology",
+  "p": "The wolf playing chess, thinking about his next move."
+ },
+ "L179": {
+  "theme": "psychology",
+  "p": "A balance scale with a flaming greed symbol on one side and a trembling fear ghost on the other."
+ },
+ "L180": {
+  "theme": "psychology",
+  "p": "The wolf waits patiently on a bench at a bus stop, reading a book."
+ },
+ "L181": {
+  "theme": "psychology",
+  "p": "A casino slot machine with flashing lights, the wolf walking away from it."
+ },
+ "L182": {
+  "theme": "psychology",
+  "p": "The wolf holding a crumpled lottery ticket, disappointed."
+ },
+ "L183": {
+  "theme": "psychology",
+  "p": "A fortune teller with a crystal ball, the wolf rolling his eyes."
+ },
+ "L184": {
+  "theme": "psychology",
+  "p": "A big hourglass with sand running, the wolf sitting next to it calmly."
+ },
+ "L185": {
+  "theme": "psychology",
+  "p": "The wolf lost in a hedge maze, looking for the exit."
+ },
+ "L186": {
+  "theme": "psychology",
+  "p": "The wolf standing at a crossroads with many signposts pointing in different directions."
+ },
+ "L187": {
+  "theme": "learning",
+  "p": "The wolf as a teacher in a classroom, students raising their hands."
+ },
+ "L188": {
+  "theme": "learning",
+  "p": "A blackboard covered with simple math and coin drawings, the wolf with chalk."
+ },
+ "L189": {
+  "theme": "learning",
+  "p": "A tall stack of books with the wolf reading on top of it."
+ },
+ "L190": {
+  "theme": "learning",
+  "p": "The wolf in a graduation cap and gown, tossing the cap in the air."
+ },
+ "L191": {
+  "theme": "learning",
+  "p": "The wolf looks through a big magnifying glass at a tiny coin with details."
+ },
+ "L192": {
+  "theme": "learning",
+  "p": "A long checklist on a clipboard with green ticks, the wolf ticking the last box."
+ },
+ "L193": {
+  "theme": "learning",
+  "p": "A big glowing lightbulb above the wolf's head, eureka moment."
+ },
+ "L194": {
+  "theme": "learning",
+  "p": "The wolf assembles big puzzle pieces into a complete picture of a coin."
+ },
+ "L195": {
+  "theme": "learning",
+  "p": "The wolf reads an old treasure map with a compass on a wooden table."
+ },
+ "L196": {
+  "theme": "learning",
+  "p": "The wolf climbs a tall ladder toward a shining star."
+ },
+ "L197": {
+  "theme": "learning",
+  "p": "The wolf draws a step-by-step plan on a big notebook page."
+ },
+ "L198": {
+  "theme": "learning",
+  "p": "A wooden signpost with many arrows at a forest crossroads, the wolf reading it."
+ },
+ "L199": {
+  "theme": "time",
+  "p": "Calendar pages flying away in the wind, the wolf watching them."
+ },
+ "L200": {
+  "theme": "time",
+  "p": "A giant clock tower, the wolf checking his golden watch below it."
+ },
+ "L201": {
+  "theme": "time",
+  "p": "A small seed growing into a big tree full of gold coins over time, time-lapse style."
+ },
+ "L202": {
+  "theme": "time",
+  "p": "An old grey-bearded wolf in a rocking chair smiling, counting a big pile of coins, cozy home."
+ },
+ "L203": {
+  "theme": "time",
+  "p": "A snowball made of coins rolling down a hill, growing bigger."
+ },
+ "L204": {
+  "theme": "time",
+  "p": "A very long staircase reaching above the clouds, the wolf climbing step by step."
+ },
+ "L205": {
+  "theme": "time",
+  "p": "A long straight road going to the horizon at sunrise, the wolf walking on it with a backpack."
+ },
+ "L206": {
+  "theme": "time",
+  "p": "The wolf planting small seeds in a garden with a watering can."
+ },
+ "L207": {
+  "theme": "time",
+  "p": "The wolf harvesting golden fruits from a tall tree into a basket."
+ },
+ "L208": {
+  "theme": "time",
+  "p": "A beautiful sunrise over the sea, the wolf with a coffee on a balcony, new day."
+ },
+ "L209": {
+  "theme": "world",
+  "p": "A big glowing globe spinning, the wolf pointing at different countries."
+ },
+ "L210": {
+  "theme": "world",
+  "p": "The wolf looks out of an airplane window at clouds, traveling."
+ },
+ "L211": {
+  "theme": "world",
+  "p": "The wolf in Tokyo at night with neon signs and crowds."
+ },
+ "L212": {
+  "theme": "world",
+  "p": "The wolf in London near a red double-decker bus and a big clock tower."
+ },
+ "L213": {
+  "theme": "world",
+  "p": "The wolf in New York with yellow taxis and tall skyscrapers."
+ },
+ "L214": {
+  "theme": "world",
+  "p": "The wolf in Frankfurt with modern bank towers by the river."
+ },
+ "L215": {
+  "theme": "world",
+  "p": "The wolf at a currency exchange counter holding different banknotes."
+ },
+ "L216": {
+  "theme": "world",
+  "p": "The wolf shows his passport at an airport gate."
+ },
+ "L217": {
+  "theme": "world",
+  "p": "A colorful world map on a wall with pins and strings, the wolf studying it."
+ },
+ "L218": {
+  "theme": "world",
+  "p": "The wolf in Dubai with very tall futuristic towers in the desert sun."
+ },
+ "L219": {
+  "theme": "tech",
+  "p": "A friendly humanoid robot shaking hands with the wolf in a futuristic lab."
+ },
+ "L220": {
+  "theme": "tech",
+  "p": "A huge data center with endless rows of blinking servers, the wolf walking through."
+ },
+ "L221": {
+  "theme": "tech",
+  "p": "A clean room chip factory with workers in white suits, the wolf in a white suit too."
+ },
+ "L222": {
+  "theme": "tech",
+  "p": "The wolf unboxes a brand new smartphone, excited."
+ },
+ "L223": {
+  "theme": "tech",
+  "p": "A factory line building electric cars with robotic arms, the wolf supervising."
+ },
+ "L224": {
+  "theme": "tech",
+  "p": "Colorful social media style icons floating in a cloud above a city."
+ },
+ "L225": {
+  "theme": "tech",
+  "p": "Mountains of delivery boxes in a giant warehouse, the wolf on a forklift."
+ },
+ "L226": {
+  "theme": "tech",
+  "p": "The wolf on a sofa watching a streaming show on a big TV with popcorn."
+ },
+ "L227": {
+  "theme": "tech",
+  "p": "Warehouse robots moving shelves automatically, the wolf amazed."
+ },
+ "L228": {
+  "theme": "tech",
+  "p": "Glowing data clouds connected to many devices, the wolf holding a tablet."
+ },
+ "L229": {
+  "theme": "tech",
+  "p": "A shiny silicon wafer with rainbow reflections held by the wolf with gloves."
+ },
+ "L230": {
+  "theme": "tech",
+  "p": "The wolf codes on two screens full of colorful code, hacker style but friendly."
+ },
+ "L231": {
+  "theme": "misc",
+  "p": "The wolf relaxes on a luxury yacht deck with sunglasses, blue sea."
+ },
+ "L232": {
+  "theme": "misc",
+  "p": "The wolf works on a laptop on a sunny beach under an umbrella."
+ },
+ "L233": {
+  "theme": "misc",
+  "p": "The wolf drives a shiny red sports car on a coastal road."
+ },
+ "L234": {
+  "theme": "misc",
+  "p": "The wolf stands on a mountain peak with a flag, victorious."
+ },
+ "L235": {
+  "theme": "misc",
+  "p": "The wolf walks in the rain with an umbrella through a neon city."
+ },
+ "L236": {
+  "theme": "misc",
+  "p": "The wolf in a winter coat in a snowy city, holding a warm drink."
+ },
+ "L237": {
+  "theme": "misc",
+  "p": "The wolf fishes calmly from a small boat on a quiet lake at dawn."
+ },
+ "L238": {
+  "theme": "misc",
+  "p": "The wolf gardens happily, taking care of plants."
+ },
+ "L239": {
+  "theme": "misc",
+  "p": "The wolf looks out of a train window at a passing landscape."
+ },
+ "L240": {
+  "theme": "misc",
+  "p": "The wolf waits at an airport with a suitcase, looking at departure screens without readable text."
+ },
+ "L241": {
+  "theme": "misc",
+  "p": "The wolf watches the sunset from a rooftop, the city lights turning on."
+ },
+ "L242": {
+  "theme": "misc",
+  "p": "The wolf in a glass elevator going up the outside of a skyscraper, happy."
+ },
+ "L243": {
+  "theme": "misc",
+  "p": "The wolf in a glass elevator going down fast, scared."
+ },
+ "L244": {
+  "theme": "misc",
+  "p": "The wolf walks across a long suspension bridge at sunrise."
+ },
+ "L245": {
+  "theme": "misc",
+  "p": "The wolf builds a house of bricks, strong and patient."
+ },
+ "L246": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer from a luxury penthouse with a city view at night."
+ },
+ "L247": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer while sitting on a pile of gold coins."
+ },
+ "L248": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer in front of a giant green rising chart."
+ },
+ "L249": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer from a sports car window, sunglasses on."
+ },
+ "L250": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer on a stage with spotlights and confetti."
+ },
+ "L251": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer from a classroom in front of a blackboard."
+ },
+ "L252": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer standing in a bank vault full of gold."
+ },
+ "L253": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer with a smartphone in his other hand, neon city."
+ },
+ "L254": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer from a private jet seat, clouds outside the window."
+ },
+ "L255": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer in a cozy library with a book under his arm."
+ },
+ "L256": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer from the top of a mountain at sunrise."
+ },
+ "L257": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer on a busy trading floor, screens behind him."
+ },
+ "L258": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer from a beach chair with a laptop."
+ },
+ "L259": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer in front of a bitcoin-shaped neon sign."
+ },
+ "L260": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer holding a gold bar in his other paw."
+ },
+ "L261": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer under an umbrella in a rainy neon street."
+ },
+ "L262": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer from behind a big desk in a luxury office."
+ },
+ "L263": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer with a coffee cup in his other paw, morning cafe."
+ },
+ "L264": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer in front of a futuristic city skyline at dusk."
+ },
+ "L265": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer from a podcast studio with a microphone."
+ },
+ "L266": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer on a rooftop with fireworks in the sky."
+ },
+ "L267": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer next to a huge golden trophy."
+ },
+ "L268": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer from a train window, landscape passing."
+ },
+ "L269": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer in a snowy street holding a warm drink."
+ },
+ "L270": {
+  "theme": "cta",
+  "p": "The wolf points at the viewer while walking on a stock exchange street with flags."
+ }
+}

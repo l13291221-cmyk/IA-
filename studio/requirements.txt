@@ -1,0 +1,5 @@
+edge-tts>=7
+playwright>=1.40
+numpy
+pillow
+requests

@@ -1,0 +1,91 @@
+# COPIE IN ITALIANO dei reel: solo ANTEPRIMA per il titolare, MAI pubblicate.
+# Stesse immagini e stesso montaggio dei video inglesi, testi da studio/series/plan_it.json,
+# voce italiana. Finiscono nella release "anteprima-it" (non "bot-reels…": il sito non le
+# pubblica, le mostra solo accanto all'originale in Amministrazione → Guarda i video).
+# Si lancia a mano (o da Claude) con l'elenco dei gruppi, es. ["2,3,4", "5,6,p010"].
+name: Copie in italiano (anteprima)
+
+on:
+  workflow_dispatch:
+    inputs:
+      chunks:
+        description: 'Gruppi di video da montare in italiano (JSON), es. ["2,3,4", "5,6,p010"]'
+        required: true
+      maxsec:
+        description: "Durata massima in secondi (vuoto = nessuna): la voce va un po' più veloce se serve"
+        required: false
+        default: "35"
+      hook:
+        description: "1 = inizio col gancio (il lupo dice subito la prima frase, titolo scritto in alto); 0 = vecchio inizio"
+        required: false
+        default: "1"
+
+permissions:
+  contents: write
+
+jobs:
+  monta:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        keys: ${{ fromJSON(inputs.chunks) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            studio
+          filter: blob:none
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Strumenti
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg > /dev/null
+          pip install -q edge-tts numpy pillow requests
+
+      - name: Monta il gruppo in italiano
+        env:
+          KEYS: ${{ matrix.keys }}
+          MAXSEC: ${{ inputs.maxsec }}
+          HOOK: ${{ inputs.hook }}
+          REEL_LANG: it
+        run: python studio/batch_render.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: it-${{ strategy.job-index }}
+          path: studio/work/out/*.mp4
+          retention-days: 3
+          if-no-files-found: warn
+
+  carica:
+    needs: monta
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: nuovi
+          pattern: it-*
+          merge-multiple: true
+
+      - name: Metti le copie nella release "anteprima-it"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          ls nuovi/*.mp4 > /dev/null 2>&1 || { echo "nessun video montato"; exit 1; }
+          echo "copie montate: $(ls nuovi/*.mp4 | wc -l)"
+          gh release view anteprima-it -R "$REPO" > /dev/null 2>&1 || \
+            gh release create anteprima-it -R "$REPO" --title "Anteprima in italiano (non pubblicata)" \
+              --notes "Copie in italiano dei reel, solo da guardare nell'anteprima del sito. Non vengono pubblicate." \
+              --latest=false
+          for f in nuovi/*.mp4; do
+            for i in 1 2 3; do gh release upload anteprima-it "$f" -R "$REPO" --clobber && break; sleep 10; done
+          done

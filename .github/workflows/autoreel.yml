@@ -1,0 +1,76 @@
+# Bot dei reel: ogni giorno crea UN nuovo reel con la libreria di immagini (studio/library)
+# e lo carica nelle Release del repository (bot-reels-1, bot-reels-2, ...), che non pesano
+# sullo spazio del repository. Copione scritto da un'AI GRATUITA SENZA CHIAVI: GitHub Models
+# (inclusa in GitHub Actions) o Pollinations. Gemini/Mistral solo se un giorno metti le chiavi.
+# Si può lanciare anche a mano: Actions -> Reel automatico -> Run workflow.
+name: Reel automatico
+
+on:
+  schedule:
+    - cron: "23 4 * * *"      # ogni giorno alle 04:23 UTC: il reel del giorno
+    - cron: "23 16 * * *"     # 16:23 UTC: il mercoledì il video su VcriptoV (+ la domenica e un secondo
+                              # reel al giorno SOLO nell'ultimo mese del ciclo di 14 mesi)
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: "Cosa creare"
+        type: choice
+        options: [serie, vcriptov, controllo, rifai, prova-ai]
+        default: serie
+      keys:
+        description: "Solo per 'rifai': i video del bot da rifare con lo stesso argomento, es. 391,392,v001"
+        required: false
+        default: ""
+
+permissions:
+  contents: write     # salvare lo stato e caricare i video nelle Release
+  models: read        # AI gratuita di GitHub (GitHub Models), senza chiavi
+
+concurrency:
+  group: autoreel
+  cancel-in-progress: false
+
+jobs:
+  reel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            studio
+          filter: blob:none
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Strumenti
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg > /dev/null
+          pip install -q edge-tts numpy pillow requests
+
+      - name: Crea il reel e caricalo nelle Release
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+          LLM7_API_KEY: ${{ secrets.LLM7_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EXTRA_RUN: ${{ github.event.schedule == '23 16 * * *' }}
+          KIND: ${{ github.event.inputs.kind }}
+          KEYS: ${{ github.event.inputs.keys }}
+        run: python studio/autoreel.py
+
+      - name: Salva lo stato del bot
+        run: |
+          git config user.name "vcriptov-reel-bot"
+          git config user.email "vcriptov-reel-bot@users.noreply.github.com"
+          git add --sparse studio/bot
+          if git diff --cached --quiet; then echo "niente da salvare"; exit 0; fi
+          git commit -q -m "Reel automatico: $(cat studio/bot/last.txt)"
+          for i in 1 2 3 4; do
+            git pull -q --rebase origin main && git push -q origin HEAD:main && exit 0
+            sleep $((i * 10))
+          done
+          exit 1

@@ -1,0 +1,38 @@
+{
+ "en": [
+  {
+   "say": "Ever wonder why the world's most powerful banks keep piles of gold in deep vaults?",
+   "img": "intro",
+   "caption": true,
+   "after": "L301.jpg"
+  },
+  {
+   "say": "Central banks buy gold to diversify their reserves. This means they don't rely on just one currency.",
+   "img": "L215.jpg:flip"
+  },
+  {
+   "say": "They usually buy gold from commercial banks or other central banks through official markets.",
+   "img": "L111.jpg"
+  },
+  {
+   "say": "Unlike paper money, gold is a physical asset that holds value regardless of which government issues it.",
+   "img": "144_s0.jpg:flip"
+  },
+  {
+   "say": "By holding gold, central banks aim to stabilize their national economy during global financial uncertainty.",
+   "img": "140_s2.jpg:flip"
+  },
+  {
+   "say": "Follow for part 394: why crypto never sleeps. Not financial advice.",
+   "img": "L250.jpg:flip"
+  }
+ ],
+ "it": [
+  "Ti sei mai chiesto perché le banche più potenti al mondo tengono tonnellate d'oro in caveau sotterranei?",
+  "Le banche centrali comprano oro per diversificare le riserve. Così non dipendono da una sola valuta.",
+  "Di solito comprano l'oro da banche commerciali o altre banche centrali tramite i mercati ufficiali.",
+  "A differenza della carta moneta, l'oro è un asset fisico che mantiene il valore a prescindere dal governo che lo emette.",
+  "Detenendo oro, le banche centrali mirano a stabilizzare l'economia nazionale durante l'incertezza finanziaria globale.",
+  "Segui per la parte 394: perché le crypto non dormono mai. Non è un consiglio finanziario."
+ ]
+}

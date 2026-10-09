@@ -1,0 +1,60 @@
+# PROVE (prototipi da far vedere al titolare prima di cambiare tutti i video): monta i video
+# indicati in inglese e in italiano con le opzioni scelte e li mette nella release "prove"
+# (il sito non la legge: non si pubblica niente).
+name: Prova montaggio
+
+on:
+  workflow_dispatch:
+    inputs:
+      keys:
+        description: "Video da provare, es. 3,15"
+        required: true
+      hook:
+        description: "1 = inizio col gancio (il lupo dice subito la prima frase)"
+        default: "1"
+      maxsec:
+        description: "Durata massima in secondi (0 = nessuna)"
+        default: "35"
+
+permissions:
+  contents: write
+
+jobs:
+  prova:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        lang: [en, it]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            studio
+          filter: blob:none
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Strumenti
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg > /dev/null
+          pip install -q edge-tts numpy pillow requests
+      - name: Monta
+        env:
+          KEYS: ${{ inputs.keys }}
+          REEL_LANG: ${{ matrix.lang }}
+          HOOK: ${{ inputs.hook }}
+          MAXSEC: ${{ inputs.maxsec }}
+        run: |
+          python studio/batch_render.py
+          cd studio/work/out && for f in *.mp4; do mv "$f" "${f%.mp4}_${{ matrix.lang }}.mp4"; done
+      - name: Metti nella release "prove"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          gh release view prove -R "$REPO" > /dev/null 2>&1 || \
+            gh release create prove -R "$REPO" --title "Prove di montaggio (non pubblicate)" \
+              --notes "Prototipi da guardare prima di cambiare i video. Non vengono pubblicati." --latest=false
+          for f in studio/work/out/*.mp4; do gh release upload prove "$f" -R "$REPO" --clobber; done

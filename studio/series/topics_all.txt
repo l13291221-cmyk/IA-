@@ -1,0 +1,353 @@
+38|C|how to read a crypto whitepaper
+39|C|tokenomics, and why supply matters
+40|G|what a stock really is
+41|C|token unlocks, the hidden selling pressure
+42|C|fully diluted valuation, explained
+43|G|how the stock market works
+44|C|circulating, total and max supply
+45|C|how to research a coin in five minutes
+46|G|what an index like the S&P 500 is
+47|C|the crypto slang you need to know
+48|C|market orders versus limit orders
+49|G|ETFs, explained
+50|C|slippage, and how to avoid it
+51|C|the order book, explained simply
+52|G|index funds and Warren Buffett's famous bet
+53|C|centralized versus decentralized exchanges
+54|C|why exchanges ask for your ID
+55|G|dividends, explained
+56|C|proof of reserves
+57|C|the Mt. Gox story
+58|G|reinvesting dividends
+59|C|custodial versus non-custodial wallets
+60|C|what a block really is
+61|G|the P/E ratio
+62|C|hashing, explained simply
+63|C|public and private keys
+64|G|revenue versus profit
+65|C|what a wallet address really is
+66|C|confirmations, and why transfers take time
+67|G|earnings reports
+68|C|proof of work, explained
+69|C|proof of work versus proof of stake
+70|G|growth stocks versus value stocks
+71|C|soft forks and hard forks
+72|C|who is Satoshi Nakamoto
+73|G|blue chip stocks
+74|C|the genesis block
+75|C|Bitcoin Pizza Day
+76|G|the danger of penny stocks
+77|C|satoshis: you don't need a whole bitcoin
+78|C|the Lightning Network
+79|G|stock splits
+80|C|Bitcoin ETFs
+81|C|Ethereum ETFs
+82|G|share buybacks
+83|C|coins versus tokens
+84|C|ERC-20 tokens
+85|G|IPOs
+86|C|NFTs, honestly explained
+87|C|oracles: how blockchains see the real world
+88|G|the Magnificent Seven
+89|C|bridges, and why they get hacked
+90|C|layer one versus layer two
+91|G|Apple: from near bankruptcy to giant
+92|C|the three types of stablecoins
+93|C|what a depeg is
+94|G|the Nvidia and chips story
+95|C|Solana in sixty seconds
+96|C|XRP in sixty seconds
+97|G|Coca-Cola and the power of boring companies
+98|C|Cardano in sixty seconds
+99|C|Dogecoin, the joke that became a giant
+100|G|economic moats
+101|C|Litecoin, the silver to Bitcoin's gold
+102|C|Chainlink and oracle tokens
+103|G|Berkshire Hathaway
+104|C|privacy coins
+105|C|the doji candle
+106|G|Warren Buffett's rules
+107|C|the hammer candle
+108|C|the shooting star candle
+109|G|Peter Lynch: invest in what you know
+110|C|engulfing candles
+111|C|the double top
+112|G|Benjamin Graham and Mr. Market
+113|C|the double bottom
+114|C|head and shoulders
+115|G|active versus passive investing
+116|C|inverse head and shoulders
+117|C|the ascending triangle
+118|G|fund fees that eat your returns
+119|C|the descending triangle
+120|C|the biggest lessons so far
+121|G|choosing a broker
+122|C|the bull flag
+123|C|the bear flag
+124|G|fractional shares
+125|C|rising and falling wedges
+126|C|the cup and handle
+127|G|options, and why they're risky
+128|C|breakouts and fakeouts
+129|C|timeframes: which chart should you use
+130|G|buying stocks on margin
+131|C|multi-timeframe analysis
+132|C|the MACD indicator
+133|G|the GameStop short squeeze
+134|C|Bollinger Bands
+135|C|EMA versus SMA
+136|G|meme stocks
+137|C|Fibonacci retracements
+138|C|divergences
+139|G|sector investing
+140|C|the risk to reward ratio
+141|C|the trading journal
+142|G|emerging markets
+143|C|backtesting
+144|C|paper trading
+145|G|currency risk
+146|C|overtrading
+147|C|revenge trading
+148|G|bonds, explained
+149|C|going long versus going short
+150|C|short selling, explained
+151|G|government bonds
+152|C|futures versus spot
+153|C|funding rates
+154|G|why bond prices fall when rates rise
+155|C|liquidation cascades
+156|C|whales and market makers
+157|G|real estate and REITs
+158|C|stop hunts
+159|C|patience, the most underrated skill
+160|G|savings accounts versus inflation
+161|C|greed
+162|C|fear
+163|G|inflation, explained
+164|C|loss aversion
+165|C|confirmation bias
+166|G|compound interest
+167|C|the sunk cost trap
+168|C|anchoring to old prices
+169|G|the rule of 72
+170|C|herd mentality
+171|C|overconfidence after a win
+172|G|an emergency fund comes first
+173|C|checking prices too often
+174|C|social media noise
+175|G|paying off expensive debt first
+176|C|paid influencer promotions
+177|C|setting realistic goals
+178|G|the 50/30/20 budget
+179|C|writing your investment plan
+180|C|why discipline beats talent
+181|G|pay yourself first
+182|C|when to take a break
+183|C|never invest borrowed money
+184|G|lifestyle inflation
+185|C|thinking in years, not days
+186|C|strong passwords and password managers
+187|G|tracking your net worth
+188|C|authenticator apps versus SMS codes
+189|C|SIM swap attacks
+190|G|time in the market versus timing the market
+191|C|securing your email
+192|C|fake browser extensions
+193|G|risk tolerance and time horizon
+194|C|token approvals, and how to revoke them
+195|C|address poisoning
+196|G|asset allocation, explained
+197|C|fake support on Telegram and Discord
+198|C|pig butchering scams
+199|G|why people buy gold
+200|C|Ponzi schemes
+201|C|pump and dump groups
+202|G|gold and inflation
+203|C|fake trading bots with guaranteed profits
+204|C|romance scams
+205|G|gold versus Bitcoin
+206|C|fake exchanges and fake apps
+207|C|QR code scams
+208|G|how to invest in gold
+209|C|recovery scams
+210|C|crypto inheritance planning
+211|G|silver, the double life metal
+212|C|multisig wallets
+213|C|keeping your holdings private
+214|G|the gold to silver ratio
+215|C|backing up your seed phrase in two places
+216|C|buying a hardware wallet safely
+217|G|platinum and palladium
+218|C|verifying addresses on your hardware wallet
+219|C|why Federal Reserve meetings move crypto
+220|G|copper, the metal with a PhD in economics
+221|C|crypto and the stock market
+222|C|liquidity cycles
+223|G|lithium and the battery boom
+224|C|institutional adoption
+225|C|crypto rules in Europe: MiCA
+226|G|rare earth metals
+227|C|stablecoin regulation
+228|C|keeping records for taxes
+229|G|oil, the world's most traded commodity
+230|C|the four phases of a market cycle
+231|C|the Fear and Greed Index
+232|G|commodities, explained
+233|C|buy the rumor, sell the news
+234|C|black swan events
+235|G|why diamonds are a bad investment
+236|C|the exchange listing effect
+237|C|weekend volatility
+238|G|investing in art and collectibles
+239|C|companies that hold Bitcoin
+240|C|El Salvador and Bitcoin
+241|G|real estate versus stocks
+242|C|the biggest lessons so far, part two
+243|C|Bitcoin mining and energy
+244|G|GDP, explained
+245|C|hashrate, explained
+246|C|yield farming
+247|G|recessions
+248|C|APY versus APR
+249|C|when a yield is too good to be true
+250|G|what central banks do
+251|C|crypto lending and collateral
+252|C|liquidations in DeFi
+253|G|interest rates, explained
+254|C|flash loans
+255|C|DAOs
+256|G|money printing and quantitative easing
+257|C|governance tokens
+258|C|liquid staking
+259|G|the US dollar as the world's currency
+260|C|restaking and its risks
+261|C|tokenized real-world assets
+262|G|forex basics
+263|C|MEV and front-running
+264|C|the different types of wallets
+265|G|unemployment and the economy
+266|C|crypto-backed stablecoins
+267|C|algorithmic stablecoins
+268|G|the inverted yield curve
+269|C|NFT royalties and utility
+270|C|play-to-earn: the boom and the bust
+271|G|stagflation
+272|C|the metaverse hype cycle
+273|C|narratives and sector rotation
+274|G|hyperinflation
+275|C|airdrop farming
+276|C|how much should you invest
+277|G|tulip mania
+278|C|is it too late to buy Bitcoin
+279|C|can crypto go to zero
+280|G|the South Sea bubble
+281|C|what to do after a big loss
+282|C|your first purchase, step by step
+283|G|the Great Depression
+284|C|how to cash out to your bank
+285|C|recurring buys
+286|G|Black Monday 1987
+287|C|price alerts
+288|C|tracking your portfolio
+289|G|the dot-com bubble
+290|C|rebalancing, with a real example
+291|C|taking profit into stablecoins or cash
+292|G|the 2008 financial crisis
+293|C|when to sell: your reason is gone
+294|C|HODL, and where it comes from
+295|G|the 2020 COVID crash
+296|C|diamond hands versus paper hands
+297|C|DYOR: do your own research
+298|G|Japan's lost decades
+299|C|ATH and ATL
+300|C|myth: crypto is only for criminals
+301|G|crypto versus stocks: the real differences
+302|C|myth: you need a lot of money to start
+303|C|myth: a cheap coin will easily 100x
+304|G|stock market hours versus crypto's 24/7
+305|C|myth: crypto is just a Ponzi scheme
+306|C|myth: Bitcoin is anonymous
+307|G|AI stocks and the hype
+308|C|the 2016 DAO hack
+309|C|the 2017 ICO boom
+310|G|Tesla and volatile stocks
+311|C|DeFi summer
+312|C|the 2021 NFT mania
+313|G|brand value as an investment
+314|C|the Terra Luna collapse
+315|C|the lessons of the FTX collapse
+316|G|the efficient market idea
+317|C|the day Bitcoin ETFs were approved
+318|C|Bitcoin's four-year cycle
+319|G|robo-advisors
+320|C|the biggest crypto crashes in history
+321|C|why Bitcoin dominance moves
+322|G|financial independence and FIRE
+323|C|the altcoin risk ladder
+324|C|how new coins get listed
+325|G|passive income myths
+326|C|do crypto protocols make money
+327|C|token burns
+328|G|get-rich-quick traps
+329|C|inflationary versus deflationary tokens
+330|C|real yield
+331|G|insurance before investing
+332|C|how stablecoin issuers make money
+333|C|the role of Tether
+334|G|taxes on investments, the basics
+335|C|crypto payments in daily life
+336|C|Bitcoin as long-term savings
+337|G|how a stock chart differs from a crypto chart
+338|C|cold storage, step by step
+339|C|testing your backup
+340|G|earnings season
+341|C|what happens if your exchange gets hacked
+342|C|exchange insurance funds
+343|G|the business cycle
+344|C|fake airdrops on social media
+345|C|deepfake scams
+346|G|consumer staples versus luxury
+347|C|AI trading bot scams
+348|C|job offer scams
+349|G|healthcare stocks
+350|C|how to report a scam
+351|C|crypto and your mental health
+352|G|energy stocks
+353|C|FOMO at all-time highs
+354|C|buying the dip
+355|G|bank stocks
+356|C|catching a falling knife
+357|C|the dead cat bounce
+358|G|utility stocks
+359|C|capitulation
+360|C|accumulation zones
+361|G|small caps versus large caps
+362|C|distribution at the top
+363|C|why most altcoins lose against Bitcoin
+364|G|international investing
+365|C|the power of doing nothing
+366|C|the trailing stop loss
+367|G|the Nikkei, the DAX and other world indexes
+368|C|averaging up versus averaging down
+369|C|stress testing your portfolio
+370|G|a simple diversified portfolio
+371|C|the biggest lessons so far, part three
+372|C|planning your exit for the next bull market
+373|G|how billionaires really built wealth
+374|C|what to do in a bear market
+375|C|staying safe for the next ten years
+376|G|the power of patience in the stock market
+377|C|building wealth slowly
+378|C|your checklist before every buy
+379|G|why most day traders lose
+380|C|your checklist before every sell
+381|C|your security checklist
+382|G|dollar-cost averaging into index funds
+383|C|the ten commandments of crypto, part one
+384|C|the ten commandments of crypto, part two
+385|G|investing in your twenties, thirties and forties
+386|C|how far you've come
+387|C|your crypto plan for the next year
+388|G|how to read the news like an investor
+389|G|the biggest investing mistakes of all time
+390|C|the road ahead

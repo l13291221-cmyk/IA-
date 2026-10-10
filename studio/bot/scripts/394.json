@@ -1,0 +1,38 @@
+{
+ "en": [
+  {
+   "say": "While you sleep, crypto keeps trading. This market never closes, not at night, not on weekends, never.",
+   "img": "intro",
+   "caption": true,
+   "after": "12_s4.jpg"
+  },
+  {
+   "say": "Stock exchanges are buildings with fixed opening and closing hours. Crypto works completely differently.",
+   "img": "43_s5.jpg"
+  },
+  {
+   "say": "It runs on a global network of computers. There is no single place that can shut down.",
+   "img": "L088.jpg"
+  },
+  {
+   "say": "Traders live in every time zone. When one country sleeps, another is wide awake, buying and selling.",
+   "img": "L217.jpg"
+  },
+  {
+   "say": "So prices can move at any moment, even in the middle of the night. The market truly never pauses.",
+   "img": "10_s4.jpg:flip"
+  },
+  {
+   "say": "Follow for part 395: the difference between saving and investing. Not financial advice.",
+   "img": "L251.jpg"
+  }
+ ],
+ "it": [
+  "Mentre dormi, la crypto continua a scambiare. Questo mercato non chiude mai, neanche di notte, neanche nei weekend.",
+  "Gli scambi azionari sono edifici con orari fissi di apertura e chiusura. La crypto funziona in modo completamente diverso.",
+  "Gira su una rete globale di computer. Non c'è un unico posto che possa chiudere.",
+  "I trader vivono in ogni fuso orario. Quando un paese dorme, un altro è sveglio, comprando e vendendo.",
+  "Quindi i prezzi possono muoversi in qualsiasi momento, anche di notte. Il mercato non si ferma mai.",
+  "Segui per la parte 395: la differenza tra salvare e investire. Non è un consiglio finanziario."
+ ]
+}

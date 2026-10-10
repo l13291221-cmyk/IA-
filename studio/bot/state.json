@@ -1,5 +1,5 @@
 {
- "next_part": 394,
+ "next_part": 395,
  "paused": false,
  "cycle_start": "2026-10-07",
  "usage": {
@@ -303,12 +303,21 @@
    "L215",
    "L250",
    "L301"
+  ],
+  "394": [
+   "10_s4",
+   "12_s4",
+   "43_s5",
+   "L088",
+   "L217",
+   "L251"
   ]
  },
  "topics_done": [
   "why gold has been money for thousands of years",
   "what happens to Bitcoin when the last coin is mined",
-  "how central banks buy gold"
+  "how central banks buy gold",
+  "why crypto never sleeps"
  ],
  "made": [
   {
@@ -330,6 +339,11 @@
    "part": "393",
    "topic": "how central banks buy gold",
    "date": "2026-10-09"
+  },
+  {
+   "part": "394",
+   "topic": "why crypto never sleeps",
+   "date": "2026-10-10"
   }
  ],
  "promo_angles_done": [
@@ -372,6 +386,7 @@
   "391",
   "392",
   "v001",
-  "393"
+  "393",
+  "394"
  ]
 }

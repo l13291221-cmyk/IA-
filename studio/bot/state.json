@@ -1,5 +1,5 @@
 {
- "next_part": 395,
+ "next_part": 396,
  "paused": false,
  "cycle_start": "2026-10-07",
  "usage": {
@@ -311,13 +311,22 @@
    "L088",
    "L217",
    "L251"
+  ],
+  "395": [
+   "09_s2",
+   "12_s1",
+   "12_s6",
+   "L161",
+   "L168",
+   "L346"
   ]
  },
  "topics_done": [
   "why gold has been money for thousands of years",
   "what happens to Bitcoin when the last coin is mined",
   "how central banks buy gold",
-  "why crypto never sleeps"
+  "why crypto never sleeps",
+  "the difference between saving and investing"
  ],
  "made": [
   {
@@ -344,6 +353,11 @@
    "part": "394",
    "topic": "why crypto never sleeps",
    "date": "2026-10-10"
+  },
+  {
+   "part": "395",
+   "topic": "the difference between saving and investing",
+   "date": "2026-10-11"
   }
  ],
  "promo_angles_done": [
@@ -387,6 +401,7 @@
   "392",
   "v001",
   "393",
-  "394"
+  "394",
+  "395"
  ]
 }

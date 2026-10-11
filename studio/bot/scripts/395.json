@@ -1,0 +1,38 @@
+{
+ "en": [
+  {
+   "say": "Ever wonder why your money might stay stuck or grow? Let's untangle saving versus investing in a minute.",
+   "img": "intro",
+   "caption": true,
+   "after": "L161.jpg"
+  },
+  {
+   "say": "Saving means putting money aside in a safe place, like a bank account, so you can use it later.",
+   "img": "L168.jpg"
+  },
+  {
+   "say": "Investing means using money to buy assets that can increase in value over time, like stocks or bonds.",
+   "img": "L346.jpg"
+  },
+  {
+   "say": "While savings protect your money from loss, investing accepts some risk to potentially earn more.",
+   "img": "12_s1.jpg:flip"
+  },
+  {
+   "say": "Start by saving a safety net, then consider investing when you’re comfortable with a bit of uncertainty.",
+   "img": "09_s2.jpg"
+  },
+  {
+   "say": "Follow for part 396: why most traders lose money. Not financial advice.",
+   "img": "12_s6.jpg"
+  }
+ ],
+ "it": [
+  "Ti sei mai chiesto perché i tuoi soldi possono restare bloccati o crescere? Scopriamo in un minuto la differenza tra risparmio e investimento.",
+  "Risparmiare significa mettere i soldi da parte in un posto sicuro, tipo un conto in banca, così li puoi usare più tardi.",
+  "Investire significa usare i soldi per comprare asset che possono aumentare di valore col tempo, tipo azioni o obbligazioni.",
+  "Mentre i risparmi proteggono i tuoi soldi dalla perdita, l'investimento accetta un po’ di rischio per potenzialmente guadagnare di più.",
+  "Inizia mettendo da parte un cuscinetto di sicurezza, poi pensa all'investimento quando ti senti a tuo agio con un po’ di incertezza.",
+  "Segui per la parte 396: perché la maggior parte dei trader perde soldi. Non è un consiglio finanziario."
+ ]
+}

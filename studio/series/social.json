@@ -8618,6 +8618,44 @@
   "topic_it": "Come le banche centrali comprano l'oro",
   "next_it": "perché le crypto non dormono mai"
  },
+ "394": {
+  "part": 394,
+  "promo": false,
+  "hook_en": "While you sleep, crypto keeps trading. This market never closes, not at night, not on weekends, never.",
+  "hook_it": "Mentre dormi, la crypto continua a scambiare. Questo mercato non chiude mai, neanche di notte, neanche nei weekend.",
+  "points_en": [
+   "Stock exchanges are buildings with fixed opening and closing hours. Crypto works completely differently.",
+   "It runs on a global network of computers. There is no single place that can shut down.",
+   "Traders live in every time zone. When one country sleeps, another is wide awake, buying and selling."
+  ],
+  "points_it": [
+   "Gira su una rete globale di computer. Non c'è un unico posto che possa chiudere.",
+   "I trader vivono in ogni fuso orario. Quando un paese dorme, un altro è sveglio, comprando e vendendo.",
+   "Quindi i prezzi possono muoversi in qualsiasi momento, anche di notte. Il mercato non si ferma mai."
+  ],
+  "topic_en": "Why crypto never sleeps",
+  "next_en": "the difference between saving and investing",
+  "topic_it": "Perché le crypto non dormono mai",
+  "next_it": "la differenza tra salvare e investire"
+ },
+ "395": {
+  "part": 395,
+  "promo": false,
+  "hook_en": "Ever wonder why your money might stay stuck or grow? Let's untangle saving versus investing in a minute.",
+  "hook_it": "Ti sei mai chiesto perché i tuoi soldi possono restare bloccati o crescere? Scopriamo in un minuto la differenza tra risparmio e investimento.",
+  "points_en": [
+   "Saving means putting money aside in a safe place, like a bank account, so you can use it later.",
+   "Investing means using money to buy assets that can increase in value over time, like stocks or bonds.",
+   "While savings protect your money from loss, investing accepts some risk to potentially earn more."
+  ],
+  "points_it": [
+   "Risparmiare significa mettere i soldi da parte in un posto sicuro, tipo un conto in banca, così li puoi usare più tardi."
+  ],
+  "topic_en": "The difference between saving and investing",
+  "next_en": "why most traders lose money",
+  "topic_it": "La differenza tra salvare e investire",
+  "next_it": "perché la maggior parte dei trader perde soldi"
+ },
  "v001": {
   "part": 1,
   "promo": true,

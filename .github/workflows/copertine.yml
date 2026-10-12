@@ -1,0 +1,80 @@
+# Testi dei social e COPERTINE dei video, per ogni video (anche quelli nuovi del bot).
+#  - studio/series/social.json: argomento, frase d'apertura, punti chiave, prossima puntata
+#    (inglese e italiano): il sito ci scrive descrizioni Instagram/TikTok e titoli YouTube.
+#  - release "copertine": 001.jpg, 010a.jpg, 391.jpg… (argomento grande + PART N): il sito
+#    le usa come copertina dei reel.
+# Parte da solo dopo ogni "Reel automatico"; a mano: Actions -> Copertine e testi social -> Run.
+name: Copertine e testi social
+
+on:
+  workflow_dispatch:
+    inputs:
+      tutte:
+        description: "Rifai TUTTE le copertine (anche quelle già caricate)"
+        type: boolean
+        default: false
+  workflow_run:
+    workflows: ["Reel automatico"]
+    types: [completed]
+  push:
+    branches: [main]
+    paths:
+      - "studio/series/plan.json"
+      - "studio/series/plan_it.json"
+      - "studio/social_meta.py"
+      - "studio/covers.py"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: copertine
+  cancel-in-progress: false
+
+jobs:
+  copertine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            studio
+          filter: blob:none
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Strumenti
+        run: pip install -q pillow
+
+      - name: Testi social (social.json)
+        run: |
+          python studio/social_meta.py
+          git config user.name "vcriptov-reel-bot"
+          git config user.email "vcriptov-reel-bot@users.noreply.github.com"
+          git add --sparse studio/series/social.json
+          if git diff --cached --quiet; then echo "social.json invariato"; exit 0; fi
+          git commit -q -m "Testi social aggiornati"
+          for i in 1 2 3 4; do
+            git pull -q --rebase origin main && git push -q origin HEAD:main && exit 0
+            sleep $((i * 10))
+          done
+          exit 1
+
+      - name: Copertine mancanti nella release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ALL: ${{ github.event.inputs.tutte }}
+        run: |
+          gh release view copertine >/dev/null 2>&1 || gh release create copertine \
+            --title "Copertine dei video" --notes "Copertine per Instagram e YouTube (studio/covers.py). Le legge il sito: non cancellare."
+          if [ "$ALL" = "true" ]; then HAVE=""; else HAVE=$(gh release view copertine --json assets -q '.assets[].name' | tr '\n' ' '); fi
+          export HAVE
+          python studio/covers.py --mancanti
+          ls studio/work/covers/*.jpg >/dev/null 2>&1 || { echo "niente da caricare"; exit 0; }
+          ls studio/work/covers/*.jpg | xargs -n 40 gh release upload copertine --clobber
+          echo "caricate: $(ls studio/work/covers/*.jpg | wc -l)"

@@ -1,5 +1,5 @@
 {
- "next_part": 396,
+ "next_part": 397,
  "paused": false,
  "cycle_start": "2026-10-07",
  "usage": {
@@ -319,6 +319,14 @@
    "L161",
    "L168",
    "L346"
+  ],
+  "396": [
+   "03_s3",
+   "155_s0",
+   "25_s0",
+   "321_s0",
+   "L002",
+   "L261"
   ]
  },
  "topics_done": [
@@ -326,7 +334,8 @@
   "what happens to Bitcoin when the last coin is mined",
   "how central banks buy gold",
   "why crypto never sleeps",
-  "the difference between saving and investing"
+  "the difference between saving and investing",
+  "why most traders lose money"
  ],
  "made": [
   {
@@ -358,6 +367,11 @@
    "part": "395",
    "topic": "the difference between saving and investing",
    "date": "2026-10-11"
+  },
+  {
+   "part": "396",
+   "topic": "why most traders lose money",
+   "date": "2026-10-15"
   }
  ],
  "promo_angles_done": [
@@ -402,6 +416,7 @@
   "v001",
   "393",
   "394",
-  "395"
+  "395",
+  "396"
  ]
 }

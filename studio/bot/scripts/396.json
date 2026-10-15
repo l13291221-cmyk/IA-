@@ -1,0 +1,38 @@
+{
+ "en": [
+  {
+   "say": "Most crypto traders lose money. Not because crypto is fake, but because of how they trade.",
+   "img": "intro",
+   "caption": true,
+   "after": "L002.jpg:flip"
+  },
+  {
+   "say": "Many beginners buy when prices jump, because everyone is excited. Then they panic and sell when prices fall.",
+   "img": "25_s0.jpg:flip"
+  },
+  {
+   "say": "Fear and excitement push people into fast, emotional decisions instead of calm, planned ones. This is where money is lost.",
+   "img": "321_s0.jpg"
+  },
+  {
+   "say": "Every trade also costs fees. Trading many times means paying again and again, which slowly eats your money.",
+   "img": "03_s3.jpg"
+  },
+  {
+   "say": "Borrowed money makes losses grow fast. Remember: slow, calm plans beat fast, emotional moves.",
+   "img": "155_s0.jpg"
+  },
+  {
+   "say": "Follow for part 397: how inflation quietly steals your savings. Not financial advice.",
+   "img": "L261.jpg:flip"
+  }
+ ],
+ "it": [
+  "La maggior parte dei trader crypto perde soldi. Non perché la crypto sia finta, ma per il modo in cui fanno trading.",
+  "Molti principianti comprano quando i prezzi saltano, perché tutti sono eccitati. Poi si panicano e vendono quando i prezzi scendono.",
+  "La paura e l'eccitazione spingono le persone a decisioni rapide ed emotive invece di quelle calme e pianificate. Qui è che si perde il denaro.",
+  "Ogni trade costa anche commissioni. Fare trading spesso significa pagare di nuovo e di nuovo, e questo lentamente ti ruba i soldi.",
+  "Il denaro preso in prestito fa crescere le perdite rapidamente. Ricorda: piani lenti e calmi battono mosse rapide ed emotive.",
+  "Segui per la parte 397: come l'inflazione ti sottrae silenziosamente i risparmi. Non è un consiglio finanziario."
+ ]
+}

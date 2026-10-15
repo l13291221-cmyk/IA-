@@ -8656,6 +8656,25 @@
   "topic_it": "La differenza tra salvare e investire",
   "next_it": "perché la maggior parte dei trader perde soldi"
  },
+ "396": {
+  "part": 396,
+  "promo": false,
+  "hook_en": "Most crypto traders lose money. Not because crypto is fake, but because of how they trade.",
+  "hook_it": "La maggior parte dei trader crypto perde soldi. Non perché la crypto sia finta, ma per il modo in cui fanno trading.",
+  "points_en": [
+   "Many beginners buy when prices jump, because everyone is excited. Then they panic and sell when prices fall.",
+   "Every trade also costs fees. Trading many times means paying again and again, which slowly eats your money.",
+   "Borrowed money makes losses grow fast. Remember: slow, calm plans beat fast, emotional moves."
+  ],
+  "points_it": [
+   "Molti principianti comprano quando i prezzi saltano, perché tutti sono eccitati. Poi si panicano e vendono quando i prezzi scendono.",
+   "La paura e l'eccitazione spingono le persone a decisioni rapide ed emotive invece di quelle calme e pianificate. Qui è che si perde il denaro."
+  ],
+  "topic_en": "Why most traders lose money",
+  "next_en": "how inflation quietly steals your savings",
+  "topic_it": "Perché la maggior parte dei trader perde soldi",
+  "next_it": "come l'inflazione ti sottrae silenziosamente i risparmi"
+ },
  "v001": {
   "part": 1,
   "promo": true,

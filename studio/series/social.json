@@ -8675,6 +8675,25 @@
   "topic_it": "Perché la maggior parte dei trader perde soldi",
   "next_it": "come l'inflazione ti sottrae silenziosamente i risparmi"
  },
+ "397": {
+  "part": 397,
+  "promo": false,
+  "hook_en": "Ever wonder why your savings feel lighter over time? Inflation silently erodes your money’s buying power.",
+  "hook_it": "Ti sei mai chiesto perché i tuoi risparmi sembrano più leggeri col tempo? L'inflazione erode silenziosamente il potere d'acquisto del tuo denaro.",
+  "points_en": [
+   "When prices rise, the same dollar buys fewer goods, so your savings shrink in real terms.",
+   "Even if your account balance stays the same, the value of that balance drops as everyday costs climb.",
+   "Savings held in cash or low‑interest accounts can fall behind inflation, meaning you get less out of your money."
+  ],
+  "points_it": [
+   "Quando i prezzi salgono, lo stesso dollaro compra meno beni, quindi i tuoi risparmi si riducono in termini reali.",
+   "Anche se il saldo del tuo conto rimane lo stesso, il valore di quel saldo diminuisce mentre i costi quotidiani salgono."
+  ],
+  "topic_en": "How inflation quietly steals your savings",
+  "next_en": "why you should never chase green candles",
+  "topic_it": "Come l'inflazione ti sottrae silenziosamente i risparmi",
+  "next_it": "perché non dovresti mai inseguire le candele verdi"
+ },
  "v001": {
   "part": 1,
   "promo": true,

@@ -1,5 +1,5 @@
 {
- "next_part": 397,
+ "next_part": 398,
  "paused": false,
  "cycle_start": "2026-10-07",
  "usage": {
@@ -327,6 +327,14 @@
    "321_s0",
    "L002",
    "L261"
+  ],
+  "397": [
+   "L064",
+   "L112",
+   "L120",
+   "L264",
+   "L327",
+   "L337"
   ]
  },
  "topics_done": [
@@ -335,7 +343,8 @@
   "how central banks buy gold",
   "why crypto never sleeps",
   "the difference between saving and investing",
-  "why most traders lose money"
+  "why most traders lose money",
+  "how inflation quietly steals your savings"
  ],
  "made": [
   {
@@ -372,6 +381,11 @@
    "part": "396",
    "topic": "why most traders lose money",
    "date": "2026-10-15"
+  },
+  {
+   "part": "397",
+   "topic": "how inflation quietly steals your savings",
+   "date": "2026-10-16"
   }
  ],
  "promo_angles_done": [
@@ -417,6 +431,7 @@
   "393",
   "394",
   "395",
-  "396"
+  "396",
+  "397"
  ]
 }

@@ -1,0 +1,38 @@
+{
+ "en": [
+  {
+   "say": "Ever wonder why your savings feel lighter over time? Inflation silently erodes your money’s buying power.",
+   "img": "intro",
+   "caption": true,
+   "after": "L327.jpg:flip"
+  },
+  {
+   "say": "When prices rise, the same dollar buys fewer goods, so your savings shrink in real terms.",
+   "img": "L120.jpg:flip"
+  },
+  {
+   "say": "Even if your account balance stays the same, the value of that balance drops as everyday costs climb.",
+   "img": "L064.jpg:flip"
+  },
+  {
+   "say": "Savings held in cash or low‑interest accounts can fall behind inflation, meaning you get less out of your money.",
+   "img": "L112.jpg"
+  },
+  {
+   "say": "To protect your savings, consider assets that grow with or outpace inflation, keeping real purchasing power intact.",
+   "img": "L337.jpg"
+  },
+  {
+   "say": "Follow for part 398: why you should never chase green candles. Not financial advice.",
+   "img": "L264.jpg"
+  }
+ ],
+ "it": [
+  "Ti sei mai chiesto perché i tuoi risparmi sembrano più leggeri col tempo? L'inflazione erode silenziosamente il potere d'acquisto del tuo denaro.",
+  "Quando i prezzi salgono, lo stesso dollaro compra meno beni, quindi i tuoi risparmi si riducono in termini reali.",
+  "Anche se il saldo del tuo conto rimane lo stesso, il valore di quel saldo diminuisce mentre i costi quotidiani salgono.",
+  "I risparmi in contanti o in conti a basso interesse possono non tenere il passo con l'inflazione, quindi ottieni meno dal tuo denaro.",
+  "Per proteggere i tuoi risparmi, considera asset che crescono con o superano l'inflazione, mantenendo intatto il potere d'acquisto reale.",
+  "Segui per la parte 398: perché non dovresti mai inseguire le candele verdi. Non è un consiglio finanziario."
+ ]
+}

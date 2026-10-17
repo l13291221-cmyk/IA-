@@ -1,16 +1,8 @@
 {
- "next_part": 398,
+ "next_part": 399,
  "paused": false,
  "cycle_start": "2026-10-07",
  "usage": {
-  "359": [
-   "04_s6",
-   "14_s1",
-   "359_s0",
-   "L111",
-   "L170",
-   "L208"
-  ],
   "360": [
    "01_s8",
    "03_s0",
@@ -335,6 +327,14 @@
    "L264",
    "L327",
    "L337"
+  ],
+  "398": [
+   "01_s7",
+   "07_s6",
+   "25_s2",
+   "299_s0",
+   "L052",
+   "L249"
   ]
  },
  "topics_done": [
@@ -344,7 +344,8 @@
   "why crypto never sleeps",
   "the difference between saving and investing",
   "why most traders lose money",
-  "how inflation quietly steals your savings"
+  "how inflation quietly steals your savings",
+  "why you should never chase green candles"
  ],
  "made": [
   {
@@ -386,6 +387,11 @@
    "part": "397",
    "topic": "how inflation quietly steals your savings",
    "date": "2026-10-16"
+  },
+  {
+   "part": "398",
+   "topic": "why you should never chase green candles",
+   "date": "2026-10-17"
   }
  ],
  "promo_angles_done": [
@@ -393,7 +399,6 @@
  ],
  "next_promo": 2,
  "order": [
-  "359",
   "360",
   "361",
   "362",
@@ -432,6 +437,7 @@
   "394",
   "395",
   "396",
-  "397"
+  "397",
+  "398"
  ]
 }

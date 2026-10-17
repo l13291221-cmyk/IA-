@@ -1,0 +1,38 @@
+{
+ "en": [
+  {
+   "say": "That coin is pumping and everyone's buying. Stop. This is exactly when beginners lose money.",
+   "img": "intro",
+   "caption": true,
+   "after": "25_s2.jpg:flip"
+  },
+  {
+   "say": "A green candle just means the price went up recently. It doesn't tell you why, or what happens next.",
+   "img": "07_s6.jpg:flip"
+  },
+  {
+   "say": "When something rises fast, many people jump in late. They buy high, then panic and sell low.",
+   "img": "299_s0.jpg"
+  },
+  {
+   "say": "Prices can also crash just as quickly as they rise. Crypto is known for big swings in both directions.",
+   "img": "L052.jpg:flip"
+  },
+  {
+   "say": "So make a plan before you invest, and stick to it. Missing one pump is better than buying at the top.",
+   "img": "01_s7.jpg:flip"
+  },
+  {
+   "say": "Follow for part 399: what makes a company worth investing in. Not financial advice.",
+   "img": "L249.jpg"
+  }
+ ],
+ "it": [
+  "Quella coin sta pumpando e tutti la stanno comprando. Stop. È proprio in questi momenti che i principianti perdono soldi.",
+  "Una candela verde significa solo che il prezzo è salito di recente. Non ti dice perché, né cosa succederà dopo.",
+  "Quando qualcosa sale veloce, molti entrano in ritardo. Comprano alto, poi prendono il panico e vendono basso.",
+  "I prezzi possono anche crollare con la stessa velocità con cui salgono. La crypto è nota per le grandi oscillazioni in entrambe le direzioni.",
+  "Quindi fai un piano prima di investire, e rispettalo. Perdersi un pump è meglio che comprare al top.",
+  "Segui per la parte 399: cosa rende un'azienda un buon investimento. Non è un consiglio finanziario."
+ ]
+}

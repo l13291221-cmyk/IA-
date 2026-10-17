@@ -8694,6 +8694,26 @@
   "topic_it": "Come l'inflazione ti sottrae silenziosamente i risparmi",
   "next_it": "perché non dovresti mai inseguire le candele verdi"
  },
+ "398": {
+  "part": 398,
+  "promo": false,
+  "hook_en": "That coin is pumping and everyone's buying. Stop. This is exactly when beginners lose money.",
+  "hook_it": "Quella coin sta pumpando e tutti la stanno comprando. Stop. È proprio in questi momenti che i principianti perdono soldi.",
+  "points_en": [
+   "A green candle just means the price went up recently. It doesn't tell you why, or what happens next.",
+   "When something rises fast, many people jump in late. They buy high, then panic and sell low.",
+   "Prices can also crash just as quickly as they rise. Crypto is known for big swings in both directions."
+  ],
+  "points_it": [
+   "Una candela verde significa solo che il prezzo è salito di recente. Non ti dice perché, né cosa succederà dopo.",
+   "Quando qualcosa sale veloce, molti entrano in ritardo. Comprano alto, poi prendono il panico e vendono basso.",
+   "Quindi fai un piano prima di investire, e rispettalo. Perdersi un pump è meglio che comprare al top."
+  ],
+  "topic_en": "Why you should never chase green candles",
+  "next_en": "what makes a company worth investing in",
+  "topic_it": "Perché non dovresti mai inseguire le candele verdi",
+  "next_it": "cosa rende un'azienda un buon investimento"
+ },
  "v001": {
   "part": 1,
   "promo": true,

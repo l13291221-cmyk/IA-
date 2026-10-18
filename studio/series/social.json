@@ -8714,6 +8714,25 @@
   "topic_it": "Perché non dovresti mai inseguire le candele verdi",
   "next_it": "cosa rende un'azienda un buon investimento"
  },
+ "399": {
+  "part": 399,
+  "promo": false,
+  "hook_en": "Ever wonder why some companies stay on top while others fade? Let’s uncover the secret that makes a business a solid investment.",
+  "hook_it": "Mai ti sei chiesto perché alcune aziende restano in cima mentre altre svaniscono? Scopriamo il segreto che rende un business un investimento solido.",
+  "points_en": [
+   "First, look at the company's core product or service. Does it solve a real problem or create a real need?",
+   "Next, examine the team. Strong leaders with a clear vision and a track record of turning ideas into reality are key.",
+   "Also, look at the company’s financial health. Consistent revenue growth and manageable debt show resilience."
+  ],
+  "points_it": [
+   "Prima, guarda il prodotto o servizio principale dell'azienda. Risolve un problema reale o crea una reale esigenza?",
+   "Inoltre, guarda la salute finanziaria dell'azienda. Crescita costante dei ricavi e debito gestibile mostrano resilienza."
+  ],
+  "topic_en": "What makes a company worth investing in",
+  "next_en": "how to stay calm in a crypto crash",
+  "topic_it": "Cosa rende un'azienda un buon investimento",
+  "next_it": "come rimanere calmi in un crash crypto"
+ },
  "v001": {
   "part": 1,
   "promo": true,

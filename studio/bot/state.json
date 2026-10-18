@@ -1,21 +1,8 @@
 {
- "next_part": 399,
+ "next_part": 400,
  "paused": false,
  "cycle_start": "2026-10-07",
  "usage": {
-  "360": [
-   "01_s8",
-   "03_s0",
-   "09_s3",
-   "13_s2",
-   "200_s0",
-   "305_s0",
-   "360_s0",
-   "L035",
-   "L260",
-   "p010_s0",
-   "p360_s0"
-  ],
   "361": [
    "12_s6",
    "24_s0",
@@ -335,6 +322,14 @@
    "299_s0",
    "L052",
    "L249"
+  ],
+  "399": [
+   "10_s6",
+   "288_s0",
+   "L051",
+   "L054",
+   "L357",
+   "L368"
   ]
  },
  "topics_done": [
@@ -345,7 +340,8 @@
   "the difference between saving and investing",
   "why most traders lose money",
   "how inflation quietly steals your savings",
-  "why you should never chase green candles"
+  "why you should never chase green candles",
+  "what makes a company worth investing in"
  ],
  "made": [
   {
@@ -392,6 +388,11 @@
    "part": "398",
    "topic": "why you should never chase green candles",
    "date": "2026-10-17"
+  },
+  {
+   "part": "399",
+   "topic": "what makes a company worth investing in",
+   "date": "2026-10-18"
   }
  ],
  "promo_angles_done": [
@@ -399,7 +400,6 @@
  ],
  "next_promo": 2,
  "order": [
-  "360",
   "361",
   "362",
   "363",
@@ -438,6 +438,7 @@
   "395",
   "396",
   "397",
-  "398"
+  "398",
+  "399"
  ]
 }

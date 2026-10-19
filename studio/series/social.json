@@ -8733,6 +8733,25 @@
   "topic_it": "Cosa rende un'azienda un buon investimento",
   "next_it": "come rimanere calmi in un crash crypto"
  },
+ "400": {
+  "part": 400,
+  "promo": false,
+  "hook_en": "Crypto just crashed and your screen is bright red. Before you panic, watch this.",
+  "hook_it": "La crypto è appena crollata e lo schermo è rosso vivo. Prima di farti prendere dal panico, guarda questo.",
+  "points_en": [
+   "Big drops are a normal part of crypto. It has always moved in wild swings, both up and down.",
+   "Zoom out on the chart. Crypto moves in cycles, and one red day is just a tiny piece of the story.",
+   "Only invest what you can afford to lose, and step away from the screen. A calm mind is your best tool."
+  ],
+  "points_it": [
+   "Le grosse cadute sono una parte normale della crypto. È sempre andata in oscillazioni selvagge, su e giù.",
+   "Allontanati dal grafico. La crypto si muove in cicli, e un solo giorno rosso è solo un piccolo pezzo della storia."
+  ],
+  "topic_en": "How to stay calm in a crypto crash",
+  "next_en": "silver versus gold for beginners",
+  "topic_it": "Come rimanere calmi in un crash crypto",
+  "next_it": "argento contro oro per principianti"
+ },
  "v001": {
   "part": 1,
   "promo": true,

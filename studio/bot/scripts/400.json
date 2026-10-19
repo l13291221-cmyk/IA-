@@ -1,0 +1,38 @@
+{
+ "en": [
+  {
+   "say": "Crypto just crashed and your screen is bright red. Before you panic, watch this.",
+   "img": "intro",
+   "caption": true,
+   "after": "01_s0.jpg"
+  },
+  {
+   "say": "Big drops are a normal part of crypto. It has always moved in wild swings, both up and down.",
+   "img": "337_s0.jpg"
+  },
+  {
+   "say": "Selling in a panic can turn a temporary drop into a permanent loss. Staying calm starts with a plan made before the crash.",
+   "img": "L015.jpg:flip"
+  },
+  {
+   "say": "Zoom out on the chart. Crypto moves in cycles, and one red day is just a tiny piece of the story.",
+   "img": "208_s0.jpg"
+  },
+  {
+   "say": "Only invest what you can afford to lose, and step away from the screen. A calm mind is your best tool.",
+   "img": "L010.jpg"
+  },
+  {
+   "say": "Follow for part 401: silver versus gold for beginners. Not financial advice.",
+   "img": "43_s6.jpg"
+  }
+ ],
+ "it": [
+  "La crypto è appena crollata e lo schermo è rosso vivo. Prima di farti prendere dal panico, guarda questo.",
+  "Le grosse cadute sono una parte normale della crypto. È sempre andata in oscillazioni selvagge, su e giù.",
+  "Vendere in panico può trasformare una caduta temporanea in una perdita permanente. Rimanere calmi inizia con un piano fatto prima del crollo.",
+  "Allontanati dal grafico. La crypto si muove in cicli, e un solo giorno rosso è solo un piccolo pezzo della storia.",
+  "Investi solo quello che puoi permetterti di perdere e allontanati dallo schermo. Una mente calma è il tuo miglior strumento.",
+  "Segui per la parte 401: argento contro oro per principianti. Non è un consiglio finanziario."
+ ]
+}

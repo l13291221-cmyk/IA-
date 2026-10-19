@@ -1,16 +1,8 @@
 {
- "next_part": 400,
+ "next_part": 401,
  "paused": false,
  "cycle_start": "2026-10-07",
  "usage": {
-  "361": [
-   "12_s6",
-   "24_s0",
-   "35_s0",
-   "361_s0",
-   "73_s0",
-   "L131"
-  ],
   "362": [
    "03_s6",
    "12_s1",
@@ -330,6 +322,14 @@
    "L054",
    "L357",
    "L368"
+  ],
+  "400": [
+   "01_s0",
+   "208_s0",
+   "337_s0",
+   "43_s6",
+   "L010",
+   "L015"
   ]
  },
  "topics_done": [
@@ -341,7 +341,8 @@
   "why most traders lose money",
   "how inflation quietly steals your savings",
   "why you should never chase green candles",
-  "what makes a company worth investing in"
+  "what makes a company worth investing in",
+  "how to stay calm in a crypto crash"
  ],
  "made": [
   {
@@ -393,6 +394,11 @@
    "part": "399",
    "topic": "what makes a company worth investing in",
    "date": "2026-10-18"
+  },
+  {
+   "part": "400",
+   "topic": "how to stay calm in a crypto crash",
+   "date": "2026-10-19"
   }
  ],
  "promo_angles_done": [
@@ -400,7 +406,6 @@
  ],
  "next_promo": 2,
  "order": [
-  "361",
   "362",
   "363",
   "364",
@@ -439,6 +444,7 @@
   "396",
   "397",
   "398",
-  "399"
+  "399",
+  "400"
  ]
 }

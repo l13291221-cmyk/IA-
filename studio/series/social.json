@@ -8752,6 +8752,25 @@
   "topic_it": "Come rimanere calmi in un crash crypto",
   "next_it": "argento contro oro per principianti"
  },
+ "401": {
+  "part": 401,
+  "promo": false,
+  "hook_en": "Ever wonder why some investors pick silver over gold? Let's explore the basics of each metal.",
+  "hook_it": "Ti sei mai chiesto perché alcuni investitori scelgono l'argento invece dell'oro? Esploriamo le basi di entrambi i metalli.",
+  "points_en": [
+   "Silver is lighter, cheaper, and more versatile, used in electronics, jewelry, and solar panels for growth.",
+   "Gold is heavier, rare, and mainly valued for jewelry, coins, and industrial alloys.",
+   "Both metals are easy to store in bars or coins, but gold's liquidity is slightly higher worldwide."
+  ],
+  "points_it": [
+   "L'oro è più pesante, raro e principalmente valorizzato per gioielleria, monete e leghe industriali.",
+   "Scegliere tra argento e oro dipende dai tuoi obiettivi, dal budget e dal rischio che vuoi assumere oggi."
+  ],
+  "topic_en": "Silver versus gold for beginners",
+  "next_en": "the questions to ask before buying any coin",
+  "topic_it": "Argento contro oro per principianti",
+  "next_it": "le domande da fare prima di comprare qualsiasi moneta"
+ },
  "v001": {
   "part": 1,
   "promo": true,

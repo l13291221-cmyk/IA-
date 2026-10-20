@@ -1,0 +1,38 @@
+{
+ "en": [
+  {
+   "say": "Ever wonder why some investors pick silver over gold? Let's explore the basics of each metal.",
+   "img": "intro",
+   "caption": true,
+   "after": "L068.jpg"
+  },
+  {
+   "say": "Silver is lighter, cheaper, and more versatile, used in electronics, jewelry, and solar panels for growth.",
+   "img": "L070.jpg:flip"
+  },
+  {
+   "say": "Gold is heavier, rare, and mainly valued for jewelry, coins, and industrial alloys.",
+   "img": "L156.jpg:flip"
+  },
+  {
+   "say": "Both metals are easy to store in bars or coins, but gold's liquidity is slightly higher worldwide.",
+   "img": "L079.jpg"
+  },
+  {
+   "say": "Choosing between silver and gold depends on your goals, budget, and how much risk you want to take today.",
+   "img": "L162.jpg:flip"
+  },
+  {
+   "say": "Follow for part 402: the questions to ask before buying any coin. Not financial advice.",
+   "img": "L267.jpg:flip"
+  }
+ ],
+ "it": [
+  "Ti sei mai chiesto perché alcuni investitori scelgono l'argento invece dell'oro? Esploriamo le basi di entrambi i metalli.",
+  "L'argento è più leggero, più economico e più versatile, usato in elettronica, gioielleria e pannelli solari per la crescita.",
+  "L'oro è più pesante, raro e principalmente valorizzato per gioielleria, monete e leghe industriali.",
+  "Entrambi i metalli sono facili da conservare in barre o monete, ma la liquidità dell'oro è leggermente più alta a livello mondiale.",
+  "Scegliere tra argento e oro dipende dai tuoi obiettivi, dal budget e dal rischio che vuoi assumere oggi.",
+  "Segui per la parte 402: le domande da fare prima di comprare qualsiasi moneta. Non è un consiglio finanziario."
+ ]
+}

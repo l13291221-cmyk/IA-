@@ -1,16 +1,8 @@
 {
- "next_part": 401,
+ "next_part": 402,
  "paused": false,
  "cycle_start": "2026-10-07",
  "usage": {
-  "362": [
-   "03_s6",
-   "12_s1",
-   "362_s0",
-   "76_s1",
-   "L025",
-   "L247"
-  ],
   "363": [
    "09_s5",
    "321_s0",
@@ -330,6 +322,14 @@
    "43_s6",
    "L010",
    "L015"
+  ],
+  "401": [
+   "L068",
+   "L070",
+   "L079",
+   "L156",
+   "L162",
+   "L267"
   ]
  },
  "topics_done": [
@@ -342,7 +342,8 @@
   "how inflation quietly steals your savings",
   "why you should never chase green candles",
   "what makes a company worth investing in",
-  "how to stay calm in a crypto crash"
+  "how to stay calm in a crypto crash",
+  "silver versus gold for beginners"
  ],
  "made": [
   {
@@ -399,6 +400,11 @@
    "part": "400",
    "topic": "how to stay calm in a crypto crash",
    "date": "2026-10-19"
+  },
+  {
+   "part": "401",
+   "topic": "silver versus gold for beginners",
+   "date": "2026-10-20"
   }
  ],
  "promo_angles_done": [
@@ -406,7 +412,6 @@
  ],
  "next_promo": 2,
  "order": [
-  "362",
   "363",
   "364",
   "365",
@@ -445,6 +450,7 @@
   "397",
   "398",
   "399",
-  "400"
+  "400",
+  "401"
  ]
 }

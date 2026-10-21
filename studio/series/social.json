@@ -8790,5 +8790,25 @@
   "next_en": null,
   "topic_it": "Ti sei mai chiesto com'è fatto davvero un segnale di VcriptoV?",
   "next_it": null
+ },
+ "v002": {
+  "part": 2,
+  "promo": true,
+  "hook_en": "Your money stays on your own exchange. No funds are ever held by VcriptoV.",
+  "hook_it": "I tuoi soldi rimangono sul tuo exchange. Nessun fondo viene mai tenuto da VcriptoV.",
+  "points_en": [
+   "VcriptoV analyzes the market 24/7 and sends signals to Telegram and the dashboard.",
+   "Every signal has entry, stop loss, and take profit. You decide if you invest.",
+   "Your API keys stay encrypted and you can revoke them anytime. No real trading by default."
+  ],
+  "points_it": [
+   "VcriptoV analizza il mercato 24/7 e manda segnali su Telegram e sul dashboard.",
+   "Ogni segnale ha entry, stop loss e take profit. Tu decidi se investire.",
+   "Le tue API keys rimangono criptate e puoi revocarle quando vuoi. Nessun trading reale di default."
+  ],
+  "topic_en": "Your money stays on your own exchange",
+  "next_en": null,
+  "topic_it": "I tuoi soldi rimangono sul tuo exchange",
+  "next_it": null
  }
 }

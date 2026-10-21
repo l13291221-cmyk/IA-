@@ -1,0 +1,97 @@
+name: ricerca tecniche
+
+# Ricerca di VcriptoV: 2.000.000 di tecniche di trading provate sui prezzi veri, divise su
+# 20 computer di GitHub (repository pubblico = minuti gratis). Parte quando si aggiorna il
+# ramo «ricerca». Ogni computer rimanda un riassunto piccolo sul suo ramo «ris-pXX».
+# Finita la ricerca questo ramo e i rami dei risultati vengono cancellati.
+
+on:
+  push:
+    branches: [ricerca]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ricerca
+  cancel-in-progress: false
+
+jobs:
+  dati:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Programmi
+        run: pip install -q numpy numba pandas requests
+      - name: Prezzi (Binance 1h dal 2017, Bitcoin Bitstamp dal 2011, tassi di finanziamento)
+        working-directory: ricerca
+        run: |
+          mkdir -p h1 old fund
+          python dl_h1.py h1 > dl.log 2>&1
+          python dl_h1b.py h1 >> dl.log 2>&1
+          python dl_bitstamp.py old >> dl.log 2>&1
+          python dl_fund.py fund BTC,ETH,BNB,XRP,ADA,SOL,DOGE,LTC,LINK,DOT,AVAX,MATIC,POL,TRX,XLM,ATOM,UNI,FIL,AAVE,ALGO,NEAR,FTM,SAND,MANA,AXS,ICP,APT,ARB,OP,SUI,WIF,TON,TIA,INJ,SEI,ENA,ZEC,DASH,XMR,XTZ,VET,THETA,NEO,EOS,BCH,ETC,CRV,SUSHI,GALA,APE,LDO,RUNE,HBAR,EGLD,CHZ,GRT,COMP,MKR,SNX,WLD,JUP,TAO,FET,STX,IMX,KAS,HYPE,ONDO,ORDI,DYDX,IOTA,QTUM,ONT,KAVA,1000PEPE,1000SHIB,1000BONK,1000FLOKI,RENDER,RNDR >> dl.log 2>&1
+          python prep.py h1 >> dl.log 2>&1
+          tail -15 dl.log
+          tar -cf ../dati.tar h1 old fund prep.npz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dati
+          path: dati.tar
+          retention-days: 3
+          compression-level: 6
+      - name: Errore? lo rimando indietro
+        if: failure()
+        run: |
+          mkdir -p /tmp/e && cp ricerca/dl.log /tmp/e/ 2>/dev/null || echo "niente log" > /tmp/e/dl.log
+          git config user.name "vcriptov-ricerca"; git config user.email "vcriptov-ricerca@users.noreply.github.com"
+          git checkout --orphan ris-errore-dati && git rm -rf -q . && git clean -fdxq && cp /tmp/e/* . && git add . \
+            && git commit -q -m "errore dati" && git push -f origin ris-errore-dati
+
+  calcolo:
+    needs: dati
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        part: ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
+               "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Programmi
+        run: pip install -q numpy numba pandas requests
+      - uses: actions/download-artifact@v4
+        with:
+          name: dati
+          path: ricerca
+      - name: Prova 100.000 tecniche
+        working-directory: ricerca
+        run: |
+          tar -xf dati.tar && rm dati.tar
+          nproc
+          gunzip -c specs/specs4_${{ matrix.part }}.json.gz > specs.json
+          SUMMARY=1 CHUNK=5000 python run.py specs.json out > run.log 2>&1
+          tail -3 run.log
+          python compact.py out ${{ matrix.part }}
+      - name: Rimando il riassunto
+        run: |
+          mkdir -p /tmp/r && cp ricerca/res_${{ matrix.part }}.npz ricerca/run.log /tmp/r/
+          git config user.name "vcriptov-ricerca"; git config user.email "vcriptov-ricerca@users.noreply.github.com"
+          git checkout --orphan ris-p${{ matrix.part }} && git rm -rf -q . && git clean -fdxq && cp /tmp/r/* . && git add . \
+            && git commit -q -m "risultati pezzo ${{ matrix.part }}" && git push -f origin ris-p${{ matrix.part }}
+      - name: Errore? lo rimando indietro
+        if: failure()
+        run: |
+          mkdir -p /tmp/e && (cp ricerca/run.log /tmp/e/ 2>/dev/null || echo "niente log" > /tmp/e/run.log)
+          git config user.name "vcriptov-ricerca"; git config user.email "vcriptov-ricerca@users.noreply.github.com"
+          git checkout --orphan ris-errore-p${{ matrix.part }} && git rm -rf -q . && git clean -fdxq && cp /tmp/e/* . && git add . \
+            && git commit -q -m "errore pezzo ${{ matrix.part }}" && git push -f origin ris-errore-p${{ matrix.part }}

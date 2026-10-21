@@ -1,0 +1,43 @@
+name: keepalive + reel puntuali
+
+# Spostato qui (repository PUBBLICO = minuti di GitHub Actions gratis e illimitati) dal
+# repository privato vcriptov, dove ogni avvio ogni 10 minuti consumava i minuti a pagamento.
+#
+# Perché esiste: Render (piano gratis) mette in "sleep" il sito quando nessuno
+# lo visita (di notte capita sempre). Da spento, il sito NON può svegliarsi da
+# solo, quindi il reel programmato (es. le 23:00) salterebbe. Questo workflow
+# gira su GitHub (gratis, esterno) e ogni ~10 minuti: 1) sveglia il sito e il
+# motore video, 2) chiama /tasks/social-tick che fa uscire SUBITO l'eventuale
+# reel in ritardo. Così i contenuti escono puntuali senza pagare Render.
+#
+# Nota: le pianificazioni di GitHub possono ritardare di qualche minuto sotto
+# carico — va benissimo per pubblicare i reel. Per la MASSIMA puntualità si può
+# aggiungere in parallelo un monitor gratuito (UptimeRobot / cron-job.org) che
+# chiama lo stesso indirizzo /tasks/social-tick ogni 5 minuti.
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"   # ogni 10 minuti (UTC)
+  workflow_dispatch:          # permette di avviarlo a mano dalla tab "Actions"
+
+# Se due esecuzioni si accavallano, tieni solo l'ultima.
+concurrency:
+  group: keepalive
+  cancel-in-progress: true
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sveglia il sito principale
+        run: curl -s -m 30 "https://vcriptov.onrender.com/" -o /dev/null || true
+
+      - name: Sveglia il motore video
+        run: curl -s -m 30 "https://ia-tio5.onrender.com/" -o /dev/null || true
+
+      - name: Fai uscire l'eventuale reel/post in programma
+        # Se hai impostato la variabile CRON_KEY su Render, aggiungi lo stesso
+        # valore nei Secrets del repo (Settings → Secrets → Actions → CRON_KEY):
+        # verrà passato qui sotto. Se non la usi, funziona lo stesso.
+        run: |
+          curl -s -m 90 "https://vcriptov.onrender.com/tasks/social-tick?key=${{ secrets.CRON_KEY }}" -o /dev/null || true

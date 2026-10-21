@@ -1,0 +1,33 @@
+{
+ "en": [
+  {
+   "say": "Your money stays on your own exchange. No funds are ever held by VcriptoV.",
+   "img": "intro",
+   "caption": true,
+   "after": "p210_s0.jpg"
+  },
+  {
+   "say": "VcriptoV analyzes the market 24/7 and sends signals to Telegram and the dashboard.",
+   "img": "p340_s0.jpg"
+  },
+  {
+   "say": "Every signal has entry, stop loss, and take profit. You decide if you invest.",
+   "img": "p270_s0.jpg"
+  },
+  {
+   "say": "Your API keys stay encrypted and you can revoke them anytime. No real trading by default.",
+   "img": "p260_s0.jpg:flip"
+  },
+  {
+   "say": "Start free at VcriptoV dot com. Link in bio. Not financial advice.",
+   "img": "L266.jpg"
+  }
+ ],
+ "it": [
+  "I tuoi soldi rimangono sul tuo exchange. Nessun fondo viene mai tenuto da VcriptoV.",
+  "VcriptoV analizza il mercato 24/7 e manda segnali su Telegram e sul dashboard.",
+  "Ogni segnale ha entry, stop loss e take profit. Tu decidi se investire.",
+  "Le tue API keys rimangono criptate e puoi revocarle quando vuoi. Nessun trading reale di default.",
+  "Inizia gratis su VcriptoV punto com. Link in bio. Non è un consiglio finanziario."
+ ]
+}

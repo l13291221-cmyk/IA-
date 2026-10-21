@@ -3,14 +3,6 @@
  "paused": false,
  "cycle_start": "2026-10-07",
  "usage": {
-  "363": [
-   "09_s5",
-   "321_s0",
-   "363_s0",
-   "41_s2",
-   "67_s0",
-   "L264"
-  ],
   "364": [
    "11_s6",
    "145_s0",
@@ -330,6 +322,13 @@
    "L156",
    "L162",
    "L267"
+  ],
+  "v002": [
+   "L266",
+   "p210_s0",
+   "p260_s0",
+   "p270_s0",
+   "p340_s0"
   ]
  },
  "topics_done": [
@@ -405,14 +404,19 @@
    "part": "401",
    "topic": "silver versus gold for beginners",
    "date": "2026-10-20"
+  },
+  {
+   "part": "v002",
+   "topic": "VcriptoV: your money stays on your own exchange",
+   "date": "2026-10-21"
   }
  ],
  "promo_angles_done": [
-  "what a VcriptoV signal looks like"
+  "what a VcriptoV signal looks like",
+  "your money stays on your own exchange"
  ],
- "next_promo": 2,
+ "next_promo": 3,
  "order": [
-  "363",
   "364",
   "365",
   "366",
@@ -451,6 +455,7 @@
   "398",
   "399",
   "400",
-  "401"
+  "401",
+  "v002"
  ]
 }

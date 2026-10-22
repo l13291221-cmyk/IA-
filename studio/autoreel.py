@@ -292,17 +292,31 @@ def write_promo(angle):
     if e and valid_promo(e):
         print("copione VcriptoV dalla banca (scritto in anticipo)", flush=True)
         return [dict(x) for x in e["scenes"]]
-    last = None
-    for attempt in range(4):
+    last, hint = None, ""
+    for attempt in range(5):
         try:
-            data = parse_json(ask_ai(PROMO_PROMPT.format(angle=angle, facts=PROMO_FACTS)))
+            data = parse_json(ask_ai(PROMO_PROMPT.format(angle=angle, facts=PROMO_FACTS) + hint))
             if valid_promo(data):
                 return data["scenes"]
-            last = "copione non valido"
+            last = f"copione non valido ({_words(data)} parole)"
+            hint = (f"\n\nIMPORTANT: your previous answer was not valid ({_words(data)} words). Use EXACTLY 4 "
+                    "scenes, 40 to 80 words in total, and mention VcriptoV by name.")
         except Exception as exc:
             last = str(exc)
         time.sleep(3)
     raise RuntimeError(f"copione VcriptoV non riuscito: {last}")
+
+
+def _words(script):
+    return sum(len(str(s.get("say", "")).split()) for s in (script.get("scenes") or []) if isinstance(s, dict))
+
+
+def _clean_scenes(script):
+    """Scene usabili anche se il copione è un po' corto: 4-6 scene, testi puliti."""
+    sc = script.get("scenes") or []
+    return 4 <= len(sc) <= 6 and all(
+        isinstance(s, dict) and (s.get("say") or "").strip() and len(s["say"]) <= 220
+        and not re.search(r"[#*\[\]]|https?://", s["say"]) for s in sc)
 
 
 def write_script(topic, series):
@@ -310,16 +324,25 @@ def write_script(topic, series):
     if e and valid(e):
         print("copione dalla banca (scritto in anticipo)", flush=True)
         return [dict(x) for x in e["scenes"]]
-    last = None
-    for attempt in range(4):
+    last, best, hint = None, None, ""
+    for attempt in range(5):
         try:
-            data = parse_json(ask_ai(PROMPT.format(topic=topic, series=series)))
+            data = parse_json(ask_ai(PROMPT.format(topic=topic, series=series) + hint))
             if valid(data):
                 return data["scenes"]
-            last = "copione non valido"
+            n = _words(data)
+            last = f"copione non valido ({n} parole)"
+            if _clean_scenes(data) and (best is None or n > _words(best)):
+                best = data
+            # Le AI gratuite a volte scrivono troppo corto: lo dico chiaramente al giro dopo.
+            hint = (f"\n\nIMPORTANT: your previous script had {n} words. The whole script MUST be "
+                    "80 to 110 words: 5 scenes of 16 to 22 words each.")
         except Exception as exc:
             last = str(exc)
         time.sleep(3)
+    if best is not None and _words(best) >= 40:
+        print(f"copione un po' corto ({_words(best)} parole) ma pulito: lo uso invece di saltare il reel", flush=True)
+        return best["scenes"]
     raise RuntimeError(f"copione non riuscito: {last}")
 
 

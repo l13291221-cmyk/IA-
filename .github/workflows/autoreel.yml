@@ -60,7 +60,9 @@ jobs:
           EXTRA_RUN: ${{ github.event.schedule == '23 16 * * *' }}
           KIND: ${{ github.event.inputs.kind }}
           KEYS: ${{ github.event.inputs.keys }}
-        run: python studio/autoreel.py
+        run: |
+          set -o pipefail
+          python studio/autoreel.py 2>&1 | tee /tmp/reel.log
 
       - name: Salva lo stato del bot
         run: |
@@ -74,3 +76,12 @@ jobs:
             sleep $((i * 10))
           done
           exit 1
+
+      - name: Errore? salvo il registro (ramo log-reel, per capire cosa non va)
+        if: failure()
+        run: |
+          mkdir -p /tmp/e && cp /tmp/reel.log /tmp/e/ 2>/dev/null || echo "niente registro" > /tmp/e/reel.log
+          git config user.name "vcriptov-reel-bot"
+          git config user.email "vcriptov-reel-bot@users.noreply.github.com"
+          git checkout --orphan log-reel && git rm -rf -q . && git clean -fdxq && cp /tmp/e/* . && git add . \
+            && git commit -q -m "registro reel non riuscito $(date -u +%F' '%H:%M)" && git push -f -q origin log-reel

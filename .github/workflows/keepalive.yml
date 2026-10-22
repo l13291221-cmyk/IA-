@@ -19,6 +19,9 @@ on:
   schedule:
     - cron: "*/10 * * * *"   # ogni 10 minuti (UTC)
   workflow_dispatch:          # permette di avviarlo a mano dalla tab "Actions"
+  push:                       # e una volta subito quando si cambia questo file
+    branches: [main]
+    paths: [".github/workflows/keepalive.yml"]
 
 # Se due esecuzioni si accavallano, tieni solo l'ultima.
 concurrency:

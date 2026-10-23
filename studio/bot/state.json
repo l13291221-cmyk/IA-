@@ -1,16 +1,8 @@
 {
- "next_part": 402,
+ "next_part": 403,
  "paused": false,
  "cycle_start": "2026-10-07",
  "usage": {
-  "364": [
-   "11_s6",
-   "145_s0",
-   "214_s0",
-   "364_s0",
-   "L209",
-   "L217"
-  ],
   "365": [
    "21_s0",
    "298_s0",
@@ -329,6 +321,14 @@
    "p260_s0",
    "p270_s0",
    "p340_s0"
+  ],
+  "402": [
+   "225_s0",
+   "L096",
+   "L182",
+   "L194",
+   "L255",
+   "L345"
   ]
  },
  "topics_done": [
@@ -342,7 +342,8 @@
   "why you should never chase green candles",
   "what makes a company worth investing in",
   "how to stay calm in a crypto crash",
-  "silver versus gold for beginners"
+  "silver versus gold for beginners",
+  "the questions to ask before buying any coin"
  ],
  "made": [
   {
@@ -409,6 +410,11 @@
    "part": "v002",
    "topic": "VcriptoV: your money stays on your own exchange",
    "date": "2026-10-21"
+  },
+  {
+   "part": "402",
+   "topic": "the questions to ask before buying any coin",
+   "date": "2026-10-23"
   }
  ],
  "promo_angles_done": [
@@ -417,7 +423,6 @@
  ],
  "next_promo": 3,
  "order": [
-  "364",
   "365",
   "366",
   "367",
@@ -456,6 +461,7 @@
   "399",
   "400",
   "401",
-  "v002"
+  "v002",
+  "402"
  ]
 }

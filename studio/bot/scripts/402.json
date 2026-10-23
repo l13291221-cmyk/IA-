@@ -1,0 +1,38 @@
+{
+ "en": [
+  {
+   "say": "Buying crypto is like buying a lottery ticket. You need to ask the right questions first.",
+   "img": "intro",
+   "caption": true,
+   "after": "L182.jpg"
+  },
+  {
+   "say": "First, what problem does this coin solve? Can it really help people or businesses?",
+   "img": "L194.jpg:flip"
+  },
+  {
+   "say": "Second, who runs the project? Is the team experienced and trustworthy?",
+   "img": "L345.jpg"
+  },
+  {
+   "say": "Third, how strong is the community? Do people actually believe in this project?",
+   "img": "225_s0.jpg:flip"
+  },
+  {
+   "say": "Fourth, is the technology solid? Can it stand the test of time?",
+   "img": "L096.jpg:flip"
+  },
+  {
+   "say": "Follow for part 403: why oil prices affect everything you buy. Not financial advice.",
+   "img": "L255.jpg"
+  }
+ ],
+ "it": [
+  "Comprare crypto è come comprare un biglietto della lotteria. Prima devi fare le domande giuste.",
+  "Primo, qual è il problema che risolve questa moneta? Può davvero aiutare le persone o le aziende?",
+  "Secondo, chi gestisce il progetto? La squadra è esperta e affidabile?",
+  "Terzo, quanto è forte la community? Le persone ci credono davvero in questo progetto?",
+  "Quarto, la tecnologia è solida? Resisterà nel tempo?",
+  "Segui per la parte 403: perché i prezzi del petrolio influenzano tutto ciò che compri. Non è un consiglio finanziario."
+ ]
+}

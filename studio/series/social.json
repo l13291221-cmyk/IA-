@@ -8771,6 +8771,26 @@
   "topic_it": "Argento contro oro per principianti",
   "next_it": "le domande da fare prima di comprare qualsiasi moneta"
  },
+ "402": {
+  "part": 402,
+  "promo": false,
+  "hook_en": "Buying crypto is like buying a lottery ticket. You need to ask the right questions first.",
+  "hook_it": "Comprare crypto è come comprare un biglietto della lotteria. Prima devi fare le domande giuste.",
+  "points_en": [
+   "First, what problem does this coin solve? Can it really help people or businesses?",
+   "Second, who runs the project? Is the team experienced and trustworthy?",
+   "Third, how strong is the community? Do people actually believe in this project?"
+  ],
+  "points_it": [
+   "Primo, qual è il problema che risolve questa moneta? Può davvero aiutare le persone o le aziende?",
+   "Secondo, chi gestisce il progetto? La squadra è esperta e affidabile?",
+   "Terzo, quanto è forte la community? Le persone ci credono davvero in questo progetto?"
+  ],
+  "topic_en": "The questions to ask before buying any coin",
+  "next_en": "why oil prices affect everything you buy",
+  "topic_it": "Le domande da fare prima di comprare qualsiasi moneta",
+  "next_it": "perché i prezzi del petrolio influenzano tutto ciò che compri"
+ },
  "v001": {
   "part": 1,
   "promo": true,

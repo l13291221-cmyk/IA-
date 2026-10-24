@@ -8791,6 +8791,26 @@
   "topic_it": "Le domande da fare prima di comprare qualsiasi moneta",
   "next_it": "perché i prezzi del petrolio influenzano tutto ciò che compri"
  },
+ "403": {
+  "part": 403,
+  "promo": false,
+  "hook_en": "Oil prices don't just affect gas stations. They touch everything you buy.",
+  "hook_it": "I prezzi del petrolio non riguardano solo le benzinai. Toccano tutto ciò che compri.",
+  "points_en": [
+   "When oil prices rise, factories have to pay more to run.",
+   "That means your phone, clothes, and food can get more expensive.",
+   "Lower oil prices help businesses keep prices stable."
+  ],
+  "points_it": [
+   "Quando il petrolio sale, le fabbriche devono pagare di più per funzionare.",
+   "Quindi il tuo telefono, i vestiti e il cibo possono diventare più cari.",
+   "I prezzi bassi del petrolio aiutano le aziende a mantenere i prezzi stabili."
+  ],
+  "topic_en": "Why oil prices affect everything you buy",
+  "next_en": "what a crypto bull run feels like from the inside",
+  "topic_it": "Perché i prezzi del petrolio influenzano tutto ciò che compri",
+  "next_it": "cosa si prova in un crypto bull run dall'interno"
+ },
  "v001": {
   "part": 1,
   "promo": true,

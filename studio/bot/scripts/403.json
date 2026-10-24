@@ -1,0 +1,38 @@
+{
+ "en": [
+  {
+   "say": "Oil prices don't just affect gas stations. They touch everything you buy.",
+   "img": "intro",
+   "caption": true,
+   "after": "346_s0.jpg"
+  },
+  {
+   "say": "When oil prices rise, factories have to pay more to run.",
+   "img": "84_s0.jpg"
+  },
+  {
+   "say": "That means your phone, clothes, and food can get more expensive.",
+   "img": "L284.jpg:flip"
+  },
+  {
+   "say": "Lower oil prices help businesses keep prices stable.",
+   "img": "66_s2.jpg"
+  },
+  {
+   "say": "So oil prices are a big part of the economy, even if you don't notice.",
+   "img": "L340.jpg:flip"
+  },
+  {
+   "say": "Follow for part 404: what a crypto bull run feels like from the inside. Not financial advice.",
+   "img": "08_s5.jpg"
+  }
+ ],
+ "it": [
+  "I prezzi del petrolio non riguardano solo le benzinai. Toccano tutto ciò che compri.",
+  "Quando il petrolio sale, le fabbriche devono pagare di più per funzionare.",
+  "Quindi il tuo telefono, i vestiti e il cibo possono diventare più cari.",
+  "I prezzi bassi del petrolio aiutano le aziende a mantenere i prezzi stabili.",
+  "Quindi il petrolio è una parte importante dell'economia, anche se non te ne accorgi.",
+  "Segui per la parte 404: cosa si prova in un crypto bull run dall'interno. Non è un consiglio finanziario."
+ ]
+}

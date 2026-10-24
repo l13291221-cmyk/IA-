@@ -1,16 +1,8 @@
 {
- "next_part": 403,
+ "next_part": 404,
  "paused": false,
  "cycle_start": "2026-10-07",
  "usage": {
-  "365": [
-   "21_s0",
-   "298_s0",
-   "365_s0",
-   "L026",
-   "L265",
-   "p110_s0"
-  ],
   "366": [
    "12_s3",
    "13_s4",
@@ -329,6 +321,14 @@
    "L194",
    "L255",
    "L345"
+  ],
+  "403": [
+   "08_s5",
+   "346_s0",
+   "66_s2",
+   "84_s0",
+   "L284",
+   "L340"
   ]
  },
  "topics_done": [
@@ -343,7 +343,8 @@
   "what makes a company worth investing in",
   "how to stay calm in a crypto crash",
   "silver versus gold for beginners",
-  "the questions to ask before buying any coin"
+  "the questions to ask before buying any coin",
+  "why oil prices affect everything you buy"
  ],
  "made": [
   {
@@ -415,6 +416,11 @@
    "part": "402",
    "topic": "the questions to ask before buying any coin",
    "date": "2026-10-23"
+  },
+  {
+   "part": "403",
+   "topic": "why oil prices affect everything you buy",
+   "date": "2026-10-24"
   }
  ],
  "promo_angles_done": [
@@ -423,7 +429,6 @@
  ],
  "next_promo": 3,
  "order": [
-  "365",
   "366",
   "367",
   "368",
@@ -462,6 +467,7 @@
   "400",
   "401",
   "v002",
-  "402"
+  "402",
+  "403"
  ]
 }

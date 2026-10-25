@@ -1,0 +1,38 @@
+{
+ "en": [
+  {
+   "say": "Imagine waking up to a crypto price surge. Your wallet jumps, but so does your heart rate.",
+   "img": "intro",
+   "caption": true,
+   "after": "L136.jpg:flip"
+  },
+  {
+   "say": "News flashes everywhere. Everyone’s talking about the next big coin.",
+   "img": "L224.jpg"
+  },
+  {
+   "say": "Traders rush to buy. Some make money, others lose it all.",
+   "img": "286_s0.jpg"
+  },
+  {
+   "say": "The market moves fast. No time to think—just act or miss the wave.",
+   "img": "L032.jpg"
+  },
+  {
+   "say": "A bull run is a rollercoaster. It’s exciting, risky, and unpredictable.",
+   "img": "L148.jpg"
+  },
+  {
+   "say": "Follow for part 405: how a recession affects your investments. Not financial advice.",
+   "img": "L369.jpg"
+  }
+ ],
+ "it": [
+  "Immagina di svegliarti con un botto di prezzo in crypto. Il tuo wallet salta, ma anche il battito del cuore.",
+  "Le notizie esplodono dappertutto. Tutti parlano della prossima grande moneta.",
+  "I trader si affrettano a comprare. Alcuni guadagnano, altri perdono tutto.",
+  "Il mercato si muove veloce. Non c'è tempo di pensare—agisci o perdi l'onda.",
+  "Una bull run è una giostra. È emozionante, rischiosa e imprevedibile.",
+  "Segui per la parte 405: come una recessione influisce sulle tue investimenti. Non è un consiglio finanziario."
+ ]
+}

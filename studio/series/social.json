@@ -8811,6 +8811,26 @@
   "topic_it": "Perché i prezzi del petrolio influenzano tutto ciò che compri",
   "next_it": "cosa si prova in un crypto bull run dall'interno"
  },
+ "404": {
+  "part": 404,
+  "promo": false,
+  "hook_en": "Imagine waking up to a crypto price surge. Your wallet jumps, but so does your heart rate.",
+  "hook_it": "Immagina di svegliarti con un botto di prezzo in crypto. Il tuo wallet salta, ma anche il battito del cuore.",
+  "points_en": [
+   "News flashes everywhere. Everyone’s talking about the next big coin.",
+   "Traders rush to buy. Some make money, others lose it all.",
+   "The market moves fast. No time to think—just act or miss the wave."
+  ],
+  "points_it": [
+   "Le notizie esplodono dappertutto. Tutti parlano della prossima grande moneta.",
+   "I trader si affrettano a comprare. Alcuni guadagnano, altri perdono tutto.",
+   "Il mercato si muove veloce. Non c'è tempo di pensare—agisci o perdi l'onda."
+  ],
+  "topic_en": "What a crypto bull run feels like from the inside",
+  "next_en": "how a recession affects your investments",
+  "topic_it": "Cosa si prova in un crypto bull run dall'interno",
+  "next_it": "come una recessione influisce sulle tue investimenti"
+ },
  "v001": {
   "part": 1,
   "promo": true,

@@ -1,16 +1,8 @@
 {
- "next_part": 405,
+ "next_part": 406,
  "paused": false,
  "cycle_start": "2026-10-07",
  "usage": {
-  "367": [
-   "07_s6",
-   "367_s0",
-   "74_s1",
-   "L154",
-   "L213",
-   "L214"
-  ],
   "368": [
    "01_s0",
    "117_s0",
@@ -329,6 +321,14 @@
    "L148",
    "L224",
    "L369"
+  ],
+  "405": [
+   "319_s0",
+   "332_s0",
+   "L044",
+   "L115",
+   "L265",
+   "p160_s0"
   ]
  },
  "topics_done": [
@@ -345,7 +345,8 @@
   "silver versus gold for beginners",
   "the questions to ask before buying any coin",
   "why oil prices affect everything you buy",
-  "what a crypto bull run feels like from the inside"
+  "what a crypto bull run feels like from the inside",
+  "how a recession affects your investments"
  ],
  "made": [
   {
@@ -427,6 +428,11 @@
    "part": "404",
    "topic": "what a crypto bull run feels like from the inside",
    "date": "2026-10-25"
+  },
+  {
+   "part": "405",
+   "topic": "how a recession affects your investments",
+   "date": "2026-10-26"
   }
  ],
  "promo_angles_done": [
@@ -435,7 +441,6 @@
  ],
  "next_promo": 3,
  "order": [
-  "367",
   "368",
   "369",
   "370",
@@ -474,6 +479,7 @@
   "v002",
   "402",
   "403",
-  "404"
+  "404",
+  "405"
  ]
 }

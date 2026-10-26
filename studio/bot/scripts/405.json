@@ -1,0 +1,38 @@
+{
+ "en": [
+  {
+   "say": "When the economy slows, your portfolio feels the ripple—let's see what happens to your investments.",
+   "img": "intro",
+   "caption": true,
+   "after": "319_s0.jpg"
+  },
+  {
+   "say": "Stocks often decline as companies cut costs, lower earnings, and investors grow cautious about future growth.",
+   "img": "L044.jpg:flip"
+  },
+  {
+   "say": "Government bonds usually become more attractive because people look for safer places, leading to higher prices and lower yields.",
+   "img": "332_s0.jpg"
+  },
+  {
+   "say": "Diversified holdings spread risk; different sectors—like utilities or consumer staples—often hold up better than volatile tech or luxury stocks.",
+   "img": "p160_s0.jpg"
+  },
+  {
+   "say": "Staying calm, staying invested for the long haul, and avoiding panic sales can transform short‑term dips into future growth.",
+   "img": "L115.jpg"
+  },
+  {
+   "say": "Follow for part 406: why a hardware wallet is worth the money. Not financial advice.",
+   "img": "L265.jpg"
+  }
+ ],
+ "it": [
+  "Quando l'economia rallenta, il tuo portafoglio sente l'onda—vediamo che succede ai tuoi investimenti.",
+  "Le azioni spesso scendono quando le aziende tagliano i costi, riducono i guadagni e gli investitori diventano più cauti riguardo alla crescita futura.",
+  "I titoli di stato diventano di solito più attraenti perché le persone cercano luoghi più sicuri, con conseguente aumento dei prezzi e riduzione dei rendimenti.",
+  "Le posizioni diversificate distribuiscono il rischio; settori diversi—come le utilities o i beni di consumo—spesso resistono meglio rispetto a tech volatili o azioni di lusso.",
+  "Rimanere calmi, rimanere investiti a lungo termine e evitare vendite di panico possono trasformare le fluttuazioni a breve termine in crescita futura.",
+  "Segui per la parte 406: perché un hardware wallet vale il denaro. Non è un consiglio finanziario."
+ ]
+}

@@ -8831,6 +8831,23 @@
   "topic_it": "Cosa si prova in un crypto bull run dall'interno",
   "next_it": "come una recessione influisce sulle tue investimenti"
  },
+ "405": {
+  "part": 405,
+  "promo": false,
+  "hook_en": "When the economy slows, your portfolio feels the ripple—let's see what happens to your investments.",
+  "hook_it": "Quando l'economia rallenta, il tuo portafoglio sente l'onda—vediamo che succede ai tuoi investimenti.",
+  "points_en": [
+   "Stocks often decline as companies cut costs, lower earnings, and investors grow cautious about future growth."
+  ],
+  "points_it": [
+   "Le azioni spesso scendono quando le aziende tagliano i costi, riducono i guadagni e gli investitori diventano più cauti riguardo alla crescita futura.",
+   "I titoli di stato diventano di solito più attraenti perché le persone cercano luoghi più sicuri, con conseguente aumento dei prezzi e riduzione dei rendimenti."
+  ],
+  "topic_en": "How a recession affects your investments",
+  "next_en": "why a hardware wallet is worth the money",
+  "topic_it": "Come una recessione influisce sulle tue investimenti",
+  "next_it": "perché un hardware wallet vale il denaro"
+ },
  "v001": {
   "part": 1,
   "promo": true,

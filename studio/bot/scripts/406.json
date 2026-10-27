@@ -1,0 +1,38 @@
+{
+ "en": [
+  {
+   "say": "Your crypto is only as safe as your phone. Here's why you need a hardware wallet.",
+   "img": "intro",
+   "caption": true,
+   "after": "03_s4.jpg:flip"
+  },
+  {
+   "say": "A hardware wallet stores your private keys offline, keeping hackers out.",
+   "img": "L113.jpg:flip"
+  },
+  {
+   "say": "Phishing scams and malware can steal your crypto if you keep it online.",
+   "img": "14_s2.jpg:flip"
+  },
+  {
+   "say": "Even if you use strong passwords, a hardware wallet adds extra protection.",
+   "img": "L170.jpg"
+  },
+  {
+   "say": "It's a small price to pay for the peace of mind your crypto is truly safe.",
+   "img": "13_s4.jpg:flip"
+  },
+  {
+   "say": "Follow for part 407: how dividends can pay your bills one day. Not financial advice.",
+   "img": "L252.jpg"
+  }
+ ],
+ "it": [
+  "Il tuo crypto è sicuro solo quanto il tuo telefono. Ecco perché serve un hardware wallet.",
+  "Un hardware wallet tiene le tue chiavi private offline, tenendo lontani gli hacker.",
+  "Gli scam di phishing e i malware possono rubare il tuo crypto se lo tieni online.",
+  "Anche se usi password forti, un hardware wallet aggiunge un'extra di protezione.",
+  "È un piccolo prezzo da pagare per la tranquillità di sapere che il tuo crypto è davvero al sicuro.",
+  "Segui per la parte 407: come i dividendi possono pagare le tue bollette un giorno. Non è un consiglio finanziario."
+ ]
+}

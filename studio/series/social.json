@@ -8848,6 +8848,26 @@
   "topic_it": "Come una recessione influisce sulle tue investimenti",
   "next_it": "perché un hardware wallet vale il denaro"
  },
+ "406": {
+  "part": 406,
+  "promo": false,
+  "hook_en": "Your crypto is only as safe as your phone. Here's why you need a hardware wallet.",
+  "hook_it": "Il tuo crypto è sicuro solo quanto il tuo telefono. Ecco perché serve un hardware wallet.",
+  "points_en": [
+   "A hardware wallet stores your private keys offline, keeping hackers out.",
+   "Phishing scams and malware can steal your crypto if you keep it online.",
+   "Even if you use strong passwords, a hardware wallet adds extra protection."
+  ],
+  "points_it": [
+   "Un hardware wallet tiene le tue chiavi private offline, tenendo lontani gli hacker.",
+   "Gli scam di phishing e i malware possono rubare il tuo crypto se lo tieni online.",
+   "Anche se usi password forti, un hardware wallet aggiunge un'extra di protezione."
+  ],
+  "topic_en": "Why a hardware wallet is worth the money",
+  "next_en": "how dividends can pay your bills one day",
+  "topic_it": "Perché un hardware wallet vale il denaro",
+  "next_it": "come i dividendi possono pagare le tue bollette un giorno"
+ },
  "v001": {
   "part": 1,
   "promo": true,

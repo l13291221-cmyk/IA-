@@ -1,0 +1,38 @@
+{
+ "en": [
+  {
+   "say": "Imagine one day waking up to money in your bank account just for owning shares.",
+   "img": "intro",
+   "caption": true,
+   "after": "31_s5.jpg:flip"
+  },
+  {
+   "say": "That's how dividends work. Companies share profits with shareholders.",
+   "img": "40_s0.jpg:flip"
+  },
+  {
+   "say": "Not all stocks pay dividends, but some do, especially older, stable companies.",
+   "img": "241_s0.jpg:flip"
+  },
+  {
+   "say": "Dividends are usually paid quarterly, often in cash or additional shares.",
+   "img": "10_s2.jpg:flip"
+  },
+  {
+   "say": "They can be a steady income stream, but they're not a get-rich-quick solution.",
+   "img": "167_s0.jpg"
+  },
+  {
+   "say": "Follow for part 408: the most common mistakes after a big crypto win. Not financial advice.",
+   "img": "L257.jpg"
+  }
+ ],
+ "it": [
+  "Immagina di svegliarti un giorno con soldi in banca solo per aver posseduto azioni.",
+  "Così funzionano i dividendi. Le aziende dividono i profitti con gli azionisti.",
+  "Non tutte le azioni pagano dividendi, ma alcune sì, soprattutto quelle più vecchie e stabili.",
+  "I dividendi vengono solitamente pagati trimestralmente, spesso in contanti o in altre azioni.",
+  "Possono essere una fonte di reddito stabile, ma non sono una soluzione per arricchirti in fretta.",
+  "Segui per la parte 408: gli errori più comuni dopo una grossa vincita in crypto. Non è un consiglio finanziario."
+ ]
+}

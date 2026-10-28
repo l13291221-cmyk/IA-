@@ -1,16 +1,8 @@
 {
- "next_part": 407,
+ "next_part": 408,
  "paused": false,
  "cycle_start": "2026-10-07",
  "usage": {
-  "369": [
-   "128_s3",
-   "369_s0",
-   "38_s6",
-   "L031",
-   "L046",
-   "L162"
-  ],
   "370": [
    "166_s0",
    "185_s0",
@@ -329,6 +321,14 @@
    "L113",
    "L170",
    "L252"
+  ],
+  "407": [
+   "10_s2",
+   "167_s0",
+   "241_s0",
+   "31_s5",
+   "40_s0",
+   "L257"
   ]
  },
  "topics_done": [
@@ -347,7 +347,8 @@
   "why oil prices affect everything you buy",
   "what a crypto bull run feels like from the inside",
   "how a recession affects your investments",
-  "why a hardware wallet is worth the money"
+  "why a hardware wallet is worth the money",
+  "how dividends can pay your bills one day"
  ],
  "made": [
   {
@@ -439,6 +440,11 @@
    "part": "406",
    "topic": "why a hardware wallet is worth the money",
    "date": "2026-10-27"
+  },
+  {
+   "part": "407",
+   "topic": "how dividends can pay your bills one day",
+   "date": "2026-10-28"
   }
  ],
  "promo_angles_done": [
@@ -447,7 +453,6 @@
  ],
  "next_promo": 3,
  "order": [
-  "369",
   "370",
   "371",
   "372",
@@ -486,6 +491,7 @@
   "403",
   "404",
   "405",
-  "406"
+  "406",
+  "407"
  ]
 }

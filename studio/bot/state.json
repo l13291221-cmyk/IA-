@@ -3,19 +3,6 @@
  "paused": false,
  "cycle_start": "2026-10-07",
  "usage": {
-  "370": [
-   "166_s0",
-   "185_s0",
-   "196_s0",
-   "293_s0",
-   "330_s0",
-   "370_s0",
-   "43_s6",
-   "L156",
-   "L267",
-   "p180_s0",
-   "p370_s0"
-  ],
   "371": [
    "08_s5",
    "371_s0",
@@ -329,6 +316,13 @@
    "31_s5",
    "40_s0",
    "L257"
+  ],
+  "v003": [
+   "L062",
+   "L139",
+   "L269",
+   "p040_s0",
+   "p130_s0"
   ]
  },
  "topics_done": [
@@ -445,15 +439,20 @@
    "part": "407",
    "topic": "how dividends can pay your bills one day",
    "date": "2026-10-28"
+  },
+  {
+   "part": "v003",
+   "topic": "VcriptoV: start for free",
+   "date": "2026-10-28"
   }
  ],
  "promo_angles_done": [
   "what a VcriptoV signal looks like",
-  "your money stays on your own exchange"
+  "your money stays on your own exchange",
+  "start for free"
  ],
- "next_promo": 3,
+ "next_promo": 4,
  "order": [
-  "370",
   "371",
   "372",
   "373",
@@ -492,6 +491,7 @@
   "404",
   "405",
   "406",
-  "407"
+  "407",
+  "v003"
  ]
 }

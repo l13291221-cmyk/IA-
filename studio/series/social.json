@@ -8868,6 +8868,26 @@
   "topic_it": "Perché un hardware wallet vale il denaro",
   "next_it": "come i dividendi possono pagare le tue bollette un giorno"
  },
+ "407": {
+  "part": 407,
+  "promo": false,
+  "hook_en": "Imagine one day waking up to money in your bank account just for owning shares.",
+  "hook_it": "Immagina di svegliarti un giorno con soldi in banca solo per aver posseduto azioni.",
+  "points_en": [
+   "That's how dividends work. Companies share profits with shareholders.",
+   "Not all stocks pay dividends, but some do, especially older, stable companies.",
+   "Dividends are usually paid quarterly, often in cash or additional shares."
+  ],
+  "points_it": [
+   "Così funzionano i dividendi. Le aziende dividono i profitti con gli azionisti.",
+   "Non tutte le azioni pagano dividendi, ma alcune sì, soprattutto quelle più vecchie e stabili.",
+   "I dividendi vengono solitamente pagati trimestralmente, spesso in contanti o in altre azioni."
+  ],
+  "topic_en": "How dividends can pay your bills one day",
+  "next_en": "the most common mistakes after a big crypto win",
+  "topic_it": "Come i dividendi possono pagare le tue bollette un giorno",
+  "next_it": "gli errori più comuni dopo una grossa vincita in crypto"
+ },
  "v001": {
   "part": 1,
   "promo": true,

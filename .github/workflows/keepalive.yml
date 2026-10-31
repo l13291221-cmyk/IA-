@@ -6,8 +6,8 @@ name: keepalive + reel puntuali
 # Perché esiste: Render (piano gratis) mette in "sleep" il sito quando nessuno
 # lo visita (di notte capita sempre). Da spento, il sito NON può svegliarsi da
 # solo, quindi il reel programmato (es. le 23:00) salterebbe. Questo workflow
-# gira su GitHub (gratis, esterno) e ogni ~10 minuti: 1) sveglia il sito e il
-# motore video, 2) chiama /tasks/social-tick che fa uscire SUBITO l'eventuale
+# gira su GitHub (gratis, esterno) e ogni ~10 minuti: 1) sveglia il sito,
+# 2) chiama /tasks/social-tick che fa uscire SUBITO l'eventuale
 # reel in ritardo. Così i contenuti escono puntuali senza pagare Render.
 #
 # Nota: le pianificazioni di GitHub possono ritardare di qualche minuto sotto
@@ -32,11 +32,11 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
+      # /health è una risposta di pochi byte: Render conta il traffico in uscita (piano gratuito).
+      # Il vecchio "motore video" su Render (ia-tio5) non serve più: i video li fa GitHub.
+      # Svegliarlo consumava le 750 ore gratuite al mese che Render dà a TUTTI i servizi insieme.
       - name: Sveglia il sito principale
-        run: curl -s -m 30 "https://vcriptov.onrender.com/" -o /dev/null || true
-
-      - name: Sveglia il motore video
-        run: curl -s -m 30 "https://ia-tio5.onrender.com/" -o /dev/null || true
+        run: curl -s -m 30 "https://vcriptov.onrender.com/health" -o /dev/null || true
 
       - name: Fai uscire l'eventuale reel/post in programma
         # Se hai impostato la variabile CRON_KEY su Render, aggiungi lo stesso

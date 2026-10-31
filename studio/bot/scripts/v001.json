@@ -1,21 +1,21 @@
 {
  "en": [
   {
-   "say": "Ever wondered what a VcriptoV signal actually looks like?",
+   "say": "Ever wondered what a VcriptoV alert actually looks like?",
    "img": "intro",
    "caption": true,
    "after": "p060_s0.jpg"
   },
   {
-   "say": "Each signal shows the coin, the entry price, a stop loss and a take profit.",
+   "say": "It shows the market, the price now, the nearest ceiling or floor, and how far it is.",
    "img": "p330_s0.jpg"
   },
   {
-   "say": "It arrives on Telegram and on your dashboard, with two buttons: invest, or don't invest.",
+   "say": "It arrives inside the website and as a notification on your phone. No button trades for you.",
    "img": "p020_s0.jpg"
   },
   {
-   "say": "VcriptoV analyzes the market, but you always decide. Signals are analyses, not certainties.",
+   "say": "A level is where the price turned before, not a forecast. You always decide.",
    "img": "61_s2.jpg:flip"
   },
   {
@@ -24,10 +24,10 @@
   }
  ],
  "it": [
-  "Ti sei mai chiesto com'è fatto davvero un segnale di VcriptoV?",
-  "Ogni segnale mostra la moneta, il prezzo di entrata, uno stop loss e un take profit.",
-  "Arriva su Telegram e nella tua dashboard, con due pulsanti: investi, o non investire.",
-  "VcriptoV analizza il mercato, ma decidi sempre tu. I segnali sono analisi, non certezze.",
+  "Ti sei mai chiesto com'è fatto davvero un avviso di VcriptoV?",
+  "Mostra il mercato, il prezzo di adesso, il tetto o il pavimento più vicino, e quanto è lontano.",
+  "Arriva nel sito e come notifica sul telefono. Nessun tasto compra al posto tuo.",
+  "Un livello è dove il prezzo si è girato prima, non una previsione. Decidi sempre tu.",
   "Inizia gratis su VcriptoV punto com. Link in bio. Non è un consiglio finanziario."
  ]
 }

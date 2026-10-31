@@ -202,21 +202,21 @@
  "010a": {
   "part": 10,
   "promo": true,
-  "hook_en": "What if a crypto assistant watched the market for you, all day and all night?",
-  "hook_it": "E se un assistente crypto osservasse il mercato al posto tuo, giorno e notte?",
+  "hook_en": "What if an app watched the key prices for you, all day and all night?",
+  "hook_it": "E se un'app tenesse d'occhio i prezzi importanti al posto tuo, giorno e notte?",
   "points_en": [
-   "VcriptoV analyzes the real market and sends automatic signals straight to your Telegram.",
-   "Every signal comes with a stop loss and a take profit. You choose: invest, or skip.",
+   "VcriptoV shows where Bitcoin, gold and other markets turned several times before: ceilings and floors.",
+   "When the price gets close to a level, or breaks it, you get a message. You decide what to do.",
    "And your money always stays on your own exchange. VcriptoV never holds your funds."
   ],
   "points_it": [
-   "VcriptoV analizza il mercato reale e invia segnali automatici direttamente sul tuo Telegram.",
-   "Ogni segnale arriva con stop loss e take profit. Scegli tu: investire, o lasciar perdere.",
+   "VcriptoV mostra dove Bitcoin, l'oro e altri mercati si sono girati più volte: tetti e pavimenti.",
+   "Quando il prezzo si avvicina a un livello, o lo rompe, ti arriva un messaggio. Decidi tu cosa fare.",
    "E i tuoi soldi restano sempre sul tuo exchange. VcriptoV non custodisce mai i tuoi fondi."
   ],
-  "topic_en": "What if a crypto assistant watched the market for you, all day and all night?",
+  "topic_en": "What if an app watched the key prices for you, all day and all night?",
   "next_en": null,
-  "topic_it": "E se un assistente crypto osservasse il mercato al posto tuo, giorno e notte?",
+  "topic_it": "E se un'app tenesse d'occhio i prezzi importanti al posto tuo, giorno e notte?",
   "next_it": null
  },
  "011": {
@@ -422,21 +422,21 @@
  "020a": {
   "part": 20,
   "promo": true,
-  "hook_en": "This is what a VcriptoV signal looks like.",
-  "hook_it": "Così si presenta un segnale di VcriptoV.",
+  "hook_en": "This is what a VcriptoV alert looks like.",
+  "hook_it": "Ecco com'è fatto un avviso di VcriptoV.",
   "points_en": [
-   "The coin, the entry, the stop loss, and the take profit. All in one message on Telegram.",
-   "Two buttons: invest, or don't invest. The decision is always yours.",
-   "Signals are automatic analyses, not certainties. Always check before you act."
+   "The market, the price now, the level, and how far it is. All in one message on your phone.",
+   "No buttons that trade for you. The decision is always yours.",
+   "A level is not a forecast: the price can break it. Always check before you act."
   ],
   "points_it": [
-   "La crypto, il prezzo di ingresso, lo stop loss e il take profit. Tutto in un solo messaggio su Telegram.",
-   "Due pulsanti: investi, o non investire. La decisione è sempre tua.",
-   "I segnali sono analisi automatiche, non certezze. Controlla sempre prima di agire."
+   "Il mercato, il prezzo di adesso, il livello e quanto è lontano. Tutto in un messaggio sul telefono.",
+   "Nessun tasto che compra al posto tuo. La decisione è sempre tua.",
+   "Un livello non è una previsione: il prezzo può romperlo. Controlla sempre prima di agire."
   ],
-  "topic_en": "This is what a VcriptoV signal looks like",
+  "topic_en": "This is what a VcriptoV alert looks like",
   "next_en": null,
-  "topic_it": "Così si presenta un segnale di VcriptoV",
+  "topic_it": "Ecco com'è fatto un avviso di VcriptoV",
   "next_it": null
  },
  "021": {
@@ -863,16 +863,16 @@
   "part": 40,
   "promo": true,
   "hook_en": "You can start with VcriptoV for free. No card needed.",
-  "hook_it": "Con VcriptoV puoi iniziare gratis. Non serve nessuna carta.",
+  "hook_it": "Con VcriptoV puoi iniziare gratis. Senza carta.",
   "points_en": [
-   "Get your access code by email, and unlock the automatic signals on the dashboard and on Telegram.",
-   "Signals cover the cryptos, and gold too.",
-   "You only use credits for extras, like the AI assistant and the one-tap invest."
+   "Get your access code by email, and open charts, levels and alerts.",
+   "Crypto, gold, silver and other metals, all in one place.",
+   "You only use credits for extras, like the AI assistant."
   ],
   "points_it": [
-   "Ricevi il tuo codice di accesso via email, e sblocca i segnali automatici sulla dashboard e su Telegram.",
-   "I segnali coprono le crypto, e anche l'oro.",
-   "Usi i crediti solo per gli extra, come l'assistente AI e l'investimento con un tocco."
+   "Ricevi il codice di accesso per email e apri grafici, livelli e avvisi.",
+   "Crypto, oro, argento e altri metalli, tutto in un posto.",
+   "I crediti servono solo per gli extra, come l'assistente AI."
   ],
   "topic_en": "You can start with VcriptoV for free",
   "next_en": null,
@@ -1303,20 +1303,20 @@
   "part": 60,
   "promo": true,
   "hook_en": "VcriptoV doesn't only watch crypto. It watches gold too.",
-  "hook_it": "VcriptoV non segue solo le crypto. Segue anche l'oro.",
+  "hook_it": "VcriptoV non guarda solo le crypto. Guarda anche l'oro.",
   "points_en": [
-   "Automatic gold signals arrive in the same place as your crypto signals.",
-   "Each one comes with a stop loss and a take profit, like every other signal.",
+   "Gold, silver, platinum, copper and oil get their ceilings and floors, like Bitcoin.",
+   "Each level shows how many times the price turned there, with real daily candles.",
    "One app, more markets, and the same rule: you decide."
   ],
   "points_it": [
-   "I segnali automatici sull'oro arrivano nello stesso posto dei tuoi segnali crypto.",
-   "Ognuno ha il suo stop loss e il suo take profit, come tutti gli altri segnali.",
-   "Una sola app, più mercati, e la stessa regola: decidi tu."
+   "Oro, argento, platino, rame e petrolio hanno i loro tetti e pavimenti, come Bitcoin.",
+   "Ogni livello dice quante volte il prezzo si è girato lì, con candele giornaliere vere.",
+   "Un'app, più mercati, e la stessa regola: decidi tu."
   ],
   "topic_en": "VcriptoV doesn't only watch crypto",
   "next_en": null,
-  "topic_it": "VcriptoV non segue solo le crypto",
+  "topic_it": "VcriptoV non guarda solo le crypto",
   "next_it": null
  },
  "061": {
@@ -1522,21 +1522,21 @@
  "070a": {
   "part": 70,
   "promo": true,
-  "hook_en": "Everything in one place: the VcriptoV dashboard.",
-  "hook_it": "Tutto in un unico posto: la dashboard di VcriptoV.",
+  "hook_en": "Everything in one place: your VcriptoV dashboard.",
+  "hook_it": "Tutto in un posto: la tua dashboard di VcriptoV.",
   "points_en": [
-   "Your equity curve, your profit and loss, and your liquidity.",
-   "Your open positions, and the full history of your trades.",
+   "Your exchange balance and the market at a glance.",
+   "Your orders and the history of your buying plan.",
    "Clear numbers help you make calmer decisions."
   ],
   "points_it": [
-   "La curva del tuo capitale, i tuoi profitti e perdite, e la tua liquidità.",
-   "Le tue posizioni aperte, e lo storico completo dei tuoi trade.",
-   "Numeri chiari ti aiutano a prendere decisioni più serene."
+   "Il saldo del tuo exchange e il mercato a colpo d'occhio.",
+   "I tuoi ordini e lo storico del piano di accumulo.",
+   "Numeri chiari aiutano a decidere con più calma."
   ],
-  "topic_en": "Everything in one place: the VcriptoV dashboard",
+  "topic_en": "Everything in one place: your VcriptoV dashboard",
   "next_en": null,
-  "topic_it": "Tutto in un unico posto: la dashboard di VcriptoV",
+  "topic_it": "Tutto in un posto: la tua dashboard di VcriptoV",
   "next_it": null
  },
  "071": {
@@ -1743,16 +1743,16 @@
   "part": 80,
   "promo": true,
   "hook_en": "Not ready to use real money? With VcriptoV, you don't have to.",
-  "hook_it": "Non sei pronto a usare soldi veri? Con VcriptoV, non devi farlo.",
+  "hook_it": "Non sei pronto a usare soldi veri? Con VcriptoV non devi.",
   "points_en": [
-   "Real trading is turned off by default. Without it, everything is paper trading on real prices.",
-   "You can see how signals would have worked, without risking a cent.",
+   "Real trading is turned off by default. Charts, levels and alerts work without it.",
+   "Watch how the price reacts at each level, without risking a cent.",
    "When you feel ready, you decide if and when to switch on real trading, with your own keys."
   ],
   "points_it": [
-   "Il trading reale è disattivato di default. Finché è spento, è tutto paper trading su prezzi reali.",
-   "Puoi vedere come avrebbero funzionato i segnali, senza rischiare un centesimo.",
-   "Quando ti senti pronto, decidi tu se e quando attivare il trading reale, con le tue chiavi."
+   "Il trading reale è spento all'inizio. Grafici, livelli e avvisi funzionano senza.",
+   "Guarda come reagisce il prezzo a ogni livello, senza rischiare un centesimo.",
+   "Quando ti senti pronto, decidi tu se e quando accendere il trading reale, con le tue chiavi."
   ],
   "topic_en": "Not ready to use real money?",
   "next_en": null,
@@ -1965,14 +1965,14 @@
   "hook_en": "Setting up VcriptoV takes a few minutes. Here's how.",
   "hook_it": "Configurare VcriptoV richiede pochi minuti. Ecco come.",
   "points_en": [
-   "Get your access code by email, and open the dashboard.",
-   "Connect your Telegram with the built-in step-by-step guide.",
-   "Then the signals come to you. No coding, no complicated setup."
+   "Get your access code by email, and open the app.",
+   "Pick the markets you follow and turn on notifications.",
+   "Then the alerts come to you. No coding, no complicated setup."
   ],
   "points_it": [
-   "Ricevi il tuo codice di accesso via email, e apri la dashboard.",
-   "Collega il tuo Telegram con la guida passo passo integrata.",
-   "Poi sono i segnali a venire da te. Niente codice, niente configurazioni complicate."
+   "Ricevi il codice di accesso per email e apri l'app.",
+   "Scegli i mercati che segui e attiva le notifiche.",
+   "Poi gli avvisi arrivano da te. Niente codice, niente complicazioni."
   ],
   "topic_en": "Setting up VcriptoV takes a few minutes",
   "next_en": null,
@@ -2622,21 +2622,21 @@
  "120a": {
   "part": 120,
   "promo": true,
-  "hook_en": "We'll be honest: VcriptoV signals are not always right.",
-  "hook_it": "Siamo sinceri: i segnali di VcriptoV non ci azzeccano sempre.",
+  "hook_en": "We'll be honest: price levels are not always respected.",
+  "hook_it": "Siamo onesti: i livelli di prezzo non vengono sempre rispettati.",
   "points_en": [
-   "They're automatic analyses, not 100% accurate, and not financial advice.",
-   "That's why every signal has a stop loss, to keep losses small when it's wrong.",
+   "A ceiling or a floor is where the price turned before. Not a promise, and not financial advice.",
+   "That's why a broken level is news too: you get a message when it happens.",
    "Crypto is risky. Only use money you can afford to lose."
   ],
   "points_it": [
-   "Sono analisi automatiche, non precise al 100%, e non sono consigli finanziari.",
-   "Per questo ogni segnale ha uno stop loss, per tenere piccole le perdite quando sbaglia.",
+   "Un tetto o un pavimento è dove il prezzo si è girato prima. Non una promessa, e non un consiglio finanziario.",
+   "Per questo anche un livello rotto è una notizia: ti arriva un messaggio quando succede.",
    "Le crypto sono rischiose. Usa solo soldi che puoi permetterti di perdere."
   ],
-  "topic_en": "We'll be honest: VcriptoV signals are not always right",
+  "topic_en": "We'll be honest: price levels are not always respected",
   "next_en": null,
-  "topic_it": "Siamo sinceri: i segnali di VcriptoV non ci azzeccano sempre",
+  "topic_it": "Siamo onesti: i livelli di prezzo non vengono sempre rispettati",
   "next_it": null
  },
  "121": {
@@ -2843,20 +2843,20 @@
   "part": 130,
   "promo": true,
   "hook_en": "Put VcriptoV on your phone's home screen.",
-  "hook_it": "Metti VcriptoV nella schermata home del tuo telefono.",
+  "hook_it": "Metti VcriptoV nella schermata Home del telefono.",
   "points_en": [
    "Open the website and tap install. It works like an app.",
-   "Signals, dashboard and the AI assistant, one tap away.",
-   "No app store needed."
+   "Levels, alerts and the AI assistant, one tap away.",
+   "It takes a few seconds."
   ],
   "points_it": [
    "Apri il sito e tocca installa. Funziona come un'app.",
-   "Segnali, dashboard e assistente AI, a un tocco di distanza.",
-   "Non serve nessun app store."
+   "Livelli, avvisi e assistente AI, a un tocco.",
+   "Ci vogliono pochi secondi."
   ],
   "topic_en": "Put VcriptoV on your phone's home screen",
   "next_en": null,
-  "topic_it": "Metti VcriptoV nella schermata home del tuo telefono",
+  "topic_it": "Metti VcriptoV nella schermata Home del telefono",
   "next_it": null
  },
  "131": {
@@ -3062,21 +3062,21 @@
  "140a": {
   "part": 140,
   "promo": true,
-  "hook_en": "Most traders lose because they don't plan their exit. VcriptoV signals always do.",
-  "hook_it": "La maggior parte dei trader perde perché non pianifica l'uscita. I segnali di VcriptoV lo fanno sempre.",
+  "hook_en": "Most traders lose because they don't plan their exit. Levels help you plan.",
+  "hook_it": "Quasi tutti perdono perché non pianificano l'uscita. I livelli aiutano a pianificare.",
   "points_en": [
-   "Every signal includes a stop loss, to limit the loss if it goes wrong.",
-   "And a take profit, to lock in gains if it goes right.",
+   "A floor below the price shows where it bounced before: a natural place to think about a stop.",
+   "A ceiling above shows where it was pushed back: a natural place to think about a target.",
    "A plan before every trade. That's how risk is managed."
   ],
   "points_it": [
-   "Ogni segnale include uno stop loss, per limitare la perdita se va male.",
-   "E un take profit, per incassare i guadagni se va bene.",
-   "Un piano prima di ogni trade. È così che si gestisce il rischio."
+   "Un pavimento sotto il prezzo mostra dove è rimbalzato: un punto naturale per pensare allo stop.",
+   "Un tetto sopra mostra dove è stato respinto: un punto naturale per pensare all'obiettivo.",
+   "Un piano prima di ogni operazione. È così che si gestisce il rischio."
   ],
   "topic_en": "Most traders lose because they don't plan their exit",
   "next_en": null,
-  "topic_it": "La maggior parte dei trader perde perché non pianifica l'uscita",
+  "topic_it": "Quasi tutti perdono perché non pianificano l'uscita",
   "next_it": null
  },
  "141": {
@@ -3282,21 +3282,21 @@
  "150a": {
   "part": 150,
   "promo": true,
-  "hook_en": "See a signal you like? Invest with one tap.",
-  "hook_it": "Vedi un segnale che ti piace? Investi con un tocco.",
+  "hook_en": "Want to buy a little every month, without watching the chart?",
+  "hook_it": "Vuoi comprare un po' ogni mese, senza guardare il grafico?",
   "points_en": [
-   "With one-tap invest, VcriptoV places the order on your own exchange account.",
-   "With a stop loss and a take profit, and a maximum amount per order that you set.",
-   "You stay in control. No tap, no trade."
+   "With the buying plan, VcriptoV buys a fixed amount on your own exchange account.",
+   "On the day you choose, and never above the maximum amount you set.",
+   "You stay in control. You can pause it anytime."
   ],
   "points_it": [
-   "Basta un tocco, e VcriptoV piazza l'ordine sul tuo account dell'exchange.",
-   "Con stop loss, take profit, e un importo massimo per ordine che decidi tu.",
-   "Il controllo resta a te. Niente tocco, niente trade."
+   "Con il piano di accumulo, VcriptoV compra una cifra fissa sul tuo conto dell'exchange.",
+   "Nel giorno che scegli, e mai oltre l'importo massimo che imposti.",
+   "Hai sempre il controllo. Puoi metterlo in pausa quando vuoi."
   ],
-  "topic_en": "See a signal you like?",
+  "topic_en": "Want to buy a little every month, without watching the chart?",
   "next_en": null,
-  "topic_it": "Vedi un segnale che ti piace?",
+  "topic_it": "Vuoi comprare un po' ogni mese, senza guardare il grafico?",
   "next_it": null
  },
  "151": {
@@ -3505,14 +3505,14 @@
   "hook_en": "VcriptoV speaks your language.",
   "hook_it": "VcriptoV parla la tua lingua.",
   "points_en": [
-   "The website, the signals and the AI assistant are available in many languages.",
-   "From English and Italian to Spanish, Arabic, Hindi and more.",
-   "Crypto is global. Your assistant should be too."
+   "The website, the alerts and the AI assistant are available in many languages.",
+   "From English and Italian to Spanish, Japanese, Hindi and more.",
+   "Crypto is global. Your app should be too."
   ],
   "points_it": [
-   "Il sito, i segnali e l'assistente AI sono disponibili in tante lingue.",
-   "Inglese, italiano, spagnolo, arabo, hindi e molte altre.",
-   "Le crypto sono globali. Anche il tuo assistente dovrebbe esserlo."
+   "Il sito, gli avvisi e l'assistente AI sono disponibili in tante lingue.",
+   "Dall'inglese e l'italiano allo spagnolo, al giapponese, all'hindi e altre.",
+   "Le crypto sono globali. Anche la tua app dovrebbe esserlo."
   ],
   "topic_en": "VcriptoV speaks your language",
   "next_en": null,
@@ -4166,13 +4166,13 @@
   "hook_it": "Ti serve aiuto con VcriptoV? Rispondono persone vere.",
   "points_en": [
    "Write to us by email, or on WhatsApp.",
-   "We help with setup, Telegram, exchange connections, and any question.",
+   "We help with setup, notifications, exchange connections, and any question.",
    "And remember: we will never ask for your seed phrase or your passwords."
   ],
   "points_it": [
-   "Scrivici via email, o su WhatsApp.",
-   "Ti aiutiamo con la configurazione, Telegram, il collegamento agli exchange, e qualsiasi domanda.",
-   "E ricorda: non ti chiederemo mai la tua seed phrase o le tue password."
+   "Scrivici per email o su WhatsApp.",
+   "Ti aiutiamo con la configurazione, le notifiche, il collegamento dell'exchange e qualsiasi domanda.",
+   "E ricorda: non ti chiederemo mai la seed phrase o le password."
   ],
   "topic_en": "Need help with VcriptoV?",
   "next_en": null,
@@ -5042,21 +5042,21 @@
  "230a": {
   "part": 230,
   "promo": true,
-  "hook_en": "Emotions are the biggest enemy in trading. Software doesn't panic.",
-  "hook_it": "Le emozioni sono il peggior nemico nel trading. Un software non va nel panico.",
+  "hook_en": "Emotions are the biggest enemy in trading. Data doesn't panic.",
+  "hook_it": "Le emozioni sono il nemico più grande nel trading. I dati non vanno nel panico.",
   "points_en": [
-   "VcriptoV watches the market around the clock, following the same rules every time.",
-   "No fear, no greed, no revenge trades.",
-   "You still decide. But you decide with a clear signal, not a racing heart."
+   "VcriptoV checks the prices around the clock, with the same rules every time.",
+   "No fear, no greed, just where the price stopped before.",
+   "You still decide. But you decide with clear numbers, not a racing heart."
   ],
   "points_it": [
-   "VcriptoV osserva il mercato 24 ore su 24, seguendo sempre le stesse regole.",
-   "Niente paura, niente avidità, niente revenge trading.",
-   "Decidi sempre tu. Ma decidi con un segnale chiaro, non con il cuore a mille."
+   "VcriptoV controlla i prezzi giorno e notte, sempre con le stesse regole.",
+   "Niente paura, niente avidità, solo dove il prezzo si è fermato prima.",
+   "Decidi sempre tu. Ma con numeri chiari, non col cuore a mille."
   ],
   "topic_en": "Emotions are the biggest enemy in trading",
   "next_en": null,
-  "topic_it": "Le emozioni sono il peggior nemico nel trading",
+  "topic_it": "Le emozioni sono il nemico più grande nel trading",
   "next_it": null
  },
  "231": {
@@ -5262,20 +5262,20 @@
   "part": 240,
   "promo": true,
   "hook_en": "With VcriptoV, you're always in control.",
-  "hook_it": "Con VcriptoV, hai sempre il controllo.",
+  "hook_it": "Con VcriptoV hai sempre il controllo.",
   "points_en": [
-   "Each signal waits for your choice: invest, or don't invest.",
+   "Alerts inform you. They never trade for you.",
    "Real trading is off unless you switch it on, with your own keys.",
    "And you can cancel auto-renewal anytime from your settings."
   ],
   "points_it": [
-   "Ogni segnale aspetta la tua scelta: investi, o non investire.",
-   "Il trading reale resta spento finché non lo attivi tu, con le tue chiavi.",
-   "E puoi disattivare il rinnovo automatico quando vuoi dalle impostazioni."
+   "Gli avvisi ti informano. Non comprano mai al posto tuo.",
+   "Il trading reale è spento finché non lo accendi tu, con le tue chiavi.",
+   "E puoi disdire il rinnovo automatico quando vuoi dalle impostazioni."
   ],
   "topic_en": "With VcriptoV, you're always in control",
   "next_en": null,
-  "topic_it": "Con VcriptoV, hai sempre il controllo",
+  "topic_it": "Con VcriptoV hai sempre il controllo",
   "next_it": null
  },
  "241": {
@@ -5704,14 +5704,14 @@
   "hook_en": "Your keys, your exchange, your rules. Here's how VcriptoV keeps things safe.",
   "hook_it": "Le tue chiavi, il tuo exchange, le tue regole. Ecco come VcriptoV tiene tutto al sicuro.",
   "points_en": [
-   "Exchange keys and Telegram tokens are stored encrypted.",
-   "The software can't withdraw your funds.",
+   "Exchange keys are stored encrypted.",
+   "The app can't withdraw your funds: keys with withdrawal permission are refused.",
    "Tip: create keys with only the permissions you need, and never enable withdrawals."
   ],
   "points_it": [
-   "Le chiavi degli exchange e i token di Telegram sono salvati in forma criptata.",
-   "Il software non può prelevare i tuoi fondi.",
-   "Consiglio: crea chiavi con i soli permessi che ti servono, e non abilitare mai i prelievi."
+   "Le chiavi dell'exchange sono salvate cifrate.",
+   "L'app non può prelevare i tuoi fondi: le chiavi con permesso di prelievo vengono rifiutate.",
+   "Consiglio: crea chiavi solo con i permessi che servono, e non attivare mai i prelievi."
   ],
   "topic_en": "Your keys, your exchange, your rules",
   "next_en": null,
@@ -5922,20 +5922,20 @@
   "part": 270,
   "promo": true,
   "hook_en": "Three steps to start with VcriptoV.",
-  "hook_it": "3 passi per iniziare con VcriptoV.",
+  "hook_it": "Tre passi per iniziare con VcriptoV.",
   "points_en": [
    "One: get your free access code by email.",
-   "Two: connect Telegram, so the signals reach you.",
-   "Three: read each signal, and decide. That's it."
+   "Two: follow the markets you care about, and turn on notifications.",
+   "Three: read each alert, and decide. That's it."
   ],
   "points_it": [
-   "Primo: ricevi via email il tuo codice di accesso gratuito.",
-   "Secondo: collega Telegram, così i segnali arrivano a te.",
-   "Terzo: leggi ogni segnale, e decidi. Tutto qui."
+   "Uno: ricevi gratis il codice di accesso per email.",
+   "Due: segui i mercati che ti interessano e attiva le notifiche.",
+   "Tre: leggi ogni avviso, e decidi. Tutto qui."
   ],
   "topic_en": "Three steps to start with VcriptoV",
   "next_en": null,
-  "topic_it": "3 passi per iniziare con VcriptoV",
+  "topic_it": "Tre passi per iniziare con VcriptoV",
   "next_it": null
  },
  "271": {
@@ -6364,13 +6364,13 @@
   "hook_en": "Crypto never sleeps. VcriptoV doesn't either.",
   "hook_it": "Le crypto non dormono mai. E nemmeno VcriptoV.",
   "points_en": [
-   "It watches the market 24 hours a day, 7 days a week.",
-   "When it finds a setup, the signal arrives on your phone.",
+   "It checks the prices 24 hours a day, 7 days a week.",
+   "When a price gets close to a level you follow, the message arrives on your phone.",
    "You sleep. It watches."
   ],
   "points_it": [
-   "Osserva il mercato 24 ore su 24, 7 giorni su 7.",
-   "Quando trova un setup, il segnale arriva sul tuo telefono.",
+   "Controlla i prezzi 24 ore su 24, 7 giorni su 7.",
+   "Quando un prezzo che segui si avvicina a un livello, il messaggio arriva sul telefono.",
    "Tu dormi. Lui veglia."
   ],
   "topic_en": "Crypto never sleeps",
@@ -6805,13 +6805,13 @@
   "hook_it": "Segui VcriptoV ovunque.",
   "points_en": [
    "Short lessons on Instagram, TikTok and YouTube.",
-   "Signals and updates on Telegram.",
+   "Market updates on our Telegram channel.",
    "Articles, the podcast and the AI assistant on the website."
   ],
   "points_it": [
    "Lezioni brevi su Instagram, TikTok e YouTube.",
-   "Segnali e aggiornamenti su Telegram.",
-   "Articoli, il podcast e l'assistente AI sul sito."
+   "Aggiornamenti sul mercato nel nostro canale Telegram.",
+   "Articoli, podcast e assistente AI sul sito."
   ],
   "topic_en": "Follow VcriptoV everywhere",
   "next_en": null,
@@ -7022,15 +7022,15 @@
   "part": 320,
   "promo": true,
   "hook_en": "Have questions before you start? The VcriptoV FAQ has answers.",
-  "hook_it": "Hai domande prima di iniziare? Le FAQ di VcriptoV hanno le risposte.",
+  "hook_it": "Hai domande prima di iniziare? Le FAQ di VcriptoV rispondono.",
   "points_en": [
-   "How signals work, how exchange connections work, and how credits work.",
+   "How levels and alerts work, how exchange connections work, and how credits work.",
    "What is free, what costs credits, and how to cancel.",
    "Clear answers, before you decide anything."
   ],
   "points_it": [
-   "Come funzionano i segnali, i collegamenti agli exchange e i crediti.",
-   "Cosa è gratis, cosa costa crediti, e come disdire.",
+   "Come funzionano livelli e avvisi, il collegamento dell'exchange e i crediti.",
+   "Cosa è gratis, cosa costa crediti e come disdire.",
    "Risposte chiare, prima di decidere qualsiasi cosa."
   ],
   "topic_en": "Have questions before you start?",
@@ -7242,20 +7242,20 @@
   "part": 330,
   "promo": true,
   "hook_en": "Learning by doing is the best way to learn.",
-  "hook_it": "Il modo migliore per imparare è fare pratica.",
+  "hook_it": "Imparare facendo è il modo migliore per imparare.",
   "points_en": [
-   "With paper trading, you can follow VcriptoV signals on real prices, without real money.",
-   "You see what works, what doesn't, and how you react.",
+   "Follow the levels on real prices, without real money.",
+   "You see how the price reacts, and how you react.",
    "Then decide calmly if real trading is for you."
   ],
   "points_it": [
-   "Con il paper trading, puoi seguire i segnali di VcriptoV su prezzi reali, senza soldi veri.",
-   "Vedi cosa funziona, cosa no, e come reagisci tu.",
+   "Segui i livelli sui prezzi veri, senza soldi veri.",
+   "Vedi come reagisce il prezzo, e come reagisci tu.",
    "Poi decidi con calma se il trading reale fa per te."
   ],
   "topic_en": "Learning by doing is the best way to learn",
   "next_en": null,
-  "topic_it": "Il modo migliore per imparare è fare pratica",
+  "topic_it": "Imparare facendo è il modo migliore per imparare",
   "next_it": null
  },
  "331": {
@@ -7464,14 +7464,14 @@
   "hook_en": "VcriptoV in one minute.",
   "hook_it": "VcriptoV in un minuto.",
   "points_en": [
-   "Automatic signals on crypto and gold, on Telegram and on the dashboard.",
+   "Ceilings and floors with alerts, on crypto, gold and metals.",
    "Your funds stay on your own exchange.",
-   "Plus an AI assistant, a podcast, and daily articles."
+   "Plus an AI assistant, a podcast, and articles."
   ],
   "points_it": [
-   "Segnali automatici su crypto e oro, su Telegram e sulla dashboard.",
+   "Tetti e pavimenti con avvisi, su crypto, oro e metalli.",
    "I tuoi fondi restano sul tuo exchange.",
-   "In più, un assistente AI, un podcast e articoli ogni giorno."
+   "In più un assistente AI, un podcast e gli articoli."
   ],
   "topic_en": "VcriptoV in one minute",
   "next_en": null,
@@ -7685,12 +7685,12 @@
   "hook_it": "Perché abbiamo creato VcriptoV.",
   "points_en": [
    "Crypto is full of hype, scams and emotional decisions.",
-   "We wanted a calmer way: clear signals, clear risk, and your money on your own exchange.",
+   "We wanted a calmer way: clear levels, clear risk, and your money on your own exchange.",
    "Tools for people who want to learn, not gamble."
   ],
   "points_it": [
-   "Il mondo crypto è pieno di hype, truffe e decisioni emotive.",
-   "Volevamo un approccio più calmo: segnali chiari, rischio chiaro, e i tuoi soldi sul tuo exchange.",
+   "Le crypto sono piene di hype, truffe e decisioni emotive.",
+   "Volevamo un modo più calmo: livelli chiari, rischio chiaro, e i tuoi soldi sul tuo exchange.",
    "Strumenti per chi vuole imparare, non scommettere."
   ],
   "topic_en": "Why we built VcriptoV",
@@ -7901,21 +7901,21 @@
  "360a": {
   "part": 360,
   "promo": true,
-  "hook_en": "How do you know if VcriptoV signals are any good? Look at the record.",
-  "hook_it": "Come fai a sapere se i segnali di VcriptoV sono validi? Guarda lo storico.",
+  "hook_en": "How do you read a price level? With honesty.",
+  "hook_it": "Come si legge un livello di prezzo? Con onestà.",
   "points_en": [
-   "The website shows how past signals performed, wins and losses.",
-   "Past results don't guarantee future ones. But transparency matters.",
-   "Judge any tool by its record, not by its promises."
+   "Each level shows how many times the price turned there, and how far it is now.",
+   "Past behavior doesn't guarantee the future. A level can break at any moment.",
+   "Judge any tool by its data, not by its promises."
   ],
   "points_it": [
-   "Il sito mostra come sono andati i segnali passati, vincenti e perdenti.",
-   "I risultati passati non garantiscono quelli futuri. Ma la trasparenza conta.",
-   "Giudica qualsiasi strumento dai risultati, non dalle promesse."
+   "Ogni livello dice quante volte il prezzo si è girato lì, e quanto è lontano adesso.",
+   "Il passato non garantisce il futuro. Un livello può rompersi in qualsiasi momento.",
+   "Giudica ogni strumento dai suoi dati, non dalle sue promesse."
   ],
-  "topic_en": "How do you know if VcriptoV signals are any good?",
+  "topic_en": "How do you read a price level?",
   "next_en": null,
-  "topic_it": "Come fai a sapere se i segnali di VcriptoV sono validi?",
+  "topic_it": "Come si legge un livello di prezzo?",
   "next_it": null
  },
  "361": {
@@ -8124,14 +8124,14 @@
   "hook_en": "The more you know, the better you invest.",
   "hook_it": "Più sai, meglio investi.",
   "points_en": [
-   "VcriptoV mixes tools and education: signals, articles, podcast, and these videos.",
+   "VcriptoV mixes tools and education: levels, articles, podcast, and these videos.",
    "So you understand what you do, not just follow it.",
    "Knowledge compounds, just like money."
   ],
   "points_it": [
-   "VcriptoV unisce strumenti e formazione: segnali, articoli, podcast, e questi video.",
+   "VcriptoV unisce strumenti e studio: livelli, articoli, podcast e questi video.",
    "Così capisci quello che fai, invece di seguirlo e basta.",
-   "La conoscenza cresce nel tempo, proprio come i soldi."
+   "La conoscenza cresce come i soldi: con l'interesse composto."
   ],
   "topic_en": "The more you know, the better you invest",
   "next_en": null,
@@ -8891,21 +8891,21 @@
  "v001": {
   "part": 1,
   "promo": true,
-  "hook_en": "Ever wondered what a VcriptoV signal actually looks like?",
-  "hook_it": "Ti sei mai chiesto com'è fatto davvero un segnale di VcriptoV?",
+  "hook_en": "Ever wondered what a VcriptoV alert actually looks like?",
+  "hook_it": "Ti sei mai chiesto com'è fatto davvero un avviso di VcriptoV?",
   "points_en": [
-   "Each signal shows the coin, the entry price, a stop loss and a take profit.",
-   "It arrives on Telegram and on your dashboard, with two buttons: invest, or don't invest.",
-   "VcriptoV analyzes the market, but you always decide. Signals are analyses, not certainties."
+   "It shows the market, the price now, the nearest ceiling or floor, and how far it is.",
+   "It arrives inside the website and as a notification on your phone. No button trades for you.",
+   "A level is where the price turned before, not a forecast. You always decide."
   ],
   "points_it": [
-   "Ogni segnale mostra la moneta, il prezzo di entrata, uno stop loss e un take profit.",
-   "Arriva su Telegram e nella tua dashboard, con due pulsanti: investi, o non investire.",
-   "VcriptoV analizza il mercato, ma decidi sempre tu. I segnali sono analisi, non certezze."
+   "Mostra il mercato, il prezzo di adesso, il tetto o il pavimento più vicino, e quanto è lontano.",
+   "Arriva nel sito e come notifica sul telefono. Nessun tasto compra al posto tuo.",
+   "Un livello è dove il prezzo si è girato prima, non una previsione. Decidi sempre tu."
   ],
-  "topic_en": "Ever wondered what a VcriptoV signal actually looks like?",
+  "topic_en": "Ever wondered what a VcriptoV alert actually looks like?",
   "next_en": null,
-  "topic_it": "Ti sei mai chiesto com'è fatto davvero un segnale di VcriptoV?",
+  "topic_it": "Ti sei mai chiesto com'è fatto davvero un avviso di VcriptoV?",
   "next_it": null
  },
  "v002": {
@@ -8914,14 +8914,14 @@
   "hook_en": "Your money stays on your own exchange. No funds are ever held by VcriptoV.",
   "hook_it": "I tuoi soldi rimangono sul tuo exchange. Nessun fondo viene mai tenuto da VcriptoV.",
   "points_en": [
-   "VcriptoV analyzes the market 24/7 and sends signals to Telegram and the dashboard.",
-   "Every signal has entry, stop loss, and take profit. You decide if you invest.",
+   "VcriptoV watches Bitcoin, gold and other markets day and night, and finds their ceilings and floors.",
+   "When a price you follow gets close to a level, you get a message. You decide what to do.",
    "Your API keys stay encrypted and you can revoke them anytime. No real trading by default."
   ],
   "points_it": [
-   "VcriptoV analizza il mercato 24/7 e manda segnali su Telegram e sul dashboard.",
-   "Ogni segnale ha entry, stop loss e take profit. Tu decidi se investire.",
-   "Le tue API keys rimangono criptate e puoi revocarle quando vuoi. Nessun trading reale di default."
+   "VcriptoV guarda Bitcoin, l'oro e altri mercati giorno e notte, e trova i loro tetti e pavimenti.",
+   "Quando un prezzo che segui si avvicina a un livello, ti arriva un messaggio. Decidi tu cosa fare.",
+   "Le tue API keys rimangono cifrate e puoi revocarle quando vuoi. Nessun trading reale di default."
   ],
   "topic_en": "Your money stays on your own exchange",
   "next_en": null,
@@ -8931,20 +8931,20 @@
  "v003": {
   "part": 3,
   "promo": true,
-  "hook_en": "VcriptoV is a tool that analyzes crypto and gold markets 24/7.",
-  "hook_it": "VcriptoV è uno strumento che analizza i mercati di crypto e oro 24/7.",
+  "hook_en": "VcriptoV is a tool that watches crypto and gold markets 24/7.",
+  "hook_it": "VcriptoV è uno strumento che guarda i mercati di crypto e oro 24/7.",
   "points_en": [
-   "It sends signals to Telegram and your dashboard with entry, stop loss, and take profit.",
-   "You control everything: invest or skip each signal. Your money stays on your exchange.",
-   "Start for free with an email code. No card needed, no hidden costs."
+   "It shows ceilings and floors from real daily candles, and how far the price is from each one.",
+   "You control everything: the alerts inform you, they never trade for you. Your money stays on your exchange.",
+   "Start for free with an email code. No card needed."
   ],
   "points_it": [
-   "Manda segnali su Telegram e sul tuo dashboard con entry, stop loss e take profit.",
-   "Tu controlli tutto: investi o salta ogni segnale. I tuoi soldi restano sul tuo exchange."
+   "Mostra tetti e pavimenti dalle candele giornaliere vere, e quanto è lontano il prezzo da ognuno.",
+   "Tu controlli tutto: gli avvisi ti informano, non comprano mai al posto tuo. I tuoi soldi restano sul tuo exchange."
   ],
-  "topic_en": "VcriptoV is a tool that analyzes crypto and gold markets 24/7",
+  "topic_en": "VcriptoV is a tool that watches crypto and gold markets 24/7",
   "next_en": null,
-  "topic_it": "VcriptoV è uno strumento che analizza i mercati di crypto e oro 24/7",
+  "topic_it": "VcriptoV è uno strumento che guarda i mercati di crypto e oro 24/7",
   "next_it": null
  }
 }

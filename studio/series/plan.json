@@ -12507,17 +12507,17 @@
   "intro_say": "Meet VcriptoV.",
   "scenes": [
    {
-    "say": "What if a crypto assistant watched the market for you, all day and all night?",
+    "say": "What if an app watched the key prices for you, all day and all night?",
     "p": "The wolf relaxes in an armchair while a friendly robot assistant watches many glowing crypto charts on screens at night."
    },
    {
-    "say": "VcriptoV analyzes the real market and sends automatic signals straight to your Telegram.",
+    "say": "VcriptoV shows where Bitcoin, gold and other markets turned several times before: ceilings and floors.",
     "img": "L024_1.jpg:flip",
     "hint": "phone signal notification",
     "img_pref": "auto"
    },
    {
-    "say": "Every signal comes with a stop loss and a take profit. You choose: invest, or skip.",
+    "say": "When the price gets close to a level, or breaks it, you get a message. You decide what to do.",
     "img": "L139_1.jpg",
     "hint": "buttons choose",
     "img_pref": "auto"
@@ -12546,23 +12546,23 @@
   "intro_say": "Meet VcriptoV.",
   "scenes": [
    {
-    "say": "This is what a VcriptoV signal looks like.",
+    "say": "This is what a VcriptoV alert looks like.",
     "p": "The wolf in a cozy cafe holds a phone showing a chat message with a green buy signal and two buttons, smiling."
    },
    {
-    "say": "The coin, the entry, the stop loss, and the take profit. All in one message on Telegram.",
+    "say": "The market, the price now, the level, and how far it is. All in one message on your phone.",
     "img": "L008_1.jpg",
     "hint": "phone chat message",
     "img_pref": "auto"
    },
    {
-    "say": "Two buttons: invest, or don't invest. The decision is always yours.",
+    "say": "No buttons that trade for you. The decision is always yours.",
     "img": "00_desk_1.jpg:flip",
     "hint": "decide two buttons",
     "img_pref": "auto"
    },
    {
-    "say": "Signals are automatic analyses, not certainties. Always check before you act.",
+    "say": "A level is not a forecast: the price can break it. Always check before you act.",
     "img": "L161_1.jpg",
     "hint": "magnifier check",
     "img_pref": "auto"
@@ -12630,19 +12630,19 @@
     "p": "The wolf opens an email on his phone and a glowing golden key pops out of the envelope."
    },
    {
-    "say": "Get your access code by email, and unlock the automatic signals on the dashboard and on Telegram.",
+    "say": "Get your access code by email, and open charts, levels and alerts.",
     "img": "p010_s0_1.jpg",
     "hint": "email key access",
     "img_pref": "auto"
    },
    {
-    "say": "Signals cover the cryptos, and gold too.",
+    "say": "Crypto, gold, silver and other metals, all in one place.",
     "img": "L063_1.jpg:flip",
     "hint": "gold bar coins",
     "img_pref": "auto"
    },
    {
-    "say": "You only use credits for extras, like the AI assistant and the one-tap invest.",
+    "say": "You only use credits for extras, like the AI assistant.",
     "img": "L106_1.jpg",
     "hint": "credits coins jar",
     "img_pref": "auto"
@@ -12710,13 +12710,13 @@
     "p": "The wolf holds a shiny gold bar in one paw and a phone showing a gold signal notification in the other."
    },
    {
-    "say": "Automatic gold signals arrive in the same place as your crypto signals.",
+    "say": "Gold, silver, platinum, copper and oil get their ceilings and floors, like Bitcoin.",
     "img": "L024_1.jpg",
     "hint": "phone signal",
     "img_pref": "auto"
    },
    {
-    "say": "Each one comes with a stop loss and a take profit, like every other signal.",
+    "say": "Each level shows how many times the price turned there, with real daily candles.",
     "img": "01_s0_1.jpg:flip",
     "hint": "levels chart",
     "img_pref": "auto"
@@ -12746,17 +12746,17 @@
   "intro_say": "Meet VcriptoV.",
   "scenes": [
    {
-    "say": "Everything in one place: the VcriptoV dashboard.",
+    "say": "Everything in one place: your VcriptoV dashboard.",
     "p": "The wolf at a modern desk looks at a clean glowing dashboard on his laptop with a rising curve, a pie chart and a list of positions."
    },
    {
-    "say": "Your equity curve, your profit and loss, and your liquidity.",
+    "say": "Your exchange balance and the market at a glance.",
     "img": "12_s4_1.jpg:flip",
     "hint": "chart dashboard",
     "img_pref": "auto"
    },
    {
-    "say": "Your open positions, and the full history of your trades.",
+    "say": "Your orders and the history of your buying plan.",
     "img": "L026_1.jpg",
     "hint": "records notebook",
     "img_pref": "auto"
@@ -12790,13 +12790,13 @@
     "p": "The wolf practices with toy coins on a playground built on top of a real glowing price chart, having fun."
    },
    {
-    "say": "Real trading is turned off by default. Without it, everything is paper trading on real prices.",
+    "say": "Real trading is turned off by default. Charts, levels and alerts work without it.",
     "img": "L257_1.jpg",
     "hint": "paper trading",
     "img_pref": "auto"
    },
    {
-    "say": "You can see how signals would have worked, without risking a cent.",
+    "say": "Watch how the price reacts at each level, without risking a cent.",
     "img": "L206_1.jpg:flip",
     "hint": "learning",
     "img_pref": "auto"
@@ -12830,19 +12830,19 @@
     "p": "The wolf follows a glowing step-by-step path of three stones toward a phone, smiling."
    },
    {
-    "say": "Get your access code by email, and open the dashboard.",
+    "say": "Get your access code by email, and open the app.",
     "img": "L159_1.jpg:flip",
     "hint": "email key",
     "img_pref": "auto"
    },
    {
-    "say": "Connect your Telegram with the built-in step-by-step guide.",
+    "say": "Pick the markets you follow and turn on notifications.",
     "img": "L197_1.jpg",
     "hint": "phone setup",
     "img_pref": "auto"
    },
    {
-    "say": "Then the signals come to you. No coding, no complicated setup.",
+    "say": "Then the alerts come to you. No coding, no complicated setup.",
     "img": "07_s2_1.jpg:flip",
     "hint": "relaxed",
     "img_pref": "auto"
@@ -12946,20 +12946,17 @@
   "intro_say": "Meet VcriptoV.",
   "scenes": [
    {
-    "say": "We'll be honest: VcriptoV signals are not always right.",
+    "say": "We'll be honest: price levels are not always respected.",
     "p": "The wolf stands on a stage with an open book and a balance scale, speaking honestly to an audience."
    },
    {
-    "say": "They're automatic analyses, not 100 percent accurate, and not financial advice.",
+    "say": "A ceiling or a floor is where the price turned before. Not a promise, and not financial advice.",
     "img": "L179_1.jpg",
     "hint": "balance scale",
-    "show": {
-     "100 percent": "100%"
-    },
     "img_pref": "auto"
    },
    {
-    "say": "That's why every signal has a stop loss, to keep losses small when it's wrong.",
+    "say": "That's why a broken level is news too: you get a message when it happens.",
     "img": "L087_1.jpg:flip",
     "hint": "safety net",
     "img_pref": "auto"
@@ -12999,13 +12996,13 @@
     "img_pref": "auto"
    },
    {
-    "say": "Signals, dashboard and the AI assistant, one tap away.",
+    "say": "Levels, alerts and the AI assistant, one tap away.",
     "img": "p050_s0_1.jpg",
     "hint": "phone dashboard",
     "img_pref": "auto"
    },
    {
-    "say": "No app store needed.",
+    "say": "It takes a few seconds.",
     "img": "p010_s0_1.jpg:flip",
     "hint": "thumbs up",
     "img_pref": "auto"
@@ -13029,17 +13026,17 @@
   "intro_say": "Meet VcriptoV.",
   "scenes": [
    {
-    "say": "Most traders lose because they don't plan their exit. VcriptoV signals always do.",
+    "say": "Most traders lose because they don't plan their exit. Levels help you plan.",
     "p": "The wolf draws a green target line above and a red safety line below a price on a giant chart."
    },
    {
-    "say": "Every signal includes a stop loss, to limit the loss if it goes wrong.",
+    "say": "A floor below the price shows where it bounced before: a natural place to think about a stop.",
     "img": "L042_1.jpg",
     "hint": "stop loss line",
     "img_pref": "auto"
    },
    {
-    "say": "And a take profit, to lock in gains if it goes right.",
+    "say": "A ceiling above shows where it was pushed back: a natural place to think about a target.",
     "img": "p060_s0_1.jpg:flip",
     "hint": "target profit",
     "img_pref": "auto"
@@ -13069,22 +13066,22 @@
   "intro_say": "Meet VcriptoV.",
   "scenes": [
    {
-    "say": "See a signal you like? Invest with one tap.",
+    "say": "Want to buy a little every month, without watching the chart?",
     "p": "The wolf taps a big glowing green button on his phone and a coin flies into his own exchange vault."
    },
    {
-    "say": "With one-tap invest, VcriptoV places the order on your own exchange account.",
+    "say": "With the buying plan, VcriptoV buys a fixed amount on your own exchange account.",
     "img": "L139_1.jpg:flip",
     "hint": "exchange order",
     "img_pref": "auto"
    },
    {
-    "say": "With a stop loss and a take profit, and a maximum amount per order that you set.",
+    "say": "On the day you choose, and never above the maximum amount you set.",
     "img": "12_s1_1.jpg",
     "img_pref": "12_s1_1.jpg"
    },
    {
-    "say": "You stay in control. No tap, no trade.",
+    "say": "You stay in control. You can pause it anytime.",
     "img": "L090_1.jpg:flip",
     "hint": "decide",
     "img_pref": "auto"
@@ -13112,19 +13109,19 @@
     "p": "People in different countries around the world hold phones showing the same signal notification, the wolf waving from the center of a globe."
    },
    {
-    "say": "The website, the signals and the AI assistant are available in many languages.",
+    "say": "The website, the alerts and the AI assistant are available in many languages.",
     "img": "L217_1.jpg",
     "hint": "world languages",
     "img_pref": "auto"
    },
    {
-    "say": "From English and Italian to Spanish, Arabic, Hindi and more.",
+    "say": "From English and Italian to Spanish, Japanese, Hindi and more.",
     "img": "L125_1.jpg:flip",
     "hint": "world map",
     "img_pref": "auto"
    },
    {
-    "say": "Crypto is global. Your assistant should be too.",
+    "say": "Crypto is global. Your app should be too.",
     "img": "L154_1.jpg",
     "hint": "globe",
     "img_pref": "auto"
@@ -13238,7 +13235,7 @@
     "img_pref": "auto"
    },
    {
-    "say": "We help with setup, Telegram, exchange connections, and any question.",
+    "say": "We help with setup, notifications, exchange connections, and any question.",
     "img": "L139_1.jpg",
     "hint": "helping",
     "img_pref": "auto"
@@ -13391,23 +13388,23 @@
   "intro_say": "Meet VcriptoV.",
   "scenes": [
    {
-    "say": "Emotions are the biggest enemy in trading. Software doesn't panic.",
+    "say": "Emotions are the biggest enemy in trading. Data doesn't panic.",
     "p": "A calm robot assistant keeps watching charts while the wolf next to it panics in front of a red screen, comic style."
    },
    {
-    "say": "VcriptoV watches the market around the clock, following the same rules every time.",
+    "say": "VcriptoV checks the prices around the clock, with the same rules every time.",
     "img": "L200_1.jpg:flip",
     "hint": "clock night",
     "img_pref": "auto"
    },
    {
-    "say": "No fear, no greed, no revenge trades.",
+    "say": "No fear, no greed, just where the price stopped before.",
     "img": "L179_1.jpg",
     "hint": "calm",
     "img_pref": "auto"
    },
    {
-    "say": "You still decide. But you decide with a clear signal, not a racing heart.",
+    "say": "You still decide. But you decide with clear numbers, not a racing heart.",
     "img": "06_s6_1.jpg:flip",
     "hint": "decide calm",
     "img_pref": "auto"
@@ -13435,7 +13432,7 @@
     "p": "The wolf sits in a pilot's seat of a cockpit full of glowing buttons, hands on the controls."
    },
    {
-    "say": "Each signal waits for your choice: invest, or don't invest.",
+    "say": "Alerts inform you. They never trade for you.",
     "img": "L139_1.jpg",
     "hint": "buttons choice",
     "img_pref": "auto"
@@ -13515,13 +13512,13 @@
     "p": "A strong glowing shield with a padlock protects a set of glowing keys on a desk."
    },
    {
-    "say": "Exchange keys and Telegram tokens are stored encrypted.",
+    "say": "Exchange keys are stored encrypted.",
     "img": "L160_1.jpg",
     "hint": "encrypted safe",
     "img_pref": "auto"
    },
    {
-    "say": "The software can't withdraw your funds.",
+    "say": "The app can't withdraw your funds: keys with withdrawal permission are refused.",
     "img": "69_s0_1.jpg:flip",
     "hint": "vault locked",
     "img_pref": "auto"
@@ -13561,13 +13558,13 @@
     "img_pref": "auto"
    },
    {
-    "say": "Two: connect Telegram, so the signals reach you.",
+    "say": "Two: follow the markets you care about, and turn on notifications.",
     "img": "198_s0_1.jpg",
     "hint": "phone setup",
     "img_pref": "auto"
    },
    {
-    "say": "Three: read each signal, and decide. That's it.",
+    "say": "Three: read each alert, and decide. That's it.",
     "img": "p060_s0_1.jpg:flip",
     "hint": "decide",
     "img_pref": "auto"
@@ -13635,7 +13632,7 @@
     "p": "A small friendly robot sits on top of the wolf's house at night watching a glowing chart under the stars, the wolf asleep inside."
    },
    {
-    "say": "It watches the market twenty-four hours a day, seven days a week.",
+    "say": "It checks the prices twenty-four hours a day, seven days a week.",
     "img": "L200_1.jpg:flip",
     "hint": "clock night",
     "show": {
@@ -13645,7 +13642,7 @@
     "img_pref": "auto"
    },
    {
-    "say": "When it finds a setup, the signal arrives on your phone.",
+    "say": "When a price gets close to a level you follow, the message arrives on your phone.",
     "img": "p020_s0_1.jpg",
     "hint": "phone notification",
     "img_pref": "auto"
@@ -13728,7 +13725,7 @@
     "img_pref": "auto"
    },
    {
-    "say": "Signals and updates on Telegram.",
+    "say": "Market updates on our Telegram channel.",
     "img": "p270_s0_1.jpg",
     "hint": "phone telegram",
     "img_pref": "auto"
@@ -13762,7 +13759,7 @@
     "p": "The wolf opens a big glowing book of questions and answers, question marks turning into light bulbs."
    },
    {
-    "say": "How signals work, how exchange connections work, and how credits work.",
+    "say": "How levels and alerts work, how exchange connections work, and how credits work.",
     "img": "p120_s0_1.jpg",
     "hint": "book explain",
     "img_pref": "auto"
@@ -13802,13 +13799,13 @@
     "p": "The wolf practices on a training simulator with a big chart screen, a coach robot giving tips beside him."
    },
    {
-    "say": "With paper trading, you can follow VcriptoV signals on real prices, without real money.",
+    "say": "Follow the levels on real prices, without real money.",
     "img": "144_s0_1.jpg:flip",
     "hint": "paper trading",
     "img_pref": "auto"
    },
    {
-    "say": "You see what works, what doesn't, and how you react.",
+    "say": "You see how the price reacts, and how you react.",
     "img": "L176_1.jpg",
     "hint": "mirror learning",
     "img_pref": "auto"
@@ -13842,7 +13839,7 @@
     "p": "The wolf holds a stopwatch while a giant phone behind him shows a dashboard, a signal and an AI chat."
    },
    {
-    "say": "Automatic signals on crypto and gold, on Telegram and on the dashboard.",
+    "say": "Ceilings and floors with alerts, on crypto, gold and metals.",
     "img": "p060_s0_1.jpg",
     "hint": "phone signal",
     "img_pref": "auto"
@@ -13854,7 +13851,7 @@
     "img_pref": "auto"
    },
    {
-    "say": "Plus an AI assistant, a podcast, and daily articles.",
+    "say": "Plus an AI assistant, a podcast, and articles.",
     "img": "p180_s0_1.jpg",
     "hint": "podcast articles",
     "img_pref": "auto"
@@ -13888,7 +13885,7 @@
     "img_pref": "auto"
    },
    {
-    "say": "We wanted a calmer way: clear signals, clear risk, and your money on your own exchange.",
+    "say": "We wanted a calmer way: clear levels, clear risk, and your money on your own exchange.",
     "img": "288_s0_1.jpg",
     "hint": "calm clear",
     "img_pref": "auto"
@@ -13918,23 +13915,23 @@
   "intro_say": "Meet VcriptoV.",
   "scenes": [
    {
-    "say": "How do you know if VcriptoV signals are any good? Look at the record.",
+    "say": "How do you read a price level? With honesty.",
     "p": "The wolf studies a long transparent scroll of past results with green and red marks, holding a magnifying glass."
    },
    {
-    "say": "The website shows how past signals performed, wins and losses.",
+    "say": "Each level shows how many times the price turned there, and how far it is now.",
     "img": "p010_s0_1.jpg",
     "hint": "results records",
     "img_pref": "auto"
    },
    {
-    "say": "Past results don't guarantee future ones. But transparency matters.",
+    "say": "Past behavior doesn't guarantee the future. A level can break at any moment.",
     "img": "200_s0_1.jpg:flip",
     "hint": "honest",
     "img_pref": "auto"
    },
    {
-    "say": "Judge any tool by its record, not by its promises.",
+    "say": "Judge any tool by its data, not by its promises.",
     "img": "305_s0_1.jpg",
     "hint": "magnifier",
     "img_pref": "auto"
@@ -13962,7 +13959,7 @@
     "p": "The wolf reads in a huge glowing library where books turn into charts and coins."
    },
    {
-    "say": "VcriptoV mixes tools and education: signals, articles, podcast, and these videos.",
+    "say": "VcriptoV mixes tools and education: levels, articles, podcast, and these videos.",
     "img": "p180_s0_1.jpg:flip",
     "hint": "tools education",
     "img_pref": "auto"

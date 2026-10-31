@@ -7417,13 +7417,13 @@
   "intro_say": "Ecco VcriptoV.",
   "scenes": [
    {
-    "say": "E se un assistente crypto osservasse il mercato al posto tuo, giorno e notte?"
+    "say": "E se un'app tenesse d'occhio i prezzi importanti al posto tuo, giorno e notte?"
    },
    {
-    "say": "VcriptoV analizza il mercato reale e invia segnali automatici direttamente sul tuo Telegram."
+    "say": "VcriptoV mostra dove Bitcoin, l'oro e altri mercati si sono girati più volte: tetti e pavimenti."
    },
    {
-    "say": "Ogni segnale arriva con stop loss e take profit. Scegli tu: investire, o lasciar perdere."
+    "say": "Quando il prezzo si avvicina a un livello, o lo rompe, ti arriva un messaggio. Decidi tu cosa fare."
    },
    {
     "say": "E i tuoi soldi restano sempre sul tuo exchange. VcriptoV non custodisce mai i tuoi fondi."
@@ -7440,16 +7440,16 @@
   "intro_say": "Ecco VcriptoV.",
   "scenes": [
    {
-    "say": "Così si presenta un segnale di VcriptoV."
+    "say": "Ecco com'è fatto un avviso di VcriptoV."
    },
    {
-    "say": "La crypto, il prezzo di ingresso, lo stop loss e il take profit. Tutto in un solo messaggio su Telegram."
+    "say": "Il mercato, il prezzo di adesso, il livello e quanto è lontano. Tutto in un messaggio sul telefono."
    },
    {
-    "say": "Due pulsanti: investi, o non investire. La decisione è sempre tua."
+    "say": "Nessun tasto che compra al posto tuo. La decisione è sempre tua."
    },
    {
-    "say": "I segnali sono analisi automatiche, non certezze. Controlla sempre prima di agire."
+    "say": "Un livello non è una previsione: il prezzo può romperlo. Controlla sempre prima di agire."
    },
    {
     "say": "Inizia gratis su VcriptoV punto com. Link in bio. Non è un consiglio finanziario.",
@@ -7486,16 +7486,16 @@
   "intro_say": "Ecco VcriptoV.",
   "scenes": [
    {
-    "say": "Con VcriptoV puoi iniziare gratis. Non serve nessuna carta."
+    "say": "Con VcriptoV puoi iniziare gratis. Senza carta."
    },
    {
-    "say": "Ricevi il tuo codice di accesso via email, e sblocca i segnali automatici sulla dashboard e su Telegram."
+    "say": "Ricevi il codice di accesso per email e apri grafici, livelli e avvisi."
    },
    {
-    "say": "I segnali coprono le crypto, e anche l'oro."
+    "say": "Crypto, oro, argento e altri metalli, tutto in un posto."
    },
    {
-    "say": "Usi i crediti solo per gli extra, come l'assistente AI e l'investimento con un tocco."
+    "say": "I crediti servono solo per gli extra, come l'assistente AI."
    },
    {
     "say": "Inizia gratis su VcriptoV punto com. Link in bio. Non è un consiglio finanziario.",
@@ -7532,16 +7532,16 @@
   "intro_say": "Ecco VcriptoV.",
   "scenes": [
    {
-    "say": "VcriptoV non segue solo le crypto. Segue anche l'oro."
+    "say": "VcriptoV non guarda solo le crypto. Guarda anche l'oro."
    },
    {
-    "say": "I segnali automatici sull'oro arrivano nello stesso posto dei tuoi segnali crypto."
+    "say": "Oro, argento, platino, rame e petrolio hanno i loro tetti e pavimenti, come Bitcoin."
    },
    {
-    "say": "Ognuno ha il suo stop loss e il suo take profit, come tutti gli altri segnali."
+    "say": "Ogni livello dice quante volte il prezzo si è girato lì, con candele giornaliere vere."
    },
    {
-    "say": "Una sola app, più mercati, e la stessa regola: decidi tu."
+    "say": "Un'app, più mercati, e la stessa regola: decidi tu."
    },
    {
     "say": "Inizia gratis su VcriptoV punto com. Link in bio. Non è un consiglio finanziario.",
@@ -7555,16 +7555,16 @@
   "intro_say": "Ecco VcriptoV.",
   "scenes": [
    {
-    "say": "Tutto in un unico posto: la dashboard di VcriptoV."
+    "say": "Tutto in un posto: la tua dashboard di VcriptoV."
    },
    {
-    "say": "La curva del tuo capitale, i tuoi profitti e perdite, e la tua liquidità."
+    "say": "Il saldo del tuo exchange e il mercato a colpo d'occhio."
    },
    {
-    "say": "Le tue posizioni aperte, e lo storico completo dei tuoi trade."
+    "say": "I tuoi ordini e lo storico del piano di accumulo."
    },
    {
-    "say": "Numeri chiari ti aiutano a prendere decisioni più serene."
+    "say": "Numeri chiari aiutano a decidere con più calma."
    },
    {
     "say": "Inizia gratis su VcriptoV punto com. Link in bio. Non è un consiglio finanziario.",
@@ -7578,16 +7578,16 @@
   "intro_say": "Ecco VcriptoV.",
   "scenes": [
    {
-    "say": "Non sei pronto a usare soldi veri? Con VcriptoV, non devi farlo."
+    "say": "Non sei pronto a usare soldi veri? Con VcriptoV non devi."
    },
    {
-    "say": "Il trading reale è disattivato di default. Finché è spento, è tutto paper trading su prezzi reali."
+    "say": "Il trading reale è spento all'inizio. Grafici, livelli e avvisi funzionano senza."
    },
    {
-    "say": "Puoi vedere come avrebbero funzionato i segnali, senza rischiare un centesimo."
+    "say": "Guarda come reagisce il prezzo a ogni livello, senza rischiare un centesimo."
    },
    {
-    "say": "Quando ti senti pronto, decidi tu se e quando attivare il trading reale, con le tue chiavi."
+    "say": "Quando ti senti pronto, decidi tu se e quando accendere il trading reale, con le tue chiavi."
    },
    {
     "say": "Inizia gratis su VcriptoV punto com. Link in bio. Non è un consiglio finanziario.",
@@ -7604,13 +7604,13 @@
     "say": "Configurare VcriptoV richiede pochi minuti. Ecco come."
    },
    {
-    "say": "Ricevi il tuo codice di accesso via email, e apri la dashboard."
+    "say": "Ricevi il codice di accesso per email e apri l'app."
    },
    {
-    "say": "Collega il tuo Telegram con la guida passo passo integrata."
+    "say": "Scegli i mercati che segui e attiva le notifiche."
    },
    {
-    "say": "Poi sono i segnali a venire da te. Niente codice, niente configurazioni complicate."
+    "say": "Poi gli avvisi arrivano da te. Niente codice, niente complicazioni."
    },
    {
     "say": "Inizia gratis su VcriptoV punto com. Link in bio. Non è un consiglio finanziario.",
@@ -7670,13 +7670,13 @@
   "intro_say": "Ecco VcriptoV.",
   "scenes": [
    {
-    "say": "Siamo sinceri: i segnali di VcriptoV non ci azzeccano sempre."
+    "say": "Siamo onesti: i livelli di prezzo non vengono sempre rispettati."
    },
    {
-    "say": "Sono analisi automatiche, non precise al 100%, e non sono consigli finanziari."
+    "say": "Un tetto o un pavimento è dove il prezzo si è girato prima. Non una promessa, e non un consiglio finanziario."
    },
    {
-    "say": "Per questo ogni segnale ha uno stop loss, per tenere piccole le perdite quando sbaglia."
+    "say": "Per questo anche un livello rotto è una notizia: ti arriva un messaggio quando succede."
    },
    {
     "say": "Le crypto sono rischiose. Usa solo soldi che puoi permetterti di perdere."
@@ -7693,16 +7693,16 @@
   "intro_say": "Ecco VcriptoV.",
   "scenes": [
    {
-    "say": "Metti VcriptoV nella schermata home del tuo telefono."
+    "say": "Metti VcriptoV nella schermata Home del telefono."
    },
    {
     "say": "Apri il sito e tocca installa. Funziona come un'app."
    },
    {
-    "say": "Segnali, dashboard e assistente AI, a un tocco di distanza."
+    "say": "Livelli, avvisi e assistente AI, a un tocco."
    },
    {
-    "say": "Non serve nessun app store."
+    "say": "Ci vogliono pochi secondi."
    },
    {
     "say": "Inizia gratis su VcriptoV punto com. Link in bio. Non è un consiglio finanziario.",
@@ -7716,16 +7716,16 @@
   "intro_say": "Ecco VcriptoV.",
   "scenes": [
    {
-    "say": "La maggior parte dei trader perde perché non pianifica l'uscita. I segnali di VcriptoV lo fanno sempre."
+    "say": "Quasi tutti perdono perché non pianificano l'uscita. I livelli aiutano a pianificare."
    },
    {
-    "say": "Ogni segnale include uno stop loss, per limitare la perdita se va male."
+    "say": "Un pavimento sotto il prezzo mostra dove è rimbalzato: un punto naturale per pensare allo stop."
    },
    {
-    "say": "E un take profit, per incassare i guadagni se va bene."
+    "say": "Un tetto sopra mostra dove è stato respinto: un punto naturale per pensare all'obiettivo."
    },
    {
-    "say": "Un piano prima di ogni trade. È così che si gestisce il rischio."
+    "say": "Un piano prima di ogni operazione. È così che si gestisce il rischio."
    },
    {
     "say": "Inizia gratis su VcriptoV punto com. Link in bio. Non è un consiglio finanziario.",
@@ -7739,16 +7739,16 @@
   "intro_say": "Ecco VcriptoV.",
   "scenes": [
    {
-    "say": "Vedi un segnale che ti piace? Investi con un tocco."
+    "say": "Vuoi comprare un po' ogni mese, senza guardare il grafico?"
    },
    {
-    "say": "Basta un tocco, e VcriptoV piazza l'ordine sul tuo account dell'exchange."
+    "say": "Con il piano di accumulo, VcriptoV compra una cifra fissa sul tuo conto dell'exchange."
    },
    {
-    "say": "Con stop loss, take profit, e un importo massimo per ordine che decidi tu."
+    "say": "Nel giorno che scegli, e mai oltre l'importo massimo che imposti."
    },
    {
-    "say": "Il controllo resta a te. Niente tocco, niente trade."
+    "say": "Hai sempre il controllo. Puoi metterlo in pausa quando vuoi."
    },
    {
     "say": "Inizia gratis su VcriptoV punto com. Link in bio. Non è un consiglio finanziario.",
@@ -7765,13 +7765,13 @@
     "say": "VcriptoV parla la tua lingua."
    },
    {
-    "say": "Il sito, i segnali e l'assistente AI sono disponibili in tante lingue."
+    "say": "Il sito, gli avvisi e l'assistente AI sono disponibili in tante lingue."
    },
    {
-    "say": "Inglese, italiano, spagnolo, arabo, hindi e molte altre."
+    "say": "Dall'inglese e l'italiano allo spagnolo, al giapponese, all'hindi e altre."
    },
    {
-    "say": "Le crypto sono globali. Anche il tuo assistente dovrebbe esserlo."
+    "say": "Le crypto sono globali. Anche la tua app dovrebbe esserlo."
    },
    {
     "say": "Inizia gratis su VcriptoV punto com. Link in bio. Non è un consiglio finanziario.",
@@ -7834,13 +7834,13 @@
     "say": "Ti serve aiuto con VcriptoV? Rispondono persone vere."
    },
    {
-    "say": "Scrivici via email, o su WhatsApp."
+    "say": "Scrivici per email o su WhatsApp."
    },
    {
-    "say": "Ti aiutiamo con la configurazione, Telegram, il collegamento agli exchange, e qualsiasi domanda."
+    "say": "Ti aiutiamo con la configurazione, le notifiche, il collegamento dell'exchange e qualsiasi domanda."
    },
    {
-    "say": "E ricorda: non ti chiederemo mai la tua seed phrase o le tue password."
+    "say": "E ricorda: non ti chiederemo mai la seed phrase o le password."
    },
    {
     "say": "Inizia gratis su VcriptoV punto com. Link in bio. Non è un consiglio finanziario.",
@@ -7923,16 +7923,16 @@
   "intro_say": "Ecco VcriptoV.",
   "scenes": [
    {
-    "say": "Le emozioni sono il peggior nemico nel trading. Un software non va nel panico."
+    "say": "Le emozioni sono il nemico più grande nel trading. I dati non vanno nel panico."
    },
    {
-    "say": "VcriptoV osserva il mercato 24 ore su 24, seguendo sempre le stesse regole."
+    "say": "VcriptoV controlla i prezzi giorno e notte, sempre con le stesse regole."
    },
    {
-    "say": "Niente paura, niente avidità, niente revenge trading."
+    "say": "Niente paura, niente avidità, solo dove il prezzo si è fermato prima."
    },
    {
-    "say": "Decidi sempre tu. Ma decidi con un segnale chiaro, non con il cuore a mille."
+    "say": "Decidi sempre tu. Ma con numeri chiari, non col cuore a mille."
    },
    {
     "say": "Inizia gratis su VcriptoV punto com. Link in bio. Non è un consiglio finanziario.",
@@ -7946,16 +7946,16 @@
   "intro_say": "Ecco VcriptoV.",
   "scenes": [
    {
-    "say": "Con VcriptoV, hai sempre il controllo."
+    "say": "Con VcriptoV hai sempre il controllo."
    },
    {
-    "say": "Ogni segnale aspetta la tua scelta: investi, o non investire."
+    "say": "Gli avvisi ti informano. Non comprano mai al posto tuo."
    },
    {
-    "say": "Il trading reale resta spento finché non lo attivi tu, con le tue chiavi."
+    "say": "Il trading reale è spento finché non lo accendi tu, con le tue chiavi."
    },
    {
-    "say": "E puoi disattivare il rinnovo automatico quando vuoi dalle impostazioni."
+    "say": "E puoi disdire il rinnovo automatico quando vuoi dalle impostazioni."
    },
    {
     "say": "Inizia gratis su VcriptoV punto com. Link in bio. Non è un consiglio finanziario.",
@@ -7995,13 +7995,13 @@
     "say": "Le tue chiavi, il tuo exchange, le tue regole. Ecco come VcriptoV tiene tutto al sicuro."
    },
    {
-    "say": "Le chiavi degli exchange e i token di Telegram sono salvati in forma criptata."
+    "say": "Le chiavi dell'exchange sono salvate cifrate."
    },
    {
-    "say": "Il software non può prelevare i tuoi fondi."
+    "say": "L'app non può prelevare i tuoi fondi: le chiavi con permesso di prelievo vengono rifiutate."
    },
    {
-    "say": "Consiglio: crea chiavi con i soli permessi che ti servono, e non abilitare mai i prelievi."
+    "say": "Consiglio: crea chiavi solo con i permessi che servono, e non attivare mai i prelievi."
    },
    {
     "say": "Inizia gratis su VcriptoV punto com. Link in bio. Non è un consiglio finanziario.",
@@ -8015,16 +8015,16 @@
   "intro_say": "Ecco VcriptoV.",
   "scenes": [
    {
-    "say": "3 passi per iniziare con VcriptoV."
+    "say": "Tre passi per iniziare con VcriptoV."
    },
    {
-    "say": "Primo: ricevi via email il tuo codice di accesso gratuito."
+    "say": "Uno: ricevi gratis il codice di accesso per email."
    },
    {
-    "say": "Secondo: collega Telegram, così i segnali arrivano a te."
+    "say": "Due: segui i mercati che ti interessano e attiva le notifiche."
    },
    {
-    "say": "Terzo: leggi ogni segnale, e decidi. Tutto qui."
+    "say": "Tre: leggi ogni avviso, e decidi. Tutto qui."
    },
    {
     "say": "Inizia gratis su VcriptoV punto com. Link in bio. Non è un consiglio finanziario.",
@@ -8064,10 +8064,10 @@
     "say": "Le crypto non dormono mai. E nemmeno VcriptoV."
    },
    {
-    "say": "Osserva il mercato 24 ore su 24, 7 giorni su 7."
+    "say": "Controlla i prezzi 24 ore su 24, 7 giorni su 7."
    },
    {
-    "say": "Quando trova un setup, il segnale arriva sul tuo telefono."
+    "say": "Quando un prezzo che segui si avvicina a un livello, il messaggio arriva sul telefono."
    },
    {
     "say": "Tu dormi. Lui veglia."
@@ -8113,10 +8113,10 @@
     "say": "Lezioni brevi su Instagram, TikTok e YouTube."
    },
    {
-    "say": "Segnali e aggiornamenti su Telegram."
+    "say": "Aggiornamenti sul mercato nel nostro canale Telegram."
    },
    {
-    "say": "Articoli, il podcast e l'assistente AI sul sito."
+    "say": "Articoli, podcast e assistente AI sul sito."
    },
    {
     "say": "Inizia gratis su VcriptoV punto com. Link in bio. Non è un consiglio finanziario.",
@@ -8130,13 +8130,13 @@
   "intro_say": "Ecco VcriptoV.",
   "scenes": [
    {
-    "say": "Hai domande prima di iniziare? Le FAQ di VcriptoV hanno le risposte."
+    "say": "Hai domande prima di iniziare? Le FAQ di VcriptoV rispondono."
    },
    {
-    "say": "Come funzionano i segnali, i collegamenti agli exchange e i crediti."
+    "say": "Come funzionano livelli e avvisi, il collegamento dell'exchange e i crediti."
    },
    {
-    "say": "Cosa è gratis, cosa costa crediti, e come disdire."
+    "say": "Cosa è gratis, cosa costa crediti e come disdire."
    },
    {
     "say": "Risposte chiare, prima di decidere qualsiasi cosa."
@@ -8153,13 +8153,13 @@
   "intro_say": "Ecco VcriptoV.",
   "scenes": [
    {
-    "say": "Il modo migliore per imparare è fare pratica."
+    "say": "Imparare facendo è il modo migliore per imparare."
    },
    {
-    "say": "Con il paper trading, puoi seguire i segnali di VcriptoV su prezzi reali, senza soldi veri."
+    "say": "Segui i livelli sui prezzi veri, senza soldi veri."
    },
    {
-    "say": "Vedi cosa funziona, cosa no, e come reagisci tu."
+    "say": "Vedi come reagisce il prezzo, e come reagisci tu."
    },
    {
     "say": "Poi decidi con calma se il trading reale fa per te."
@@ -8179,13 +8179,13 @@
     "say": "VcriptoV in un minuto."
    },
    {
-    "say": "Segnali automatici su crypto e oro, su Telegram e sulla dashboard."
+    "say": "Tetti e pavimenti con avvisi, su crypto, oro e metalli."
    },
    {
     "say": "I tuoi fondi restano sul tuo exchange."
    },
    {
-    "say": "In più, un assistente AI, un podcast e articoli ogni giorno."
+    "say": "In più un assistente AI, un podcast e gli articoli."
    },
    {
     "say": "Inizia gratis su VcriptoV punto com. Link in bio. Non è un consiglio finanziario.",
@@ -8202,10 +8202,10 @@
     "say": "Perché abbiamo creato VcriptoV."
    },
    {
-    "say": "Il mondo crypto è pieno di hype, truffe e decisioni emotive."
+    "say": "Le crypto sono piene di hype, truffe e decisioni emotive."
    },
    {
-    "say": "Volevamo un approccio più calmo: segnali chiari, rischio chiaro, e i tuoi soldi sul tuo exchange."
+    "say": "Volevamo un modo più calmo: livelli chiari, rischio chiaro, e i tuoi soldi sul tuo exchange."
    },
    {
     "say": "Strumenti per chi vuole imparare, non scommettere."
@@ -8222,16 +8222,16 @@
   "intro_say": "Ecco VcriptoV.",
   "scenes": [
    {
-    "say": "Come fai a sapere se i segnali di VcriptoV sono validi? Guarda lo storico."
+    "say": "Come si legge un livello di prezzo? Con onestà."
    },
    {
-    "say": "Il sito mostra come sono andati i segnali passati, vincenti e perdenti."
+    "say": "Ogni livello dice quante volte il prezzo si è girato lì, e quanto è lontano adesso."
    },
    {
-    "say": "I risultati passati non garantiscono quelli futuri. Ma la trasparenza conta."
+    "say": "Il passato non garantisce il futuro. Un livello può rompersi in qualsiasi momento."
    },
    {
-    "say": "Giudica qualsiasi strumento dai risultati, non dalle promesse."
+    "say": "Giudica ogni strumento dai suoi dati, non dalle sue promesse."
    },
    {
     "say": "Inizia gratis su VcriptoV punto com. Link in bio. Non è un consiglio finanziario.",
@@ -8248,13 +8248,13 @@
     "say": "Più sai, meglio investi."
    },
    {
-    "say": "VcriptoV unisce strumenti e formazione: segnali, articoli, podcast, e questi video."
+    "say": "VcriptoV unisce strumenti e studio: livelli, articoli, podcast e questi video."
    },
    {
     "say": "Così capisci quello che fai, invece di seguirlo e basta."
    },
    {
-    "say": "La conoscenza cresce nel tempo, proprio come i soldi."
+    "say": "La conoscenza cresce come i soldi: con l'interesse composto."
    },
    {
     "say": "Inizia gratis su VcriptoV punto com. Link in bio. Non è un consiglio finanziario.",

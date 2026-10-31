@@ -90,39 +90,40 @@ Rules:
 Return ONLY valid JSON, nothing else:
 {{"scenes": [{{"say": "...", "visual": "..."}}, ...]}}"""
 
-# Fatti VERI sul sito (gli stessi dei 38 video VcriptoV già controllati sulla homepage):
+# Fatti VERI sul sito (aggiornati dopo il rifacimento: niente segnali, niente investi con un tocco):
 # l'AI può usare SOLO questi, niente funzioni inventate.
-PROMO_FACTS = """- VcriptoV is software that analyzes the real crypto market 24/7 and sends automatic signals.
-- Signals arrive on Telegram and on the VcriptoV dashboard. Signals cover cryptocurrencies and gold too.
-- Every signal has a coin, an entry, a stop loss and a take profit.
-- Every signal has two buttons: invest or don't invest. The user always decides.
-- Signals are automatic analyses: not 100 percent accurate, not certainties, not financial advice.
+PROMO_FACTS = """- VcriptoV is a website for crypto and commodity markets: charts, price levels, alerts, an AI assistant, articles and a podcast.
+- "Ceilings and floors": VcriptoV finds the price levels where Bitcoin, other big cryptocurrencies, gold, silver, platinum, copper and oil turned several times before, from real daily candles.
+- Each level shows how many times the price turned there and how far the price is now.
+- When the price gets close to a level you follow, or breaks it, you get a message inside the website and a push notification on your phone. Levels and alerts are for people with an account.
+- A level is not a forecast and not financial advice: the price can break it at any moment. The user always decides.
 - Your money stays on your own exchange (for example Kraken or Binance). VcriptoV never holds funds and the software can't withdraw them.
-- You connect your exchange with API keys you create yourself: read-only for analysis, or trading for orders. Keys and Telegram tokens are stored encrypted. You can revoke keys anytime from your exchange.
-- Real trading is off by default: without it everything is paper trading on real prices, with no real money.
-- One-tap invest places the order on your own exchange account, with stop loss, take profit and a maximum amount per order that you set.
-- You can start for free, no card needed: get an access code by email. Credits are used only for extras like the AI assistant and one-tap invest.
+- You connect your exchange with API keys you create yourself. Keys are stored encrypted, and keys with withdrawal permission are refused. You can revoke keys anytime from your exchange.
+- Real trading is off by default. Charts, levels and alerts work without it.
+- The buying plan (DCA) buys a fixed amount on your own exchange account on the day you choose, never above the maximum you set. You can pause it anytime.
+- You can start for free, no card needed: get an access code by email. Credits are used only for extras like the AI assistant.
 - The AI assistant answers questions about crypto, markets and investing in plain words, in many languages. It is not a financial advisor.
-- The dashboard shows the equity curve, profit and loss, liquidity, open positions and trade history.
-- Setup takes a few minutes, with a step-by-step guide to connect Telegram. No coding needed.
+- The dashboard shows your exchange balance, the market at a glance, your orders and the history of your buying plan.
+- Setup takes a few minutes. No coding needed.
 - The website and the assistant are available in many languages.
 - There is a live prices page, daily articles (the VcriptoV journal) and a podcast in English (Spotify, Apple Podcasts, Amazon, and the website).
-- The website can be installed on the phone home screen like an app, no app store needed.
-- The website shows how past signals performed, wins and losses. Past results don't guarantee future ones.
+- The website can be installed on the phone home screen like an app.
 - Real people answer support questions by email and WhatsApp. VcriptoV never asks for seed phrases or passwords.
 - Creators can join the partner program ("Earn with us" page).
 - VcriptoV is not affiliated with any exchange. You can cancel auto-renewal anytime from settings.
-- The wolf in the videos is the VcriptoV mascot: calm, careful, never gambling."""
+- The wolf in the videos is the VcriptoV mascot: calm, careful, never gambling.
+- VcriptoV does NOT send trading signals, does NOT trade for you with one tap, and does NOT promise profits."""
 
 PROMO_ANGLES = [
-    "what a VcriptoV signal looks like", "your money stays on your own exchange", "start for free",
-    "the AI assistant", "gold signals too", "the dashboard", "paper trading before real money",
-    "setup in a few minutes", "the podcast", "the daily articles", "honesty: signals are not always right",
-    "install it like an app", "a plan before every trade: stop loss and take profit", "one-tap invest",
-    "it speaks your language", "live prices", "the partner program for creators", "real people for support",
-    "works with the exchange you already use", "who is the wolf", "software doesn't panic",
+    "what a VcriptoV alert looks like", "your money stays on your own exchange", "start for free",
+    "the AI assistant", "ceilings and floors on gold too", "the dashboard", "learning without real money",
+    "setup in a few minutes", "the podcast", "the daily articles", "honesty: levels can break",
+    "install it like an app", "a plan before every trade: where the floor and the ceiling are",
+    "the buying plan: a little every month", "it speaks your language", "live prices",
+    "the partner program for creators", "real people for support",
+    "works with the exchange you already use", "who is the wolf", "data doesn't panic",
     "you are always in control", "made for beginners", "how your keys stay safe", "what VcriptoV is not",
-    "crypto never sleeps, VcriptoV doesn't either", "the track record of past signals",
+    "crypto never sleeps, VcriptoV doesn't either", "what a ceiling and a floor are",
     "learning and tools together", "why we built VcriptoV",
 ]
 

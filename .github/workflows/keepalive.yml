@@ -36,11 +36,11 @@ jobs:
       # Il vecchio "motore video" su Render (ia-tio5) non serve più: i video li fa GitHub.
       # Svegliarlo consumava le 750 ore gratuite al mese che Render dà a TUTTI i servizi insieme.
       - name: Sveglia il sito principale
-        run: curl -s -m 30 "https://vcriptov.onrender.com/health" -o /dev/null || true
+        run: curl -s -m 30 "https://www.vcriptov.com/health" -o /dev/null || true
 
       - name: Fai uscire l'eventuale reel/post in programma
         # Se hai impostato la variabile CRON_KEY su Render, aggiungi lo stesso
         # valore nei Secrets del repo (Settings → Secrets → Actions → CRON_KEY):
         # verrà passato qui sotto. Se non la usi, funziona lo stesso.
         run: |
-          curl -s -m 90 "https://vcriptov.onrender.com/tasks/social-tick?key=${{ secrets.CRON_KEY }}" -o /dev/null || true
+          curl -s -m 90 "https://www.vcriptov.com/tasks/social-tick?key=${{ secrets.CRON_KEY }}" -o /dev/null || true

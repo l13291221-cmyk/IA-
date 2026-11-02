@@ -8888,6 +8888,26 @@
   "topic_it": "Come i dividendi possono pagare le tue bollette un giorno",
   "next_it": "gli errori più comuni dopo una grossa vincita in crypto"
  },
+ "408": {
+  "part": 408,
+  "promo": false,
+  "hook_en": "You just made a big profit in crypto. Congratulations! But wait—what’s next?",
+  "hook_it": "Hai appena fatto un bel profitto in crypto. Complimenti! Ma aspetta—cos'è il prossimo passo?",
+  "points_en": [
+   "First mistake: You don’t take your profits. You keep trading, chasing new gains.",
+   "Second mistake: You don’t secure your coins. You leave them in an exchange wallet.",
+   "Third mistake: You don’t learn from your win. You forget what worked this time."
+  ],
+  "points_it": [
+   "Primo errore: non prendi i profitti. Continui a trade, inseguendo nuovi guadagni.",
+   "Secondo errore: non proteggi le tue monete. Le lasci in un wallet dell'exchange.",
+   "Terzo errore: non impari dalla vittoria. Dimentichi cosa ha funzionato questa volta."
+  ],
+  "topic_en": "The most common mistakes after a big crypto win",
+  "next_en": "why real estate is not always a safe bet",
+  "topic_it": "Gli errori più comuni dopo una grossa vincita in crypto",
+  "next_it": "perché l'immobiliare non è sempre una scommessa sicura"
+ },
  "v001": {
   "part": 1,
   "promo": true,

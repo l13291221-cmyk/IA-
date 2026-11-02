@@ -1,0 +1,38 @@
+{
+ "en": [
+  {
+   "say": "You just made a big profit in crypto. Congratulations! But wait—what’s next?",
+   "img": "intro",
+   "caption": true,
+   "after": "L242.jpg:flip"
+  },
+  {
+   "say": "First mistake: You don’t take your profits. You keep trading, chasing new gains.",
+   "img": "00_desk.jpg:flip"
+  },
+  {
+   "say": "Second mistake: You don’t secure your coins. You leave them in an exchange wallet.",
+   "img": "L036.jpg:flip"
+  },
+  {
+   "say": "Third mistake: You don’t learn from your win. You forget what worked this time.",
+   "img": "L354.jpg:flip"
+  },
+  {
+   "say": "Instead, take profits, secure your coins, and learn. That’s how you grow in crypto.",
+   "img": "L041.jpg:flip"
+  },
+  {
+   "say": "Follow for part 409: why real estate is not always a safe bet. Not financial advice.",
+   "img": "L248.jpg:flip"
+  }
+ ],
+ "it": [
+  "Hai appena fatto un bel profitto in crypto. Complimenti! Ma aspetta—cos'è il prossimo passo?",
+  "Primo errore: non prendi i profitti. Continui a trade, inseguendo nuovi guadagni.",
+  "Secondo errore: non proteggi le tue monete. Le lasci in un wallet dell'exchange.",
+  "Terzo errore: non impari dalla vittoria. Dimentichi cosa ha funzionato questa volta.",
+  "Invece, prendi i profitti, proteggi le monete e impara. Così cresci in crypto.",
+  "Segui per la parte 409: perché l'immobiliare non è sempre una scommessa sicura. Non è un consiglio finanziario."
+ ]
+}

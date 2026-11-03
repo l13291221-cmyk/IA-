@@ -8908,6 +8908,26 @@
   "topic_it": "Gli errori più comuni dopo una grossa vincita in crypto",
   "next_it": "perché l'immobiliare non è sempre una scommessa sicura"
  },
+ "409": {
+  "part": 409,
+  "promo": false,
+  "hook_en": "Real estate seems safe, but it's not always easy.",
+  "hook_it": "L'immobiliare sembra sicuro, ma non è sempre facile.",
+  "points_en": [
+   "Prices rise fast, but they can drop just as quick.",
+   "You need cash to buy, and cash is hard to get.",
+   "Even experts make mistakes, and mistakes cost a lot."
+  ],
+  "points_it": [
+   "I prezzi salgono in fretta, ma possono scendere altrettanto in fretta.",
+   "Serve contante per comprare, e il contante è difficile da trovare.",
+   "Anche gli esperti sbagliano, e gli errori costano molto."
+  ],
+  "topic_en": "Why real estate is not always a safe bet",
+  "next_en": "why your seed phrase is more important than your password",
+  "topic_it": "Perché l'immobiliare non è sempre una scommessa sicura",
+  "next_it": "perché la tua seed phrase è più importante della tua password"
+ },
  "v001": {
   "part": 1,
   "promo": true,

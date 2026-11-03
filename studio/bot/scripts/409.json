@@ -1,0 +1,38 @@
+{
+ "en": [
+  {
+   "say": "Real estate seems safe, but it's not always easy.",
+   "img": "intro",
+   "caption": true,
+   "after": "L094.jpg"
+  },
+  {
+   "say": "Prices rise fast, but they can drop just as quick.",
+   "img": "01_s2.jpg"
+  },
+  {
+   "say": "You need cash to buy, and cash is hard to get.",
+   "img": "18_s3.jpg"
+  },
+  {
+   "say": "Even experts make mistakes, and mistakes cost a lot.",
+   "img": "L331.jpg"
+  },
+  {
+   "say": "Think carefully before you put your money in property.",
+   "img": "01_s1.jpg"
+  },
+  {
+   "say": "Follow for part 410: why your seed phrase is more important than your password. Not financial advice.",
+   "img": "L259.jpg:flip"
+  }
+ ],
+ "it": [
+  "L'immobiliare sembra sicuro, ma non è sempre facile.",
+  "I prezzi salgono in fretta, ma possono scendere altrettanto in fretta.",
+  "Serve contante per comprare, e il contante è difficile da trovare.",
+  "Anche gli esperti sbagliano, e gli errori costano molto.",
+  "Pensa bene prima di mettere i tuoi soldi in proprietà.",
+  "Segui per la parte 410: perché la tua seed phrase è più importante della tua password. Non è un consiglio finanziario."
+ ]
+}

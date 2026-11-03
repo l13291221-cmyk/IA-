@@ -1,16 +1,8 @@
 {
- "next_part": 409,
+ "next_part": 410,
  "paused": false,
  "cycle_start": "2026-10-07",
  "usage": {
-  "372": [
-   "187_s0",
-   "250_s0",
-   "35_s1",
-   "372_s0",
-   "L211",
-   "L266"
-  ],
   "373": [
    "336_s0",
    "373_s0",
@@ -323,6 +315,14 @@
    "L242",
    "L248",
    "L354"
+  ],
+  "409": [
+   "01_s1",
+   "01_s2",
+   "18_s3",
+   "L094",
+   "L259",
+   "L331"
   ]
  },
  "topics_done": [
@@ -343,7 +343,8 @@
   "how a recession affects your investments",
   "why a hardware wallet is worth the money",
   "how dividends can pay your bills one day",
-  "the most common mistakes after a big crypto win"
+  "the most common mistakes after a big crypto win",
+  "why real estate is not always a safe bet"
  ],
  "made": [
   {
@@ -450,6 +451,11 @@
    "part": "408",
    "topic": "the most common mistakes after a big crypto win",
    "date": "2026-11-02"
+  },
+  {
+   "part": "409",
+   "topic": "why real estate is not always a safe bet",
+   "date": "2026-11-03"
   }
  ],
  "promo_angles_done": [
@@ -459,7 +465,6 @@
  ],
  "next_promo": 4,
  "order": [
-  "372",
   "373",
   "374",
   "375",
@@ -498,6 +503,7 @@
   "406",
   "407",
   "v003",
-  "408"
+  "408",
+  "409"
  ]
 }

@@ -1,16 +1,8 @@
 {
- "next_part": 410,
+ "next_part": 411,
  "paused": false,
  "cycle_start": "2026-10-07",
  "usage": {
-  "373": [
-   "336_s0",
-   "373_s0",
-   "39_s5",
-   "L044",
-   "L182",
-   "L203"
-  ],
   "374": [
    "06_s6",
    "31_s5",
@@ -323,6 +315,14 @@
    "L094",
    "L259",
    "L331"
+  ],
+  "410": [
+   "06_s6",
+   "214_s0",
+   "296_s0",
+   "L135",
+   "L143",
+   "L185"
   ]
  },
  "topics_done": [
@@ -344,7 +344,8 @@
   "why a hardware wallet is worth the money",
   "how dividends can pay your bills one day",
   "the most common mistakes after a big crypto win",
-  "why real estate is not always a safe bet"
+  "why real estate is not always a safe bet",
+  "why your seed phrase is more important than your password"
  ],
  "made": [
   {
@@ -456,6 +457,11 @@
    "part": "409",
    "topic": "why real estate is not always a safe bet",
    "date": "2026-11-03"
+  },
+  {
+   "part": "410",
+   "topic": "why your seed phrase is more important than your password",
+   "date": "2026-11-04"
   }
  ],
  "promo_angles_done": [
@@ -465,7 +471,6 @@
  ],
  "next_promo": 4,
  "order": [
-  "373",
   "374",
   "375",
   "376",
@@ -504,6 +509,7 @@
   "407",
   "v003",
   "408",
-  "409"
+  "409",
+  "410"
  ]
 }

@@ -8928,6 +8928,26 @@
   "topic_it": "Perché l'immobiliare non è sempre una scommessa sicura",
   "next_it": "perché la tua seed phrase è più importante della tua password"
  },
+ "410": {
+  "part": 410,
+  "promo": false,
+  "hook_en": "Your seed phrase is a secret key to your crypto wealth. One wrong move and you could lose it forever.",
+  "hook_it": "La tua seed phrase è la chiave segreta al tuo patrimonio crypto. Un errore e puoi perderla per sempre.",
+  "points_en": [
+   "Unlike passwords, seed phrases can't be reset. If you lose them, your funds are gone.",
+   "Write it down on paper, store it safely. Never share it with anyone, not even support teams.",
+   "If you use a wallet app, enable two-factor authentication. It's an extra layer of protection."
+  ],
+  "points_it": [
+   "A differenza delle password, le seed phrase non si possono resettare. Se le perdi, i fondi sono andati.",
+   "Scrivilo su carta, conservalo in sicurezza. Non condividerlo con nessuno, neanche con i supporti.",
+   "Se usi un app wallet, attiva l'autenticazione a due fattori. È un'ulteriore protezione."
+  ],
+  "topic_en": "Why your seed phrase is more important than your password",
+  "next_en": "what the stock market teaches about patience",
+  "topic_it": "Perché la tua seed phrase è più importante della tua password",
+  "next_it": "cosa insegna il mercato azionario sulla pazienza"
+ },
  "v001": {
   "part": 1,
   "promo": true,
